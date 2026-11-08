@@ -30,8 +30,8 @@ disaster scenarios. Every modelling assumption is listed in the intervention reg
 | ダウンロード / Download | https://lutelute.github.io/All-Japan-Grid/download.html |
 
 <!-- [[[cog cog.out(n.scale()) ]]] -->
-**規模** — OSM から抽出: 送電線 40,087 本・変電所 6,962 か所・発電所 19,138 か所(10 地域)。潮流計算に使う正典モデル(`docs/data/built/`)は 15,562 ノード・17,314 枝。モデルに加えた仮定は介入台帳に 52 件。リリース v1.9.0・配布データセット v1.9.0。
-/ **Scale** — extracted from OSM: 40,087 lines, 6,962 substations, 19,138 plants across 10 regions. The canonical model used for power flow has 15,562 nodes and 17,314 branches; 52 modelling assumptions are listed in the intervention registry. Release v1.9.0, dataset v1.9.0.
+**規模** — OSM から抽出: 送電線 40,087 本・変電所 6,962 か所・発電所 19,138 か所(10 地域)。潮流計算に使う正典モデル(`docs/data/built/`)は 15,628 ノード・17,368 枝。モデルに加えた仮定は介入台帳に 52 件。リリース v1.9.0・配布データセット v1.9.0。
+/ **Scale** — extracted from OSM: 40,087 lines, 6,962 substations, 19,138 plants across 10 regions. The canonical model used for power flow has 15,628 nodes and 17,368 branches; 52 modelling assumptions are listed in the intervention registry. Release v1.9.0, dataset v1.9.0.
 <!-- [[[end]]] -->
 
 ---

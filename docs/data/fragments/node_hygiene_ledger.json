@@ -6,6 +6,77 @@
  "fragments": [
   {
    "island": "east",
+   "comp": 12,
+   "twin_island": "west",
+   "dropped_nodes": [
+    {
+     "id": "tokyo_jct_36.0905:138.4764:77",
+     "lat": 36.09047,
+     "lon": 138.47636,
+     "kv": 77.0,
+     "main": false,
+     "deg": 3,
+     "sub": 0,
+     "name": "tokyo junction 36.0905:138.4764:77",
+     "region": "tokyo"
+    },
+    {
+     "id": "tokyo_jct_36.1252:138.4671:77",
+     "lat": 36.1252,
+     "lon": 138.46714,
+     "kv": 77.0,
+     "main": false,
+     "deg": 3,
+     "sub": 0,
+     "name": "tokyo junction 36.1252:138.4671:77",
+     "region": "tokyo"
+    },
+    {
+     "id": "tokyo_sub_1234",
+     "lat": 36.05629,
+     "lon": 138.46627,
+     "kv": 77.0,
+     "main": true,
+     "deg": 3,
+     "sub": 1,
+     "name": "小海町変電所_2",
+     "region": "tokyo"
+    },
+    {
+     "id": "tokyo_jct_36.0789:138.4743:77",
+     "lat": 36.07894,
+     "lon": 138.47434,
+     "kv": 77.0,
+     "main": false,
+     "deg": 3,
+     "sub": 0,
+     "name": "tokyo junction 36.0789:138.4743:77",
+     "region": "tokyo"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
+    {
+     "id": "tokyo_jct_36.0905:138.4764:77",
+     "lat": 36.09047,
+     "lon": 138.47636
+    },
+    {
+     "id": "tokyo_jct_36.1252:138.4671:77",
+     "lat": 36.1252,
+     "lon": 138.46714
+    },
+    {
+     "id": "tokyo_jct_36.0789:138.4743:77",
+     "lat": 36.07894,
+     "lon": 138.47434
+    }
+   ]
+  },
+  {
+   "island": "east",
    "comp": 15,
    "twin_island": "west",
    "dropped_nodes": [
@@ -90,7 +161,50 @@
   },
   {
    "island": "east",
-   "comp": 19,
+   "comp": 16,
+   "twin_island": "west",
+   "dropped_nodes": [
+    {
+     "id": "tokyo_jct_35.8327:138.0571:77",
+     "lat": 35.83271,
+     "lon": 138.05713,
+     "kv": 77.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 35.8327:138.0571:77",
+     "region": "tokyo"
+    },
+    {
+     "id": "tokyo_jct_35.8328:137.9486:77",
+     "lat": 35.83284,
+     "lon": 137.94864,
+     "kv": 77.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 35.8328:137.9486:77",
+     "region": "tokyo"
+    },
+    {
+     "id": "tokyo_jct_35.8313:137.9651:77",
+     "lat": 35.83127,
+     "lon": 137.96511,
+     "kv": 77.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 35.8313:137.9651:77",
+     "region": "tokyo"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "reattr_skipped_freq": 1
+  },
+  {
+   "island": "east",
+   "comp": 20,
    "twin_island": "west",
    "dropped_nodes": [
     {
@@ -122,34 +236,159 @@
   },
   {
    "island": "east",
-   "comp": 86,
+   "comp": 77,
    "twin_island": "west",
    "dropped_nodes": [
     {
-     "id": "tokyo_jct_35.8327:138.0571:77",
-     "lat": 35.83271,
-     "lon": 138.05713,
-     "kv": 77.0,
+     "id": "tokyo_jct_34.954:138.348:0",
+     "lat": 34.95398,
+     "lon": 138.34796,
+     "kv": 0.0,
      "main": true,
      "deg": 1,
      "sub": 0,
-     "name": "tokyo junction 35.8327:138.0571:77",
+     "name": "tokyo junction 34.954:138.348:0",
      "region": "tokyo"
     },
     {
-     "id": "tokyo_jct_35.8313:137.9651:77",
-     "lat": 35.83127,
-     "lon": 137.96511,
-     "kv": 77.0,
-     "main": true,
+     "id": "tokyo_jct_34.9652:138.3169:0",
+     "lat": 34.9652,
+     "lon": 138.31689,
+     "kv": 0.0,
+     "main": false,
      "deg": 1,
      "sub": 0,
-     "name": "tokyo junction 35.8313:137.9651:77",
+     "name": "tokyo junction 34.9652:138.3169:0",
      "region": "tokyo"
     }
    ],
    "remapped": [],
-   "reattributed": []
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
+    {
+     "id": "tokyo_jct_34.9652:138.3169:0",
+     "lat": 34.9652,
+     "lon": 138.31689
+    }
+   ]
+  },
+  {
+   "island": "east",
+   "comp": 80,
+   "twin_island": "west",
+   "dropped_nodes": [
+    {
+     "id": "tokyo_jct_35.5463:138.0567:0",
+     "lat": 35.54632,
+     "lon": 138.05666,
+     "kv": 0.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 35.5463:138.0567:0",
+     "region": "tokyo"
+    },
+    {
+     "id": "tokyo_jct_35.5494:138.0498:0",
+     "lat": 35.54942,
+     "lon": 138.0498,
+     "kv": 0.0,
+     "main": false,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 35.5494:138.0498:0",
+     "region": "tokyo"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
+    {
+     "id": "tokyo_jct_35.5494:138.0498:0",
+     "lat": 35.54942,
+     "lon": 138.0498
+    }
+   ]
+  },
+  {
+   "island": "east",
+   "comp": 82,
+   "twin_island": "west",
+   "dropped_nodes": [
+    {
+     "id": "tokyo_jct_35.592:137.9319:0",
+     "lat": 35.59205,
+     "lon": 137.93195,
+     "kv": 0.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 35.592:137.9319:0",
+     "region": "tokyo"
+    },
+    {
+     "id": "tokyo_jct_35.5512:138.0493:0",
+     "lat": 35.55121,
+     "lon": 138.04935,
+     "kv": 0.0,
+     "main": false,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 35.5512:138.0493:0",
+     "region": "tokyo"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
+    {
+     "id": "tokyo_jct_35.5512:138.0493:0",
+     "lat": 35.55121,
+     "lon": 138.04935
+    }
+   ]
+  },
+  {
+   "island": "east",
+   "comp": 85,
+   "twin_island": "west",
+   "dropped_nodes": [
+    {
+     "id": "tokyo_jct_34.855:138.1288:0",
+     "lat": 34.85503,
+     "lon": 138.12876,
+     "kv": 0.0,
+     "main": false,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 34.855:138.1288:0",
+     "region": "tokyo"
+    },
+    {
+     "id": "tokyo_jct_34.8577:138.1398:0",
+     "lat": 34.85765,
+     "lon": 138.13985,
+     "kv": 0.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 34.8577:138.1398:0",
+     "region": "tokyo"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
+    {
+     "id": "tokyo_jct_34.855:138.1288:0",
+     "lat": 34.85503,
+     "lon": 138.12876
+    }
+   ]
   },
   {
    "island": "east",
@@ -184,6 +423,84 @@
   },
   {
    "island": "east",
+   "comp": 94,
+   "twin_island": "west",
+   "dropped_nodes": [
+    {
+     "id": "tokyo_jct_35.7661:138.084:0",
+     "lat": 35.7661,
+     "lon": 138.084,
+     "kv": 0.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 35.7661:138.084:0",
+     "region": "tokyo"
+    },
+    {
+     "id": "tokyo_jct_35.8211:138.0869:0",
+     "lat": 35.82106,
+     "lon": 138.0869,
+     "kv": 0.0,
+     "main": false,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 35.8211:138.0869:0",
+     "region": "tokyo"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
+    {
+     "id": "tokyo_jct_35.8211:138.0869:0",
+     "lat": 35.82106,
+     "lon": 138.0869
+    }
+   ]
+  },
+  {
+   "island": "east",
+   "comp": 95,
+   "twin_island": "west",
+   "dropped_nodes": [
+    {
+     "id": "tokyo_jct_36.0565:137.8907:154",
+     "lat": 36.05653,
+     "lon": 137.89072,
+     "kv": 154.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 36.0565:137.8907:154",
+     "region": "tokyo"
+    },
+    {
+     "id": "tokyo_jct_36.1247:137.922:154",
+     "lat": 36.1247,
+     "lon": 137.92196,
+     "kv": 154.0,
+     "main": false,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 36.1247:137.922:154",
+     "region": "tokyo"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
+    {
+     "id": "tokyo_jct_36.1247:137.922:154",
+     "lat": 36.1247,
+     "lon": 137.92196
+    }
+   ]
+  },
+  {
+   "island": "east",
    "comp": 101,
    "twin_island": "west",
    "dropped_nodes": [
@@ -215,7 +532,87 @@
   },
   {
    "island": "east",
-   "comp": 184,
+   "comp": 134,
+   "twin_island": "west",
+   "dropped_nodes": [
+    {
+     "id": "tokyo_jct_35.1456:138.6228:0",
+     "lat": 35.14564,
+     "lon": 138.62279,
+     "kv": 0.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 35.1456:138.6228:0",
+     "region": "tokyo"
+    }
+   ],
+   "remapped": [],
+   "reattributed": []
+  },
+  {
+   "island": "east",
+   "comp": 135,
+   "twin_island": "west",
+   "dropped_nodes": [
+    {
+     "id": "tokyo_jct_35.1343:138.6245:0",
+     "lat": 35.13425,
+     "lon": 138.62448,
+     "kv": 0.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 35.1343:138.6245:0",
+     "region": "tokyo"
+    }
+   ],
+   "remapped": [],
+   "reattributed": []
+  },
+  {
+   "island": "east",
+   "comp": 136,
+   "twin_island": "west",
+   "dropped_nodes": [
+    {
+     "id": "tokyo_jct_35.116:138.6178:0",
+     "lat": 35.11595,
+     "lon": 138.61777,
+     "kv": 0.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 35.116:138.6178:0",
+     "region": "tokyo"
+    }
+   ],
+   "remapped": [],
+   "reattributed": []
+  },
+  {
+   "island": "east",
+   "comp": 138,
+   "twin_island": "west",
+   "dropped_nodes": [
+    {
+     "id": "tokyo_jct_36.2069:137.9815:0",
+     "lat": 36.20693,
+     "lon": 137.9815,
+     "kv": 0.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "tokyo junction 36.2069:137.9815:0",
+     "region": "tokyo"
+    }
+   ],
+   "remapped": [],
+   "reattributed": []
+  },
+  {
+   "island": "east",
+   "comp": 186,
    "twin_island": "west",
    "dropped_nodes": [
     {
@@ -235,7 +632,7 @@
   },
   {
    "island": "east",
-   "comp": 192,
+   "comp": 194,
    "twin_island": "west",
    "dropped_nodes": [
     {
@@ -255,7 +652,325 @@
   },
   {
    "island": "west",
-   "comp": 7,
+   "comp": 1,
+   "twin_island": "east",
+   "dropped_nodes": [
+    {
+     "id": "chubu_jct_35.638:138.5931:66",
+     "lat": 35.63798,
+     "lon": 138.59314,
+     "kv": 66.0,
+     "main": true,
+     "deg": 3,
+     "sub": 0,
+     "name": "chubu junction 35.638:138.5931:66",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_sub_672",
+     "lat": 35.60268,
+     "lon": 138.82472,
+     "kv": 66.0,
+     "main": true,
+     "deg": 2,
+     "sub": 1,
+     "name": "笹子変電所",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_35.609:139.2414:66",
+     "lat": 35.60898,
+     "lon": 139.24138,
+     "kv": 66.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 35.609:139.2414:66",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_35.6034:138.9117:66",
+     "lat": 35.60338,
+     "lon": 138.91173,
+     "kv": 66.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 35.6034:138.9117:66",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_sub_502",
+     "lat": 35.66113,
+     "lon": 138.63759,
+     "kv": 66.0,
+     "main": true,
+     "deg": 2,
+     "sub": 1,
+     "name": "石和町松本変電所",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_35.6173:139.0216:66",
+     "lat": 35.61734,
+     "lon": 139.02165,
+     "kv": 66.0,
+     "main": true,
+     "deg": 3,
+     "sub": 0,
+     "name": "chubu junction 35.6173:139.0216:66",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_sub_671",
+     "lat": 35.61946,
+     "lon": 139.11327,
+     "kv": 66.0,
+     "main": false,
+     "deg": 2,
+     "sub": 1,
+     "name": "上野原変電所",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_sub_655",
+     "lat": 35.60463,
+     "lon": 139.02509,
+     "kv": 66.0,
+     "main": false,
+     "deg": 1,
+     "sub": 1,
+     "name": "梁川変電所",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_35.615:138.9421:66",
+     "lat": 35.61499,
+     "lon": 138.94206,
+     "kv": 66.0,
+     "main": false,
+     "deg": 3,
+     "sub": 0,
+     "name": "chubu junction 35.615:138.9421:66",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_35.6137:138.9589:66",
+     "lat": 35.61369,
+     "lon": 138.95894,
+     "kv": 66.0,
+     "main": false,
+     "deg": 3,
+     "sub": 0,
+     "name": "chubu junction 35.6137:138.9589:66",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_35.6136:138.9589:66",
+     "lat": 35.61361,
+     "lon": 138.95893,
+     "kv": 66.0,
+     "main": false,
+     "deg": 3,
+     "sub": 0,
+     "name": "chubu junction 35.6136:138.9589:66",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_sub_448",
+     "lat": 35.6705,
+     "lon": 138.74332,
+     "kv": 66.0,
+     "main": false,
+     "deg": 2,
+     "sub": 1,
+     "name": "勝沼変電所",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_35.6779:138.5787:66",
+     "lat": 35.67792,
+     "lon": 138.57875,
+     "kv": 66.0,
+     "main": false,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 35.6779:138.5787:66",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_35.6137:138.9591:66",
+     "lat": 35.61369,
+     "lon": 138.95908,
+     "kv": 66.0,
+     "main": false,
+     "deg": 3,
+     "sub": 0,
+     "name": "chubu junction 35.6137:138.9591:66",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_35.6136:138.959:66",
+     "lat": 35.61358,
+     "lon": 138.95901,
+     "kv": 66.0,
+     "main": false,
+     "deg": 3,
+     "sub": 0,
+     "name": "chubu junction 35.6136:138.959:66",
+     "region": "chubu"
+    }
+   ],
+   "remapped": [
+    {
+     "from": {
+      "name": "上野原変電所",
+      "region": "chubu",
+      "lat": 35.61946,
+      "lon": 139.11327
+     },
+     "to": {
+      "name": "上野原変電所",
+      "region": "tokyo",
+      "lat": 35.61952,
+      "lon": 139.1134
+     },
+     "dist_m": 14
+    },
+    {
+     "from": {
+      "name": "梁川変電所",
+      "region": "chubu",
+      "lat": 35.60463,
+      "lon": 139.02509
+     },
+     "to": {
+      "name": "梁川変電所",
+      "region": "tokyo",
+      "lat": 35.6053,
+      "lon": 139.02609
+     },
+     "dist_m": 117
+    },
+    {
+     "from": {
+      "name": "chubu junction 35.615:138.9421:66",
+      "region": "chubu",
+      "lat": 35.61499,
+      "lon": 138.94206
+     },
+     "to": {
+      "name": "大月変電所",
+      "region": "tokyo",
+      "lat": 35.6149,
+      "lon": 138.94218
+     },
+     "dist_m": 15
+    },
+    {
+     "from": {
+      "name": "chubu junction 35.6137:138.9589:66",
+      "region": "chubu",
+      "lat": 35.61369,
+      "lon": 138.95894
+     },
+     "to": {
+      "name": "駒橋変電所",
+      "region": "tokyo",
+      "lat": 35.61394,
+      "lon": 138.95922
+     },
+     "dist_m": 38
+    },
+    {
+     "from": {
+      "name": "chubu junction 35.6136:138.9589:66",
+      "region": "chubu",
+      "lat": 35.61361,
+      "lon": 138.95893
+     },
+     "to": {
+      "name": "駒橋変電所",
+      "region": "tokyo",
+      "lat": 35.61394,
+      "lon": 138.95922
+     },
+     "dist_m": 45
+    },
+    {
+     "from": {
+      "name": "勝沼変電所",
+      "region": "chubu",
+      "lat": 35.6705,
+      "lon": 138.74332
+     },
+     "to": {
+      "name": "勝沼変電所",
+      "region": "tokyo",
+      "lat": 35.67022,
+      "lon": 138.74283
+     },
+     "dist_m": 54
+    },
+    {
+     "from": {
+      "name": "chubu junction 35.6779:138.5787:66",
+      "region": "chubu",
+      "lat": 35.67792,
+      "lon": 138.57875
+     },
+     "to": {
+      "name": "東京電力パワーグリッド株式会社武田変電所",
+      "region": "tokyo",
+      "lat": 35.67787,
+      "lon": 138.57985
+     },
+     "dist_m": 100
+    },
+    {
+     "from": {
+      "name": "chubu junction 35.6137:138.9591:66",
+      "region": "chubu",
+      "lat": 35.61369,
+      "lon": 138.95908
+     },
+     "to": {
+      "name": "駒橋変電所",
+      "region": "tokyo",
+      "lat": 35.61394,
+      "lon": 138.95922
+     },
+     "dist_m": 31
+    },
+    {
+     "from": {
+      "name": "chubu junction 35.6136:138.959:66",
+      "region": "chubu",
+      "lat": 35.61358,
+      "lon": 138.95901
+     },
+     "to": {
+      "name": "駒橋変電所",
+      "region": "tokyo",
+      "lat": 35.61394,
+      "lon": 138.95922
+     },
+     "dist_m": 44
+    }
+   ],
+   "reattributed": [
+    {
+     "name": "chubu junction 35.6062:138.9137:66",
+     "lat": 35.60625,
+     "lon": 138.91368,
+     "region_from": "chubu",
+     "region_to": "tokyo"
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 8,
    "twin_island": "east",
    "dropped_nodes": [
     {
@@ -278,6 +993,17 @@
      "deg": 1,
      "sub": 0,
      "name": "chubu junction 35.5693:138.4748:66",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_sub_580",
+     "lat": 35.60892,
+     "lon": 138.53303,
+     "kv": 66.0,
+     "main": true,
+     "deg": 2,
+     "sub": 1,
+     "name": "常永変電所",
      "region": "chubu"
     },
     {
@@ -416,104 +1142,46 @@
   },
   {
    "island": "west",
-   "comp": 19,
+   "comp": 39,
    "twin_island": "east",
    "dropped_nodes": [
     {
-     "id": "chubu_sub_502",
-     "lat": 35.66113,
-     "lon": 138.63759,
-     "kv": 66.0,
-     "main": true,
-     "deg": 2,
-     "sub": 1,
-     "name": "石和町松本変電所",
-     "region": "chubu"
-    },
-    {
-     "id": "chubu_jct_35.638:138.5931:66",
-     "lat": 35.63798,
-     "lon": 138.59314,
-     "kv": 66.0,
-     "main": true,
-     "deg": 3,
-     "sub": 0,
-     "name": "chubu junction 35.638:138.5931:66",
-     "region": "chubu"
-    },
-    {
-     "id": "chubu_jct_35.6779:138.5787:66",
-     "lat": 35.67792,
-     "lon": 138.57875,
+     "id": "chubu_jct_35.6878:138.4972:66",
+     "lat": 35.68784,
+     "lon": 138.49722,
      "kv": 66.0,
      "main": false,
      "deg": 1,
      "sub": 0,
-     "name": "chubu junction 35.6779:138.5787:66",
-     "region": "chubu"
-    }
-   ],
-   "remapped": [
-    {
-     "from": {
-      "name": "chubu junction 35.6779:138.5787:66",
-      "region": "chubu",
-      "lat": 35.67792,
-      "lon": 138.57875
-     },
-     "to": {
-      "name": "東京電力パワーグリッド株式会社武田変電所",
-      "region": "tokyo",
-      "lat": 35.67787,
-      "lon": 138.57985
-     },
-     "dist_m": 100
-    }
-   ],
-   "reattributed": []
-  },
-  {
-   "island": "west",
-   "comp": 20,
-   "twin_island": "east",
-   "dropped_nodes": [
-    {
-     "id": "chubu_sub_672",
-     "lat": 35.60268,
-     "lon": 138.82472,
-     "kv": 66.0,
-     "main": true,
-     "deg": 2,
-     "sub": 1,
-     "name": "笹子変電所",
+     "name": "chubu junction 35.6878:138.4972:66",
      "region": "chubu"
     },
     {
-     "id": "chubu_jct_35.6034:138.9117:66",
-     "lat": 35.60338,
-     "lon": 138.91173,
+     "id": "chubu_jct_35.6887:138.4984:66",
+     "lat": 35.68871,
+     "lon": 138.49841,
      "kv": 66.0,
      "main": true,
-     "deg": 1,
+     "deg": 3,
      "sub": 0,
-     "name": "chubu junction 35.6034:138.9117:66",
+     "name": "chubu junction 35.6887:138.4984:66",
      "region": "chubu"
     }
    ],
    "remapped": [],
-   "reattributed": [
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
     {
-     "name": "chubu junction 35.6062:138.9137:66",
-     "lat": 35.60625,
-     "lon": 138.91368,
-     "region_from": "chubu",
-     "region_to": "tokyo"
+     "id": "chubu_jct_35.6878:138.4972:66",
+     "lat": 35.68784,
+     "lon": 138.49722
     }
    ]
   },
   {
    "island": "west",
-   "comp": 49,
+   "comp": 47,
    "twin_island": "east",
    "dropped_nodes": [
     {
@@ -544,7 +1212,46 @@
   },
   {
    "island": "west",
-   "comp": 54,
+   "comp": 48,
+   "twin_island": "east",
+   "dropped_nodes": [
+    {
+     "id": "chubu_jct_35.7128:138.719:0",
+     "lat": 35.71283,
+     "lon": 138.71899,
+     "kv": 0.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 35.7128:138.719:0",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_35.7049:138.7209:0",
+     "lat": 35.70491,
+     "lon": 138.72095,
+     "kv": 0.0,
+     "main": false,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 35.7049:138.7209:0",
+     "region": "chubu"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
+    {
+     "id": "chubu_jct_35.7049:138.7209:0",
+     "lat": 35.70491,
+     "lon": 138.72095
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 52,
    "twin_island": "east",
    "dropped_nodes": [
     {
@@ -575,7 +1282,319 @@
   },
   {
    "island": "west",
-   "comp": 131,
+   "comp": 73,
+   "twin_island": "east",
+   "dropped_nodes": [
+    {
+     "id": "chubu_jct_36.9563:138.9222:154",
+     "lat": 36.95627,
+     "lon": 138.92215,
+     "kv": 154.0,
+     "main": true,
+     "deg": 3,
+     "sub": 0,
+     "name": "chubu junction 36.9563:138.9222:154",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_37.0139:138.8758:154",
+     "lat": 37.01388,
+     "lon": 138.87576,
+     "kv": 154.0,
+     "main": false,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 37.0139:138.8758:154",
+     "region": "chubu"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
+    {
+     "id": "chubu_jct_37.0139:138.8758:154",
+     "lat": 37.01388,
+     "lon": 138.87576
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 76,
+   "twin_island": "east",
+   "dropped_nodes": [
+    {
+     "id": "chubu_sub_1050",
+     "lat": 36.99291,
+     "lon": 138.59129,
+     "kv": 0.0,
+     "main": true,
+     "deg": 1,
+     "sub": 1,
+     "name": "灰雨変電所",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_37.0088:138.6511:0",
+     "lat": 37.00879,
+     "lon": 138.65109,
+     "kv": 0.0,
+     "main": false,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 37.0088:138.6511:0",
+     "region": "chubu"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
+    {
+     "id": "chubu_jct_37.0088:138.6511:0",
+     "lat": 37.00879,
+     "lon": 138.65109
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 90,
+   "twin_island": "east",
+   "dropped_nodes": [
+    {
+     "id": "chubu_jct_36.6033:139.0495:66",
+     "lat": 36.60327,
+     "lon": 139.04948,
+     "kv": 66.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 36.6033:139.0495:66",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_36.6034:139.0494:66",
+     "lat": 36.60337,
+     "lon": 139.04936,
+     "kv": 66.0,
+     "main": false,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 36.6034:139.0494:66",
+     "region": "chubu"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
+    {
+     "id": "chubu_jct_36.6034:139.0494:66",
+     "lat": 36.60337,
+     "lon": 139.04936
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 91,
+   "twin_island": "east",
+   "dropped_nodes": [
+    {
+     "id": "chubu_jct_36.6026:139.0463:154",
+     "lat": 36.60263,
+     "lon": 139.04633,
+     "kv": 154.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 36.6026:139.0463:154",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_36.6022:139.0467:154",
+     "lat": 36.60218,
+     "lon": 139.04668,
+     "kv": 154.0,
+     "main": false,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 36.6022:139.0467:154",
+     "region": "chubu"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
+    {
+     "id": "chubu_jct_36.6022:139.0467:154",
+     "lat": 36.60218,
+     "lon": 139.04668
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 102,
+   "twin_island": "east",
+   "dropped_nodes": [
+    {
+     "id": "chubu_jct_36.4155:138.7877:66",
+     "lat": 36.4155,
+     "lon": 138.78769,
+     "kv": 66.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 36.4155:138.7877:66",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_36.4158:138.7886:66",
+     "lat": 36.41582,
+     "lon": 138.78856,
+     "kv": 66.0,
+     "main": false,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 36.4158:138.7886:66",
+     "region": "chubu"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
+    {
+     "id": "chubu_jct_36.4158:138.7886:66",
+     "lat": 36.41582,
+     "lon": 138.78856
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 105,
+   "twin_island": "east",
+   "dropped_nodes": [
+    {
+     "id": "chubu_jct_36.5998:138.6313:66",
+     "lat": 36.59982,
+     "lon": 138.63135,
+     "kv": 66.0,
+     "main": false,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 36.5998:138.6313:66",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_36.6019:138.6299:66",
+     "lat": 36.60191,
+     "lon": 138.62987,
+     "kv": 66.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 36.6019:138.6299:66",
+     "region": "chubu"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
+    {
+     "id": "chubu_jct_36.5998:138.6313:66",
+     "lat": 36.59982,
+     "lon": 138.63135
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 125,
+   "twin_island": "east",
+   "dropped_nodes": [
+    {
+     "id": "chubu_jct_36.0306:139.0827:66",
+     "lat": 36.03062,
+     "lon": 139.08274,
+     "kv": 66.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 36.0306:139.0827:66",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_36.0309:139.0828:66",
+     "lat": 36.03091,
+     "lon": 139.08281,
+     "kv": 66.0,
+     "main": false,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 36.0309:139.0828:66",
+     "region": "chubu"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
+    {
+     "id": "chubu_jct_36.0309:139.0828:66",
+     "lat": 36.03091,
+     "lon": 139.08281
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 129,
+   "twin_island": "east",
+   "dropped_nodes": [
+    {
+     "id": "chubu_jct_36.9702:138.8003:0",
+     "lat": 36.97017,
+     "lon": 138.80026,
+     "kv": 0.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 36.9702:138.8003:0",
+     "region": "chubu"
+    },
+    {
+     "id": "chubu_jct_36.9727:138.8022:0",
+     "lat": 36.97275,
+     "lon": 138.8022,
+     "kv": 0.0,
+     "main": false,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 36.9727:138.8022:0",
+     "region": "chubu"
+    }
+   ],
+   "remapped": [],
+   "reattributed": [],
+   "kind": "on_path_twin",
+   "on_path_junctions": [
+    {
+     "id": "chubu_jct_36.9727:138.8022:0",
+     "lat": 36.97275,
+     "lon": 138.8022
+    }
+   ]
+  },
+  {
+   "island": "west",
+   "comp": 130,
    "twin_island": "east",
    "dropped_nodes": [
     {
@@ -606,7 +1625,7 @@
   },
   {
    "island": "west",
-   "comp": 132,
+   "comp": 131,
    "twin_island": "east",
    "dropped_nodes": [
     {
@@ -629,6 +1648,26 @@
      "deg": 2,
      "sub": 1,
      "name": "みなかみ町変電所",
+     "region": "chubu"
+    }
+   ],
+   "remapped": [],
+   "reattributed": []
+  },
+  {
+   "island": "west",
+   "comp": 236,
+   "twin_island": "east",
+   "dropped_nodes": [
+    {
+     "id": "chubu_jct_35.9827:139.0552:66",
+     "lat": 35.98272,
+     "lon": 139.0552,
+     "kv": 66.0,
+     "main": true,
+     "deg": 1,
+     "sub": 0,
+     "name": "chubu junction 35.9827:139.0552:66",
      "region": "chubu"
     }
    ],
@@ -779,6 +1818,449 @@
  "removed_edges": [
   {
    "a": [
+    36.18581,
+    138.48091
+   ],
+   "b": [
+    36.1252,
+    138.46714
+   ],
+   "main": false,
+   "kv": 77.0,
+   "par": 1,
+   "name": "勝間変電所~小海町変電所線",
+   "why": "on_path_twin",
+   "n_path": 29
+  },
+  {
+   "a": [
+    36.1252,
+    138.46714
+   ],
+   "b": [
+    36.13016,
+    138.47529
+   ],
+   "main": false,
+   "kv": 77.0,
+   "par": 1,
+   "name": "leadin",
+   "why": "on_path_twin",
+   "n_path": 0
+  },
+  {
+   "a": [
+    36.1252,
+    138.46714
+   ],
+   "b": [
+    36.09047,
+    138.47636
+   ],
+   "main": false,
+   "kv": 77.0,
+   "par": 1,
+   "name": "勝間変電所~小海町変電所線",
+   "why": "on_path_twin",
+   "n_path": 16
+  },
+  {
+   "a": [
+    36.09047,
+    138.47636
+   ],
+   "b": [
+    36.09258,
+    138.48466
+   ],
+   "main": false,
+   "kv": 77.0,
+   "par": 1,
+   "name": "leadin",
+   "why": "on_path_twin",
+   "n_path": 0
+  },
+  {
+   "a": [
+    36.09047,
+    138.47636
+   ],
+   "b": [
+    36.07894,
+    138.47434
+   ],
+   "main": false,
+   "kv": 77.0,
+   "par": 1,
+   "name": "勝間変電所~小海町変電所線",
+   "why": "on_path_twin",
+   "n_path": 6
+  },
+  {
+   "a": [
+    36.07894,
+    138.47434
+   ],
+   "b": [
+    36.08132,
+    138.48312
+   ],
+   "main": false,
+   "kv": 77.0,
+   "par": 1,
+   "name": "leadin",
+   "why": "on_path_twin",
+   "n_path": 0
+  },
+  {
+   "a": [
+    36.07894,
+    138.47434
+   ],
+   "b": [
+    36.05629,
+    138.46627
+   ],
+   "main": false,
+   "kv": 77.0,
+   "par": 1,
+   "name": "勝間変電所~小海町変電所線",
+   "why": "on_path_twin",
+   "n_path": 10
+  },
+  {
+   "a": [
+    34.95398,
+    138.34796
+   ],
+   "b": [
+    34.9652,
+    138.31689
+   ],
+   "main": false,
+   "kv": 0.0,
+   "par": 1,
+   "name": "tokyo_line_4116",
+   "why": "on_path_twin",
+   "n_path": 11
+  },
+  {
+   "a": [
+    35.54632,
+    138.05666
+   ],
+   "b": [
+    35.54942,
+    138.0498
+   ],
+   "main": false,
+   "kv": 0.0,
+   "par": 1,
+   "name": "大鹿送電線",
+   "why": "on_path_twin",
+   "n_path": 3
+  },
+  {
+   "a": [
+    35.59205,
+    137.93195
+   ],
+   "b": [
+    35.55121,
+    138.04935
+   ],
+   "main": false,
+   "kv": 0.0,
+   "par": 1,
+   "name": "大鹿送電泉",
+   "why": "on_path_twin",
+   "n_path": 53
+  },
+  {
+   "a": [
+    34.85765,
+    138.13985
+   ],
+   "b": [
+    34.85503,
+    138.12876
+   ],
+   "main": false,
+   "kv": 0.0,
+   "par": 1,
+   "name": "tokyo_line_4132",
+   "why": "on_path_twin",
+   "n_path": 4
+  },
+  {
+   "a": [
+    35.7661,
+    138.084
+   ],
+   "b": [
+    35.82106,
+    138.0869
+   ],
+   "main": false,
+   "kv": 0.0,
+   "par": 1,
+   "name": "tokyo_line_4154",
+   "why": "on_path_twin",
+   "n_path": 24
+  },
+  {
+   "a": [
+    36.1247,
+    137.92196
+   ],
+   "b": [
+    36.05653,
+    137.89072
+   ],
+   "main": false,
+   "kv": 154.0,
+   "par": 2,
+   "name": "tokyo_line_4155",
+   "why": "on_path_twin",
+   "n_path": 32
+  },
+  {
+   "a": [
+    35.68871,
+    138.49841
+   ],
+   "b": [
+    35.68784,
+    138.49722
+   ],
+   "main": false,
+   "kv": 66.0,
+   "par": 1,
+   "name": "釜無白根変電所~若宮一丁目変電所線",
+   "why": "on_path_twin",
+   "n_path": 0
+  },
+  {
+   "a": [
+    35.70491,
+    138.72095
+   ],
+   "b": [
+    35.71283,
+    138.71899
+   ],
+   "main": false,
+   "kv": 0.0,
+   "par": 1,
+   "name": "中部送電線_194",
+   "why": "on_path_twin",
+   "n_path": 4
+  },
+  {
+   "a": [
+    36.95627,
+    138.92215
+   ],
+   "b": [
+    37.01388,
+    138.87576
+   ],
+   "main": false,
+   "kv": 154.0,
+   "par": 1,
+   "name": "南魚沼変電所~土樽変電所線",
+   "why": "on_path_twin",
+   "n_path": 33
+  },
+  {
+   "a": [
+    37.00879,
+    138.65109
+   ],
+   "b": [
+    36.99291,
+    138.59129
+   ],
+   "main": false,
+   "kv": 0.0,
+   "par": 1,
+   "name": "中部送電線_302",
+   "why": "on_path_twin",
+   "n_path": 28
+  },
+  {
+   "a": [
+    36.60327,
+    139.04948
+   ],
+   "b": [
+    36.60337,
+    139.04936
+   ],
+   "main": false,
+   "kv": 66.0,
+   "par": 2,
+   "name": "中部電力パワーグリッド 66.0kV線",
+   "why": "on_path_twin",
+   "n_path": 0
+  },
+  {
+   "a": [
+    36.60218,
+    139.04668
+   ],
+   "b": [
+    36.60263,
+    139.04633
+   ],
+   "main": false,
+   "kv": 154.0,
+   "par": 2,
+   "name": "中部電力パワーグリッド 154.0kV線",
+   "why": "on_path_twin",
+   "n_path": 0
+  },
+  {
+   "a": [
+    36.41582,
+    138.78856
+   ],
+   "b": [
+    36.4155,
+    138.78769
+   ],
+   "main": false,
+   "kv": 66.0,
+   "par": 2,
+   "name": "東京電力パワーグリッド 66.0kV線",
+   "why": "on_path_twin",
+   "n_path": 0
+  },
+  {
+   "a": [
+    36.60191,
+    138.62987
+   ],
+   "b": [
+    36.59982,
+    138.63135
+   ],
+   "main": false,
+   "kv": 66.0,
+   "par": 2,
+   "name": "東京電力パワーグリッド 66.0kV線",
+   "why": "on_path_twin",
+   "n_path": 0
+  },
+  {
+   "a": [
+    36.03091,
+    139.08281
+   ],
+   "b": [
+    36.03062,
+    139.08274
+   ],
+   "main": false,
+   "kv": 66.0,
+   "par": 2,
+   "name": "東京電力パワーグリッド 66.0kV線",
+   "why": "on_path_twin",
+   "n_path": 0
+  },
+  {
+   "a": [
+    36.97017,
+    138.80026
+   ],
+   "b": [
+    36.97275,
+    138.8022
+   ],
+   "main": false,
+   "kv": 0.0,
+   "par": 1,
+   "name": "湯沢変電所~南魚沼変電所線",
+   "why": "on_path_twin",
+   "n_path": 4
+  },
+  {
+   "a": [
+    35.61394,
+    138.95922
+   ],
+   "b": [
+    35.61394,
+    138.95922
+   ],
+   "main": false,
+   "kv": 66.0,
+   "par": 1,
+   "name": "中部送電線_1085",
+   "hygiene": "intervention35"
+  },
+  {
+   "a": [
+    35.61394,
+    138.95922
+   ],
+   "b": [
+    35.61394,
+    138.95922
+   ],
+   "main": false,
+   "kv": 66.0,
+   "par": 1,
+   "name": "中部送電線_1084",
+   "hygiene": "intervention35"
+  },
+  {
+   "a": [
+    35.61394,
+    138.95922
+   ],
+   "b": [
+    35.61394,
+    138.95922
+   ],
+   "main": false,
+   "kv": 66.0,
+   "par": 1,
+   "name": "中部送電線_1086",
+   "hygiene": "intervention35"
+  },
+  {
+   "a": [
+    35.61394,
+    138.95922
+   ],
+   "b": [
+    35.61394,
+    138.95922
+   ],
+   "main": false,
+   "kv": 66.0,
+   "par": 1,
+   "name": "chubu_line_2062",
+   "hygiene": "intervention35"
+  },
+  {
+   "a": [
+    35.61394,
+    138.95922
+   ],
+   "b": [
+    35.61394,
+    138.95922
+   ],
+   "main": false,
+   "kv": 66.0,
+   "par": 1,
+   "name": "中部送電線_1087",
+   "hygiene": "intervention35"
+  },
+  {
+   "a": [
     35.98247,
     139.10431
    ],
@@ -820,6 +2302,51 @@
    "kv": 66.0,
    "par": 1,
    "name": "chubu_line_3034",
+   "hygiene": "intervention35"
+  },
+  {
+   "a": [
+    35.67022,
+    138.74283
+   ],
+   "b": [
+    35.60268,
+    138.82472
+   ],
+   "main": false,
+   "kv": 66.0,
+   "par": 2,
+   "name": "大-勝 線",
+   "hygiene": "intervention35"
+  },
+  {
+   "a": [
+    35.61394,
+    138.95922
+   ],
+   "b": [
+    35.6149,
+    138.94218
+   ],
+   "main": false,
+   "kv": 66.0,
+   "par": 2,
+   "name": "笛駒線",
+   "hygiene": "intervention35"
+  },
+  {
+   "a": [
+    35.6149,
+    138.94218
+   ],
+   "b": [
+    35.61734,
+    139.02165
+   ],
+   "main": false,
+   "kv": 66.0,
+   "par": 2,
+   "name": "上-大 線",
    "hygiene": "intervention35"
   },
   {
@@ -880,6 +2407,51 @@
    "kv": 66.0,
    "par": 2,
    "name": "東京送電線_38"
+  },
+  {
+   "a": [
+    35.60898,
+    139.24138
+   ],
+   "b": [
+    35.61952,
+    139.1134
+   ],
+   "main": false,
+   "kv": 66.0,
+   "par": 2,
+   "name": "JR八王子ー上野原（八王子ー大月）線",
+   "hygiene": "intervention35"
+  },
+  {
+   "a": [
+    35.61734,
+    139.02165
+   ],
+   "b": [
+    35.61952,
+    139.1134
+   ],
+   "main": false,
+   "kv": 66.0,
+   "par": 2,
+   "name": "上-大 線",
+   "hygiene": "intervention35"
+  },
+  {
+   "a": [
+    35.61734,
+    139.02165
+   ],
+   "b": [
+    35.6053,
+    139.02609
+   ],
+   "main": false,
+   "kv": 66.0,
+   "par": 2,
+   "name": "梁川分岐線",
+   "hygiene": "intervention35"
   },
   {
    "a": [
@@ -954,5 +2526,5 @@
    "name": "長野市変電所~新諏訪一丁目変電所線"
   }
  ],
- "self_loops_removed": 3
+ "self_loops_removed": 8
 }

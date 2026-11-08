@@ -75,6 +75,49 @@ def test_route_match_reaches_every_segment_between_endpoints():
     assert sorted(res["edges"]) == [0, 1, 2]
 
 
+def test_route_does_not_take_synthetic_ties():
+    """合成の連系タイ(OCCTO の定義の両端を結んだ直線・介入#31 で潮流では止めている)は経路に通さない。
+    2026-11-08: 本四の中国側の端を東岡山に直したら、東岡山〜讃岐の直線が瀬戸大橋の実在の線より短くなり、
+    本四の 2 回線が直線に付いて実在の線が 1 回線に落ちた。通してよいのは通電のまま残す合成タイだけ。"""
+    m = _mod()
+    b = _built()
+    A, B = b["nodes"][0], b["nodes"][3]
+    b["edges"].append(_edge(A, B, 0, "甲乙間連系線") | {"tie": 1})        # 直線で、実在の線より短い
+    rec = _rec(m, region="inter", name="甲乙連系線", kv=500.0, n=2, from_sub="甲変電所", to_sub="乙変電所")
+    res = m.match_all(m.Model(b), [rec])[0]
+    assert res["method"] == "route"
+    assert sorted(res["edges"]) == [0, 1, 2]                                # 実在の線に当たり、直線(5)には当たらない
+    assert not m.routable({"tie": 1, "name": "甲乙間連系線"})
+    assert not m.routable({"dc_tie": True, "name": "阿南紀北直流幹線(DC連系)"})
+    assert m.routable({"tie": 1, "name": "東北東京間連系線"})              # 実在の線の切れ目を代表している
+    assert m.routable({"kv": 500.0, "name": "幹線区間"})
+
+
+def test_routable_ties_match_the_live_ties_of_the_power_flow():
+    """経路に通してよい合成タイは、潮流で通電のまま残す合成タイ(KEEP_LIVE_TIES)と同じ集合。"""
+    pytest.importorskip("pandapower")
+    from src.powerflow.full_from_built import KEEP_LIVE_TIES
+    assert _mod().ROUTABLE_TIES == KEEP_LIVE_TIES
+
+
+def test_real_canon_honshi_circuits_stay_on_the_bridge_lines():
+    """正典で、本四連系線の 2 回線(出典 circuit_counts_manual.jsonl)は瀬戸大橋の実在の 500 kV 線に付き、
+    合成タイ「中国四国間連系線」は東岡山〜讃岐を結ぶ(端は 2026-11-08 に東山口から直した)。"""
+    d = json.loads((ROOT / "docs" / "data" / "built" / "all.json").read_text(encoding="utf-8"))
+    bridge = [e for e in d["edges"] if "福江町三丁目変電所線" in str(e.get("name")) and e.get("kv") == 500.0
+              and "本四連系線" in str(e.get("par_note"))]
+    # 本数は数えない: 中国と四国の取り出しの写しが重なっていた正典では 3 本、介入#58 で写しをまとめると 2 本
+    # (2026-11-09)。2 回線が橋の両側(児島の側 34.46・坂出の側 34.30)の区間に付いていることを見る
+    assert len(bridge) >= 2 and all(e["par"] == 2 for e in bridge)
+    lats = sorted(p[0] for e in bridge for p in (e["a"], e["b"]))
+    assert lats[0] < 34.31 and lats[-1] > 34.45
+    tie = [e for e in d["edges"] if e.get("tie") and e.get("name") == "中国四国間連系線"]
+    assert len(tie) == 1 and tie[0]["par"] == 1 and "par_src" not in tie[0]
+    ends = sorted([tie[0]["a"], tie[0]["b"]])
+    assert abs(ends[1][0] - 34.888) < 0.01 and abs(ends[1][1] - 134.025) < 0.01   # 東岡山変電所
+    assert abs(ends[0][0] - 34.165) < 0.01 and abs(ends[0][1] - 133.953) < 0.01   # 讃岐変電所
+
+
 def test_name_match_respects_region_and_kv():
     """同名の線でも地域・電圧階級が違えば当てない。"""
     m = _mod()

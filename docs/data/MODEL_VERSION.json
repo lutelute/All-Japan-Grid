@@ -1,99 +1,99 @@
 {
-  "model_version": "930c1df7",
+  "model_version": "133052ed",
   "git_dirty": false,
-  "generated_at": "2026-11-07T13:30:19+00:00",
+  "generated_at": "2026-11-08T16:36:51+00:00",
   "steps": {
     "build_structures": {
       "status": "ok",
-      "elapsed_s": 4.8
+      "elapsed_s": 8.4
     },
     "build_editor_data": {
       "status": "ok",
-      "elapsed_s": 12.2
+      "elapsed_s": 20.1
     },
     "apply_disclosure_v1": {
       "status": "ok",
-      "elapsed_s": 0.7
+      "elapsed_s": 1.1
     },
     "apply_disclosure_v2": {
       "status": "ok",
-      "elapsed_s": 1.0
+      "elapsed_s": 1.9
     },
     "route_disclosure": {
       "status": "ok",
-      "elapsed_s": 0.7
+      "elapsed_s": 1.2
     },
     "fragment_recovery": {
       "status": "ok",
-      "elapsed_s": 2.1
+      "elapsed_s": 3.9
     },
     "fragment_recovery_chains": {
       "status": "ok",
-      "elapsed_s": 19.2
+      "elapsed_s": 34.5
     },
     "fragment_recovery_third_wave": {
       "status": "ok",
-      "elapsed_s": 20.6
+      "elapsed_s": 37.5
     },
     "node_hygiene": {
       "status": "ok",
-      "elapsed_s": 4.6
+      "elapsed_s": 7.9
     },
     "mixed_voltage_circuits": {
       "status": "ok",
-      "elapsed_s": 0.7
+      "elapsed_s": 0.9
     },
     "apply_circuit_sources": {
       "status": "ok",
-      "elapsed_s": 4.7
+      "elapsed_s": 8.2
     },
     "satellite_connections": {
       "status": "ok",
-      "elapsed_s": 0.4
+      "elapsed_s": 0.5
     },
     "voltage_corrections": {
       "status": "ok",
-      "elapsed_s": 0.4
+      "elapsed_s": 0.5
     },
     "node_hygiene_final": {
       "status": "ok",
-      "elapsed_s": 2.8
+      "elapsed_s": 4.8
     },
     "substation_properties": {
       "status": "ok",
-      "elapsed_s": 1.5
+      "elapsed_s": 2.1
     },
     "subsld_pages": {
       "status": "ok",
-      "elapsed_s": 1.9
+      "elapsed_s": 2.7
     },
     "subsld_ways": {
       "status": "ok",
-      "elapsed_s": 1.2
+      "elapsed_s": 1.8
     },
     "loops": {
       "status": "ok",
-      "elapsed_s": 0.3
+      "elapsed_s": 0.5
     },
     "export_map_tiers": {
       "status": "ok",
-      "elapsed_s": 6.6
+      "elapsed_s": 9.9
     },
     "run_full_powerflow": {
       "status": "ok",
-      "elapsed_s": 131.6
+      "elapsed_s": 217.2
     },
     "gen_sld": {
       "status": "ok",
-      "elapsed_s": 0.5
+      "elapsed_s": 0.8
     },
     "gen_national_overview": {
       "status": "ok",
-      "elapsed_s": 1.0
+      "elapsed_s": 1.5
     },
     "n1_screening": {
       "status": "ok",
-      "elapsed_s": 179.9
+      "elapsed_s": 315.1
     },
     "export_n1_pages": {
       "status": "ok",
@@ -101,27 +101,27 @@
     },
     "export_matpower_canonical": {
       "status": "ok",
-      "elapsed_s": 128.3
+      "elapsed_s": 256.6
     },
     "export_cim": {
       "status": "ok",
-      "elapsed_s": 4.6
+      "elapsed_s": 11.1
     },
     "export_cim_canonical": {
       "status": "ok",
-      "elapsed_s": 133.6
+      "elapsed_s": 287.5
     },
     "build_static_site": {
       "status": "ok",
-      "elapsed_s": 1.6
+      "elapsed_s": 3.1
     },
     "apply_capacity_sources": {
       "status": "ok",
-      "elapsed_s": 0.3
+      "elapsed_s": 0.6
     },
     "build_pages_editor": {
       "status": "ok",
-      "elapsed_s": 0.1
+      "elapsed_s": 0.2
     }
   },
   "note": "全出力を単一モデルから一括再生成した版(全面改修Phase4)。git_dirty=true は未コミット変更がある状態での再生成(=コミット推奨)。",
