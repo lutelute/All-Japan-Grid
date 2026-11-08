@@ -236,8 +236,11 @@ interconnections:
     type: "AC"
     description: "AC interconnection between Chugoku and Shikoku via Seto-Ohashi Bridge"
     route:
-      from_substation_ja: "東山口変電所"
-      from_substation_en: "Higashi-Yamaguchi(Mizushima side) Substation"
+      # 2026-11-08 訂正: 08-19 の正本化(介入#33)で「東山口変電所」と書き違えていた(その前は水島変電所)。
+      # 本四連系線は東岡山変電所(岡山)〜讃岐変電所(香川)。出典 OCCTO 第 104 回 広域系統整備委員会 資料 2
+      # 「本四連系線及び阿南紀北直流幹線の更新について」(2026-09-28)。config/occto_interconnections.yaml と同じ
+      from_substation_ja: "東岡山変電所"
+      from_substation_en: "Higashi-Okayama Substation"
       to_substation_ja: "讃岐変電所"
       to_substation_en: "Sanuki Substation"
     provenance: "occto:本四連系線:順方向/逆方向 (max 1200/1450, 中央値 1200/1200)"
