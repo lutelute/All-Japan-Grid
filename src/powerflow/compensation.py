@@ -51,6 +51,7 @@ def add_provisional_infeed(net, min_load_mw=100.0, max_dist_km=40.0):
     では閾値100MW未満で不検出→大阪77網から2段直列変圧器の逆潮給電になって
     いた(vm 0.73、docs/reports/west_ac_wave7_2026-08-30.md)。
     接続: クラスタ最大負荷バス → 地理的最近傍の≥275kVバスへ変圧器1台
+    (2026-11-07: 最大負荷が同点のときは、最近傍の上位バスまでが短いバス・名前の順。バスの番号の順に依らない)
     (sn=負荷×1.5・vk12%=階級典型値)。**実在の経路が判明したら置換される暫定**。
     max_dist_km(2026-08-30追加): 最近傍がこれより遠い場合は縫合せず台帳のみ
     (capped=True)。動機=誤帰属ノード同士の遠距離縫合の検出面化(神保原104MWが
@@ -117,6 +118,32 @@ def add_provisional_infeed(net, min_load_mw=100.0, max_dist_km=40.0):
     load_at = defaultdict(float)
     for _, r in net.load[net.load.in_service].iterrows():
         load_at[int(r.bus)] += float(r.p_mw)
+    ups = [(b, _geo(b)) for b in net.bus.index
+           if net.bus.at[b, "in_service"] and net.bus.at[b, "vn_kv"] >= 275]
+    ups = [(b, gg) for b, gg in ups if gg]
+
+    def _bname(b):
+        return str(net.bus.at[b, "name"])
+
+    def _nearest_up(ga):
+        """座標に一番近い上位のバス。同じ距離なら名前の順(バスの番号の順に依らない、2026-11-07)。"""
+        return min(ups, key=lambda bg: ((bg[1][0]-ga[0])**2 + (bg[1][1]-ga[1])**2, _bname(bg[0]), bg[1]))
+
+    def _anchor(comp):
+        """塊のつなぐ点: 需要の最も大きいバス。同点なら、一番近い上位のバスまでが短い方(仮の線を短く)、
+        それも同じなら名前の順。2026-11-07 まで同点はバスの番号の順で決まり、正典の点の数が変わるだけで
+        つなぐ点が入れ替わった(天草: 志岐変電所と浄南町変電所)。"""
+        top = max(load_at.get(b, 0.0) for b in comp)
+        cand = [b for b in comp if load_at.get(b, 0.0) >= top - 1e-6]
+        def key(b):
+            ga = _geo(b)
+            if ga and ups:
+                ug = _nearest_up(ga)[1]
+                d = (ug[0]-ga[0])**2 + (ug[1]-ga[1])**2
+            else:
+                d = float("inf")
+            return (d, _bname(b), ga or ())
+        return min(cand, key=key)
     clusters = []
     for comp in _nx.connected_components(g):
         kv = float(net.bus.at[next(iter(comp)), "vn_kv"])
@@ -127,7 +154,7 @@ def add_provisional_infeed(net, min_load_mw=100.0, max_dist_km=40.0):
         load = own + down
         if load < min_load_mw:
             continue
-        big = max(comp, key=lambda b: load_at.get(b, 0.0))
+        big = _anchor(comp)
         names = sorted({str(net.bus.at[b, "name"])[:14] for b in comp
                         if load_at.get(b, 0) > 0})[:4]
         if not names:
@@ -137,16 +164,12 @@ def add_provisional_infeed(net, min_load_mw=100.0, max_dist_km=40.0):
                              load_mw=round(load, 1),
                              downstream_mw=round(down, 1),
                              anchor_bus=int(big), names=names))
-    ups = [(b, _geo(b)) for b in net.bus.index
-           if net.bus.at[b, "in_service"] and net.bus.at[b, "vn_kv"] >= 275]
-    ups = [(b, gg) for b, gg in ups if gg]
     ledger = []
-    for c in sorted(clusters, key=lambda c: -c["load_mw"]):
+    for c in sorted(clusters, key=lambda c: (-c["load_mw"], c["names"], c["kv"])):
         ga = _geo(c["anchor_bus"])
         if not ga or not ups:
             continue
-        ub, ug = min(ups, key=lambda bg: (bg[1][0]-ga[0])**2 +
-                     (bg[1][1]-ga[1])**2)
+        ub, ug = _nearest_up(ga)
         dist_km = _math.hypot((ug[0]-ga[0])*91, (ug[1]-ga[1])*111)
         if dist_km > max_dist_km:
             ledger.append(dict(
