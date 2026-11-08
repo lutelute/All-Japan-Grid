@@ -1,9 +1,9 @@
 {
   "_meta": {
     "source": "docs/data/built/all.json",
-    "n_nodes": 15628,
-    "n_edges": 17368,
-    "generated": "2026-11-09 01:39:24",
+    "n_nodes": 15526,
+    "n_edges": 17291,
+    "generated": "2026-11-09 02:50:55",
     "scale": "full (no voltage-class reduction)"
   },
   "islands": {
@@ -86,13 +86,13 @@
       "n_junction_cuts": 0,
       "junction_cuts_ledger": [],
       "region_reattribution": {
-        "n_nodes": 15628,
+        "n_nodes": 15526,
         "n_changed": 0,
         "changes": {},
         "skipped_freq": {
-          "tokyo->chubu": 47,
-          "chubu->tohoku": 23,
-          "chubu->tokyo": 17,
+          "tokyo->chubu": 46,
+          "chubu->tohoku": 22,
+          "chubu->tokyo": 15,
           "hokuriku->tohoku": 15
         },
         "freq_fixed": {},
@@ -158,12 +158,12 @@
           "spread_mw": 114.5
         }
       },
-      "solve_seconds": 8.3
+      "solve_seconds": 6.5
     },
     "east": {
       "frequency_hz": 50,
-      "n_bus": 6213,
-      "n_line": 6419,
+      "n_bus": 6204,
+      "n_line": 6406,
       "n_trafo": 662,
       "n_trafo_nameplate": 135,
       "observed_trafos": [
@@ -201,13 +201,13 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@pub",
-              "p_hv_mw": 466.5,
-              "loading_pct": 16.4
+              "p_hv_mw": 469.1,
+              "loading_pct": 16.5
             },
             {
               "name": "trafo_500/154kV@pairmed@pub",
-              "p_hv_mw": 973.0,
-              "loading_pct": 43.2
+              "p_hv_mw": 970.5,
+              "loading_pct": 43.1
             }
           ]
         },
@@ -260,22 +260,22 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@pub",
-              "p_hv_mw": 517.6,
-              "loading_pct": 18.2
+              "p_hv_mw": 516.6,
+              "loading_pct": 18.1
             },
             {
               "name": "trafo_500/154kV@pairmed@pub",
-              "p_hv_mw": 1181.5,
-              "loading_pct": 52.4
+              "p_hv_mw": 1170.0,
+              "loading_pct": 51.9
             },
             {
               "name": "trafo_275/154kV@pairmed@pub",
-              "p_hv_mw": 309.5,
-              "loading_pct": 34.3
+              "p_hv_mw": 305.2,
+              "loading_pct": 33.9
             },
             {
               "name": "trafo_154/66kV@pairmed@pub",
-              "p_hv_mw": 148.3,
+              "p_hv_mw": 148.5,
               "loading_pct": 39.1
             }
           ]
@@ -314,12 +314,12 @@
           "result": [
             {
               "name": "trafo_275/66kV@pairmed@pub",
-              "p_hv_mw": 427.4,
-              "loading_pct": 47.6
+              "p_hv_mw": 428.3,
+              "loading_pct": 47.7
             },
             {
               "name": "trafo_275/154kV",
-              "p_hv_mw": 43.1,
+              "p_hv_mw": 43.2,
               "loading_pct": 16.2
             }
           ]
@@ -358,13 +358,13 @@
           "result": [
             {
               "name": "trafo_275/77kV@pairmed@osm",
-              "p_hv_mw": 16.4,
+              "p_hv_mw": 16.6,
               "loading_pct": 2.9
             },
             {
               "name": "trafo_275/154kV",
-              "p_hv_mw": 114.4,
-              "loading_pct": 42.9
+              "p_hv_mw": 111.4,
+              "loading_pct": 41.8
             }
           ]
         },
@@ -412,8 +412,8 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@pub",
-              "p_hv_mw": 759.0,
-              "loading_pct": 26.6
+              "p_hv_mw": 759.5,
+              "loading_pct": 26.7
             },
             {
               "name": "trafo_275/154kV@pairmed@pub",
@@ -510,17 +510,17 @@
           "result": [
             {
               "name": "trafo_275/154kV@pairmed@pub",
-              "p_hv_mw": 98.4,
+              "p_hv_mw": 98.5,
               "loading_pct": 11.0
             },
             {
               "name": "trafo_275/66kV@pairmed@pub",
-              "p_hv_mw": 425.6,
+              "p_hv_mw": 426.1,
               "loading_pct": 47.6
             },
             {
               "name": "trafo_154/66kV@pairmed@pub",
-              "p_hv_mw": 138.8,
+              "p_hv_mw": 138.9,
               "loading_pct": 36.7
             }
           ]
@@ -569,8 +569,8 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@pub",
-              "p_hv_mw": 1035.0,
-              "loading_pct": 36.3
+              "p_hv_mw": 1038.0,
+              "loading_pct": 36.4
             },
             {
               "name": "trafo_275/66kV@pairmed@pub",
@@ -579,7 +579,7 @@
             },
             {
               "name": "trafo_275/154kV",
-              "p_hv_mw": 80.4,
+              "p_hv_mw": 80.5,
               "loading_pct": 30.2
             }
           ]
@@ -618,12 +618,12 @@
           "result": [
             {
               "name": "trafo_275/154kV@pairmed@osm",
-              "p_hv_mw": 101.1,
+              "p_hv_mw": 100.6,
               "loading_pct": 11.2
             },
             {
               "name": "trafo_275/66kV@pairmed@osm",
-              "p_hv_mw": 305.3,
+              "p_hv_mw": 306.1,
               "loading_pct": 34.0
             }
           ]
@@ -662,12 +662,12 @@
           "result": [
             {
               "name": "trafo_275/66kV@pairmed@pub",
-              "p_hv_mw": 366.6,
-              "loading_pct": 40.7
+              "p_hv_mw": 367.4,
+              "loading_pct": 40.8
             },
             {
               "name": "trafo_275/154kV",
-              "p_hv_mw": 31.7,
+              "p_hv_mw": 31.8,
               "loading_pct": 11.9
             }
           ]
@@ -716,18 +716,18 @@
           "result": [
             {
               "name": "trafo_275/66kV@nameplate@osm",
-              "p_hv_mw": 109.7,
+              "p_hv_mw": 109.8,
               "loading_pct": 73.2
             },
             {
               "name": "trafo_500/275kV",
-              "p_hv_mw": 146.3,
+              "p_hv_mw": 146.4,
               "loading_pct": 15.4
             },
             {
               "name": "trafo_275/154kV",
-              "p_hv_mw": 97.6,
-              "loading_pct": 36.6
+              "p_hv_mw": 97.7,
+              "loading_pct": 36.7
             }
           ]
         },
@@ -765,13 +765,13 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@osm",
-              "p_hv_mw": 343.1,
+              "p_hv_mw": 343.8,
               "loading_pct": 12.1
             },
             {
               "name": "trafo_500/154kV@pairmed@osm",
-              "p_hv_mw": 814.4,
-              "loading_pct": 36.2
+              "p_hv_mw": 815.6,
+              "loading_pct": 36.3
             }
           ]
         },
@@ -814,17 +814,17 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@osm",
-              "p_hv_mw": -528.1,
+              "p_hv_mw": -527.9,
               "loading_pct": 18.7
             },
             {
               "name": "trafo_500/154kV@pairmed@osm",
-              "p_hv_mw": 458.1,
+              "p_hv_mw": 458.5,
               "loading_pct": 20.4
             },
             {
               "name": "trafo_275/154kV@pairmed@osm",
-              "p_hv_mw": 350.0,
+              "p_hv_mw": 350.1,
               "loading_pct": 39.0
             }
           ]
@@ -863,20 +863,20 @@
           "result": [
             {
               "name": "trafo_275/154kV@pairmed@pub",
-              "p_hv_mw": 218.7,
+              "p_hv_mw": 218.9,
               "loading_pct": 24.3
             },
             {
               "name": "trafo_275/66kV@pairmed@pub",
-              "p_hv_mw": 350.4,
-              "loading_pct": 39.0
+              "p_hv_mw": 351.1,
+              "loading_pct": 39.1
             }
           ]
         }
       ],
       "n_pair_capacity": 127,
-      "n_edge_skipped": 687,
-      "n_dedup_merged": 121,
+      "n_edge_skipped": 682,
+      "n_dedup_merged": 117,
       "n_edge_dup_removed": 3,
       "n_site_trafo": 0,
       "n_deenergized": 7,
@@ -889,7 +889,7 @@
         {
           "site": "tokyo junction 36.2906:138.4977:0",
           "bus": 3055,
-          "new_bus": 6190,
+          "new_bus": 6181,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -904,8 +904,8 @@
         },
         {
           "site": "中野台二丁目変電所",
-          "bus": 4158,
-          "new_bus": 6191,
+          "bus": 4150,
+          "new_bus": 6182,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -920,8 +920,8 @@
         },
         {
           "site": "墨東変電所",
-          "bus": 4493,
-          "new_bus": 6192,
+          "bus": 4485,
+          "new_bus": 6183,
           "hv_kv": 275.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -936,8 +936,8 @@
         },
         {
           "site": "天王洲変電所",
-          "bus": 4503,
-          "new_bus": 6193,
+          "bus": 4495,
+          "new_bus": 6184,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 2,
@@ -953,8 +953,8 @@
         },
         {
           "site": "田端変電所",
-          "bus": 4542,
-          "new_bus": 6194,
+          "bus": 4534,
+          "new_bus": 6185,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -969,8 +969,8 @@
         },
         {
           "site": "永代橋変電所",
-          "bus": 4649,
-          "new_bus": 6195,
+          "bus": 4641,
+          "new_bus": 6186,
           "hv_kv": 275.0,
           "lv_kv": 66.0,
           "n_lines": 2,
@@ -986,8 +986,8 @@
         },
         {
           "site": "東川崎変電所",
-          "bus": 4685,
-          "new_bus": 6196,
+          "bus": 4677,
+          "new_bus": 6187,
           "hv_kv": 275.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1002,8 +1002,8 @@
         },
         {
           "site": "新宿変電所",
-          "bus": 4774,
-          "new_bus": 6197,
+          "bus": 4766,
+          "new_bus": 6188,
           "hv_kv": 275.0,
           "lv_kv": 66.0,
           "n_lines": 2,
@@ -1019,8 +1019,8 @@
         },
         {
           "site": "東新宿変電所",
-          "bus": 4776,
-          "new_bus": 6198,
+          "bus": 4768,
+          "new_bus": 6189,
           "hv_kv": 275.0,
           "lv_kv": 66.0,
           "n_lines": 2,
@@ -1036,8 +1036,8 @@
         },
         {
           "site": "豊島変電所",
-          "bus": 4777,
-          "new_bus": 6199,
+          "bus": 4769,
+          "new_bus": 6190,
           "hv_kv": 275.0,
           "lv_kv": 66.0,
           "n_lines": 4,
@@ -1055,8 +1055,8 @@
         },
         {
           "site": "常盤台変電所",
-          "bus": 4946,
-          "new_bus": 6200,
+          "bus": 4938,
+          "new_bus": 6191,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 2,
@@ -1072,8 +1072,8 @@
         },
         {
           "site": "南大田変電所",
-          "bus": 4965,
-          "new_bus": 6201,
+          "bus": 4957,
+          "new_bus": 6192,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1088,8 +1088,8 @@
         },
         {
           "site": "新豊洲変電所",
-          "bus": 5002,
-          "new_bus": 6202,
+          "bus": 4994,
+          "new_bus": 6193,
           "hv_kv": 500.0,
           "lv_kv": 275.0,
           "n_lines": 1,
@@ -1104,8 +1104,8 @@
         },
         {
           "site": "水道橋変電所",
-          "bus": 5008,
-          "new_bus": 6203,
+          "bus": 5000,
+          "new_bus": 6194,
           "hv_kv": 275.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1120,8 +1120,8 @@
         },
         {
           "site": "大正寺町変電所 154kV",
-          "bus": 5220,
-          "new_bus": 6204,
+          "bus": 5212,
+          "new_bus": 6195,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1136,8 +1136,8 @@
         },
         {
           "site": "浅貝変電所 500kV",
-          "bus": 5433,
-          "new_bus": 6205,
+          "bus": 5425,
+          "new_bus": 6196,
           "hv_kv": 500.0,
           "lv_kv": 154.0,
           "n_lines": 1,
@@ -1152,8 +1152,8 @@
         },
         {
           "site": "上越変電所",
-          "bus": 5889,
-          "new_bus": 6206,
+          "bus": 5881,
+          "new_bus": 6197,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1168,8 +1168,8 @@
         },
         {
           "site": "chubu junction 35.2333:139.114:0",
-          "bus": 5937,
-          "new_bus": 6207,
+          "bus": 5930,
+          "new_bus": 6198,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1184,8 +1184,8 @@
         },
         {
           "site": "chubu junction 36.5247:138.6203:77",
-          "bus": 5976,
-          "new_bus": 6208,
+          "bus": 5971,
+          "new_bus": 6199,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1200,8 +1200,8 @@
         },
         {
           "site": "浅間上町変電所",
-          "bus": 6123,
-          "new_bus": 6209,
+          "bus": 6115,
+          "new_bus": 6200,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1216,8 +1216,8 @@
         },
         {
           "site": "北巨摩変電所",
-          "bus": 6180,
-          "new_bus": 6210,
+          "bus": 6171,
+          "new_bus": 6201,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1232,8 +1232,8 @@
         },
         {
           "site": "大井ふ頭変電所",
-          "bus": 6183,
-          "new_bus": 6211,
+          "bus": 6174,
+          "new_bus": 6202,
           "hv_kv": 275.0,
           "lv_kv": 154.0,
           "n_lines": 1,
@@ -1248,8 +1248,8 @@
         },
         {
           "site": "横浜大黒変電所",
-          "bus": 6184,
-          "new_bus": 6212,
+          "bus": 6175,
+          "new_bus": 6203,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1285,7 +1285,7 @@
           "mixed": false
         },
         {
-          "bus": 6099,
+          "bus": 6092,
           "name": "山中湖村変電所",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -1295,7 +1295,7 @@
           "mixed": false
         },
         {
-          "bus": 6127,
+          "bus": 6119,
           "name": "三屋変電所",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -1305,7 +1305,7 @@
           "mixed": false
         },
         {
-          "bus": 6158,
+          "bus": 6150,
           "name": "児玉町蛭川変電所",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -1345,7 +1345,7 @@
           "mixed": false
         },
         {
-          "bus": 2318,
+          "bus": 2319,
           "name": "tokyo junction 35.4265:138.403:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -1355,7 +1355,7 @@
           "mixed": false
         },
         {
-          "bus": 2322,
+          "bus": 2323,
           "name": "tokyo junction 35.4:138.3273:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -1446,7 +1446,7 @@
           "mixed": true
         },
         {
-          "bus": 3202,
+          "bus": 3201,
           "name": "tokyo junction 35.9073:140.5705:0",
           "from_kv": 66.0,
           "to_kv": 275.0,
@@ -1456,7 +1456,7 @@
           "mixed": false
         },
         {
-          "bus": 3612,
+          "bus": 3611,
           "name": "tokyo junction 35.085:137.839:0",
           "from_kv": 66.0,
           "to_kv": 275.0,
@@ -1466,7 +1466,7 @@
           "mixed": false
         },
         {
-          "bus": 3630,
+          "bus": 3629,
           "name": "tokyo junction 36.433:137.8443:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -1476,7 +1476,7 @@
           "mixed": false
         },
         {
-          "bus": 5877,
+          "bus": 5869,
           "name": "tokyo_sub_1796",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -1486,7 +1486,7 @@
           "mixed": false
         },
         {
-          "bus": 5937,
+          "bus": 5930,
           "name": "chubu junction 35.2333:139.114:0",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -1572,13 +1572,13 @@
         }
       ],
       "region_reattribution": {
-        "n_nodes": 15628,
+        "n_nodes": 15526,
         "n_changed": 0,
         "changes": {},
         "skipped_freq": {
-          "tokyo->chubu": 47,
-          "chubu->tohoku": 23,
-          "chubu->tokyo": 17,
+          "tokyo->chubu": 46,
+          "chubu->tohoku": 22,
+          "chubu->tokyo": 15,
           "hokuriku->tohoku": 15
         },
         "freq_fixed": {},
@@ -1621,8 +1621,8 @@
       "provisional_infeed": [
         {
           "kv": 77.0,
-          "load_mw": 172.1,
-          "downstream_mw": 25.3,
+          "load_mw": 147.6,
+          "downstream_mw": 0.0,
           "n_bus": 12,
           "cluster_names": [
             "別堀変電所",
@@ -1640,7 +1640,7 @@
         {
           "site": "tokyo junction 36.2906:138.4977:0",
           "bus": 3055,
-          "new_bus": 6190,
+          "new_bus": 6181,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1655,8 +1655,8 @@
         },
         {
           "site": "中野台二丁目変電所",
-          "bus": 4158,
-          "new_bus": 6191,
+          "bus": 4150,
+          "new_bus": 6182,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1671,8 +1671,8 @@
         },
         {
           "site": "墨東変電所",
-          "bus": 4493,
-          "new_bus": 6192,
+          "bus": 4485,
+          "new_bus": 6183,
           "hv_kv": 275.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1687,8 +1687,8 @@
         },
         {
           "site": "天王洲変電所",
-          "bus": 4503,
-          "new_bus": 6193,
+          "bus": 4495,
+          "new_bus": 6184,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 2,
@@ -1704,8 +1704,8 @@
         },
         {
           "site": "田端変電所",
-          "bus": 4542,
-          "new_bus": 6194,
+          "bus": 4534,
+          "new_bus": 6185,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1720,8 +1720,8 @@
         },
         {
           "site": "永代橋変電所",
-          "bus": 4649,
-          "new_bus": 6195,
+          "bus": 4641,
+          "new_bus": 6186,
           "hv_kv": 275.0,
           "lv_kv": 66.0,
           "n_lines": 2,
@@ -1737,8 +1737,8 @@
         },
         {
           "site": "東川崎変電所",
-          "bus": 4685,
-          "new_bus": 6196,
+          "bus": 4677,
+          "new_bus": 6187,
           "hv_kv": 275.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1753,8 +1753,8 @@
         },
         {
           "site": "新宿変電所",
-          "bus": 4774,
-          "new_bus": 6197,
+          "bus": 4766,
+          "new_bus": 6188,
           "hv_kv": 275.0,
           "lv_kv": 66.0,
           "n_lines": 2,
@@ -1770,8 +1770,8 @@
         },
         {
           "site": "東新宿変電所",
-          "bus": 4776,
-          "new_bus": 6198,
+          "bus": 4768,
+          "new_bus": 6189,
           "hv_kv": 275.0,
           "lv_kv": 66.0,
           "n_lines": 2,
@@ -1787,8 +1787,8 @@
         },
         {
           "site": "豊島変電所",
-          "bus": 4777,
-          "new_bus": 6199,
+          "bus": 4769,
+          "new_bus": 6190,
           "hv_kv": 275.0,
           "lv_kv": 66.0,
           "n_lines": 4,
@@ -1806,8 +1806,8 @@
         },
         {
           "site": "常盤台変電所",
-          "bus": 4946,
-          "new_bus": 6200,
+          "bus": 4938,
+          "new_bus": 6191,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 2,
@@ -1823,8 +1823,8 @@
         },
         {
           "site": "南大田変電所",
-          "bus": 4965,
-          "new_bus": 6201,
+          "bus": 4957,
+          "new_bus": 6192,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1839,8 +1839,8 @@
         },
         {
           "site": "新豊洲変電所",
-          "bus": 5002,
-          "new_bus": 6202,
+          "bus": 4994,
+          "new_bus": 6193,
           "hv_kv": 500.0,
           "lv_kv": 275.0,
           "n_lines": 1,
@@ -1855,8 +1855,8 @@
         },
         {
           "site": "水道橋変電所",
-          "bus": 5008,
-          "new_bus": 6203,
+          "bus": 5000,
+          "new_bus": 6194,
           "hv_kv": 275.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1871,8 +1871,8 @@
         },
         {
           "site": "大正寺町変電所 154kV",
-          "bus": 5220,
-          "new_bus": 6204,
+          "bus": 5212,
+          "new_bus": 6195,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1887,8 +1887,8 @@
         },
         {
           "site": "浅貝変電所 500kV",
-          "bus": 5433,
-          "new_bus": 6205,
+          "bus": 5425,
+          "new_bus": 6196,
           "hv_kv": 500.0,
           "lv_kv": 154.0,
           "n_lines": 1,
@@ -1903,8 +1903,8 @@
         },
         {
           "site": "上越変電所",
-          "bus": 5889,
-          "new_bus": 6206,
+          "bus": 5881,
+          "new_bus": 6197,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1919,8 +1919,8 @@
         },
         {
           "site": "chubu junction 35.2333:139.114:0",
-          "bus": 5937,
-          "new_bus": 6207,
+          "bus": 5930,
+          "new_bus": 6198,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1935,8 +1935,8 @@
         },
         {
           "site": "chubu junction 36.5247:138.6203:77",
-          "bus": 5976,
-          "new_bus": 6208,
+          "bus": 5971,
+          "new_bus": 6199,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1951,8 +1951,8 @@
         },
         {
           "site": "浅間上町変電所",
-          "bus": 6123,
-          "new_bus": 6209,
+          "bus": 6115,
+          "new_bus": 6200,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1967,8 +1967,8 @@
         },
         {
           "site": "北巨摩変電所",
-          "bus": 6180,
-          "new_bus": 6210,
+          "bus": 6171,
+          "new_bus": 6201,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -1983,8 +1983,8 @@
         },
         {
           "site": "大井ふ頭変電所",
-          "bus": 6183,
-          "new_bus": 6211,
+          "bus": 6174,
+          "new_bus": 6202,
           "hv_kv": 275.0,
           "lv_kv": 154.0,
           "n_lines": 1,
@@ -1999,8 +1999,8 @@
         },
         {
           "site": "横浜大黒変電所",
-          "bus": 6184,
-          "new_bus": 6212,
+          "bus": 6175,
+          "new_bus": 6203,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -2016,22 +2016,22 @@
       ],
       "lv_aggregate": null,
       "total_load_mw": 55250.0,
-      "n_components": 232,
-      "n_slack": 232,
-      "n_synthetic_slack": 220,
+      "n_components": 234,
+      "n_slack": 234,
+      "n_synthetic_slack": 222,
       "ac_converged": true,
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.8560076814,
+      "ac_vm_min": 0.8560057109,
       "ac_vm_max": 1.022906943,
-      "ac_max_loading_pct": 894.5096922,
-      "dc_max_loading_pct": 788.3281718,
-      "ac_total_loss_mw": 1331.63027,
+      "ac_max_loading_pct": 894.5293623,
+      "dc_max_loading_pct": 788.3305887,
+      "ac_total_loss_mw": 1331.574877,
       "slack_spread": {
         "dc": {
           "applied": true,
-          "slack": "slack_5669",
+          "slack": "slack_5661",
           "n_gen": 8183,
           "slack_before_mw": 0.0,
           "slack_after_mw": 0.0,
@@ -2039,21 +2039,21 @@
         },
         "ac": {
           "applied": true,
-          "slack": "slack_5669",
+          "slack": "slack_5661",
           "n_gen": 8183,
-          "slack_before_mw": 1675.1,
+          "slack_before_mw": 1675.5,
           "slack_after_mw": 4.9,
-          "spread_mw": 1670.2
+          "spread_mw": 1670.5
         }
       },
-      "solve_seconds": 79.7
+      "solve_seconds": 58.8
     },
     "west": {
       "frequency_hz": 60,
-      "n_bus": 7954,
-      "n_line": 8091,
-      "n_trafo": 974,
-      "n_trafo_nameplate": 159,
+      "n_bus": 7915,
+      "n_line": 8035,
+      "n_trafo": 968,
+      "n_trafo_nameplate": 158,
       "observed_trafos": [
         {
           "site": "西濃変電所 275kV",
@@ -2089,8 +2089,8 @@
           "result": [
             {
               "name": "trafo_275/154kV@pairmed@osm",
-              "p_hv_mw": 212.6,
-              "loading_pct": 23.6
+              "p_hv_mw": 213.7,
+              "loading_pct": 23.7
             },
             {
               "name": "trafo_275/77kV@pairmed@osm",
@@ -2133,13 +2133,13 @@
           "result": [
             {
               "name": "trafo_275/154kV@pairmed@pub",
-              "p_hv_mw": 414.9,
+              "p_hv_mw": 415.2,
               "loading_pct": 46.1
             },
             {
               "name": "trafo_275/77kV@pairmed@pub",
-              "p_hv_mw": 14.5,
-              "loading_pct": 2.7
+              "p_hv_mw": 13.8,
+              "loading_pct": 2.6
             }
           ]
         },
@@ -2177,12 +2177,12 @@
           "result": [
             {
               "name": "trafo_275/77kV@pairmed@pub",
-              "p_hv_mw": 237.5,
-              "loading_pct": 41.7
+              "p_hv_mw": 242.7,
+              "loading_pct": 42.6
             },
             {
               "name": "trafo_275/154kV",
-              "p_hv_mw": 89.0,
+              "p_hv_mw": 89.1,
               "loading_pct": 33.4
             }
           ]
@@ -2231,17 +2231,17 @@
           "result": [
             {
               "name": "trafo_275/154kV@pairmed@osm",
-              "p_hv_mw": 16.8,
+              "p_hv_mw": 17.3,
               "loading_pct": 1.9
             },
             {
               "name": "trafo_275/77kV@pairmed@osm",
-              "p_hv_mw": 48.8,
-              "loading_pct": 8.6
+              "p_hv_mw": 50.1,
+              "loading_pct": 8.8
             },
             {
               "name": "trafo_500/275kV",
-              "p_hv_mw": 230.3,
+              "p_hv_mw": 230.4,
               "loading_pct": 24.2
             }
           ]
@@ -2280,13 +2280,13 @@
           "result": [
             {
               "name": "trafo_275/154kV@pairmed@pub",
-              "p_hv_mw": 23.1,
-              "loading_pct": 2.6
+              "p_hv_mw": 27.8,
+              "loading_pct": 3.1
             },
             {
               "name": "trafo_275/77kV@pairmed@pub",
-              "p_hv_mw": 254.0,
-              "loading_pct": 44.6
+              "p_hv_mw": 248.4,
+              "loading_pct": 43.6
             }
           ]
         },
@@ -2334,12 +2334,12 @@
           "result": [
             {
               "name": "trafo_275/154kV@pairmed@pub",
-              "p_hv_mw": 355.1,
+              "p_hv_mw": 355.0,
               "loading_pct": 39.5
             },
             {
               "name": "trafo_275/77kV@pairmed@pub",
-              "p_hv_mw": 466.7,
+              "p_hv_mw": 466.6,
               "loading_pct": 82.4
             },
             {
@@ -2383,12 +2383,12 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@osm",
-              "p_hv_mw": 113.8,
+              "p_hv_mw": 113.9,
               "loading_pct": 4.0
             },
             {
               "name": "trafo_500/154kV@pairmed@osm",
-              "p_hv_mw": 489.1,
+              "p_hv_mw": 489.2,
               "loading_pct": 21.7
             }
           ]
@@ -2432,7 +2432,7 @@
             },
             {
               "name": "trafo_275/77kV@pairmed@osm",
-              "p_hv_mw": 247.2,
+              "p_hv_mw": 247.0,
               "loading_pct": 43.4
             }
           ]
@@ -2525,17 +2525,17 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@pub",
-              "p_hv_mw": 689.9,
+              "p_hv_mw": 690.5,
               "loading_pct": 24.2
             },
             {
               "name": "trafo_500/154kV@pairmed@pub",
-              "p_hv_mw": 1066.9,
+              "p_hv_mw": 1066.0,
               "loading_pct": 47.4
             },
             {
               "name": "trafo_275/77kV@pairmed@pub",
-              "p_hv_mw": 319.2,
+              "p_hv_mw": 319.1,
               "loading_pct": 56.1
             }
           ]
@@ -2574,13 +2574,13 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@osm",
-              "p_hv_mw": 739.8,
-              "loading_pct": 25.9
+              "p_hv_mw": 741.6,
+              "loading_pct": 26.0
             },
             {
               "name": "trafo_500/154kV@pairmed@osm",
-              "p_hv_mw": 944.3,
-              "loading_pct": 41.9
+              "p_hv_mw": 940.2,
+              "loading_pct": 41.7
             }
           ]
         },
@@ -2628,7 +2628,7 @@
           "result": [
             {
               "name": "trafo_500/275kV@pairmed@osm",
-              "p_hv_mw": 429.9,
+              "p_hv_mw": 430.0,
               "loading_pct": 15.1
             },
             {
@@ -2688,61 +2688,17 @@
             {
               "name": "trafo_275/154kV@pairmed@osm",
               "p_hv_mw": 207.4,
-              "loading_pct": 23.2
+              "loading_pct": 23.1
             },
             {
               "name": "trafo_275/77kV@pairmed@osm",
-              "p_hv_mw": 388.7,
+              "p_hv_mw": 388.5,
               "loading_pct": 68.3
             },
             {
               "name": "trafo_500/275kV",
-              "p_hv_mw": 82.6,
+              "p_hv_mw": 82.7,
               "loading_pct": 8.7
-            }
-          ]
-        },
-        {
-          "site": "西谷変電所 220kV",
-          "kv": [
-            220.0,
-            110.0,
-            66.0
-          ],
-          "by": "osm",
-          "applied": true,
-          "ladder": [
-            [
-              220.0,
-              110.0
-            ],
-            [
-              110.0,
-              66.0
-            ]
-          ],
-          "linked": [
-            [
-              220.0,
-              110.0,
-              "osm"
-            ],
-            [
-              220.0,
-              66.0,
-              "osm"
-            ]
-          ],
-          "result": [
-            {
-              "name": "trafo_220/110kV@pairmed@osm",
-              "p_hv_mw": 112.4,
-              "loading_pct": 23.7
-            },
-            {
-              "name": "trafo_220/66kV@pairmed@osm",
-              "p_hv_mw": 182.9,
-              "loading_pct": 38.6
             }
           ]
         },
@@ -2790,13 +2746,13 @@
           "result": [
             {
               "name": "trafo_500/220kV@pairmed@osm",
-              "p_hv_mw": 458.2,
-              "loading_pct": 24.1
+              "p_hv_mw": 454.5,
+              "loading_pct": 23.9
             },
             {
               "name": "trafo_500/110kV@osm",
-              "p_hv_mw": 299.7,
-              "loading_pct": 175.3
+              "p_hv_mw": 299.1,
+              "loading_pct": 174.9
             },
             {
               "name": "trafo_110/66kV",
@@ -3308,11 +3264,55 @@
               "loading_pct": 14.3
             }
           ]
+        },
+        {
+          "site": "西谷変電所 220kV",
+          "kv": [
+            220.0,
+            110.0,
+            66.0
+          ],
+          "by": "osm",
+          "applied": true,
+          "ladder": [
+            [
+              220.0,
+              110.0
+            ],
+            [
+              110.0,
+              66.0
+            ]
+          ],
+          "linked": [
+            [
+              220.0,
+              110.0,
+              "osm"
+            ],
+            [
+              220.0,
+              66.0,
+              "osm"
+            ]
+          ],
+          "result": [
+            {
+              "name": "trafo_220/110kV@pairmed@osm",
+              "p_hv_mw": 112.4,
+              "loading_pct": 23.7
+            },
+            {
+              "name": "trafo_220/66kV@pairmed@osm",
+              "p_hv_mw": 182.9,
+              "loading_pct": 38.6
+            }
+          ]
         }
       ],
-      "n_pair_capacity": 154,
-      "n_edge_skipped": 1085,
-      "n_dedup_merged": 455,
+      "n_pair_capacity": 153,
+      "n_edge_skipped": 1079,
+      "n_dedup_merged": 405,
       "n_edge_dup_removed": 17,
       "n_site_trafo": 0,
       "n_deenergized": 3,
@@ -3324,8 +3324,8 @@
       "implicit_stepdown_ledger": [
         {
           "site": "軽井沢町変電所",
-          "bus": 67,
-          "new_bus": 7921,
+          "bus": 66,
+          "new_bus": 7882,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3340,8 +3340,8 @@
         },
         {
           "site": "chubu junction 34.9388:137.1585:77",
-          "bus": 264,
-          "new_bus": 7922,
+          "bus": 258,
+          "new_bus": 7883,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3356,8 +3356,8 @@
         },
         {
           "site": "chubu junction 35.2331:136.7553:66",
-          "bus": 292,
-          "new_bus": 7923,
+          "bus": 286,
+          "new_bus": 7884,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3372,8 +3372,8 @@
         },
         {
           "site": "chubu junction 35.4641:137.0143:77",
-          "bus": 393,
-          "new_bus": 7924,
+          "bus": 387,
+          "new_bus": 7885,
           "hv_kv": 154.0,
           "lv_kv": 77.0,
           "n_lines": 1,
@@ -3388,8 +3388,8 @@
         },
         {
           "site": "chubu junction 34.8369:136.5183:77",
-          "bus": 466,
-          "new_bus": 7925,
+          "bus": 460,
+          "new_bus": 7886,
           "hv_kv": 154.0,
           "lv_kv": 77.0,
           "n_lines": 2,
@@ -3405,8 +3405,8 @@
         },
         {
           "site": "chubu junction 34.725:136.5012:66",
-          "bus": 524,
-          "new_bus": 7926,
+          "bus": 518,
+          "new_bus": 7887,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3421,8 +3421,8 @@
         },
         {
           "site": "chubu junction 35.1587:137.4328:154",
-          "bus": 647,
-          "new_bus": 7927,
+          "bus": 641,
+          "new_bus": 7888,
           "hv_kv": 275.0,
           "lv_kv": 154.0,
           "n_lines": 1,
@@ -3437,8 +3437,8 @@
         },
         {
           "site": "chubu junction 35.1449:139.0341:77",
-          "bus": 846,
-          "new_bus": 7928,
+          "bus": 839,
+          "new_bus": 7889,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3453,8 +3453,8 @@
         },
         {
           "site": "chubu junction 35.2391:138.5894:0",
-          "bus": 1033,
-          "new_bus": 7929,
+          "bus": 1023,
+          "new_bus": 7890,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 2,
@@ -3470,8 +3470,8 @@
         },
         {
           "site": "chubu junction 36.2906:138.4977:77",
-          "bus": 1143,
-          "new_bus": 7930,
+          "bus": 1128,
+          "new_bus": 7891,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3486,8 +3486,8 @@
         },
         {
           "site": "chubu junction 36.3045:138.4506:77",
-          "bus": 1174,
-          "new_bus": 7931,
+          "bus": 1159,
+          "new_bus": 7892,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3502,8 +3502,8 @@
         },
         {
           "site": "chubu junction 36.3259:138.3021:77",
-          "bus": 1241,
-          "new_bus": 7932,
+          "bus": 1226,
+          "new_bus": 7893,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3518,8 +3518,8 @@
         },
         {
           "site": "篠田変電所 275kV",
-          "bus": 1713,
-          "new_bus": 7933,
+          "bus": 1697,
+          "new_bus": 7894,
           "hv_kv": 275.0,
           "lv_kv": 154.0,
           "n_lines": 1,
@@ -3534,8 +3534,8 @@
         },
         {
           "site": "塩浜町変電所",
-          "bus": 1849,
-          "new_bus": 7934,
+          "bus": 1829,
+          "new_bus": 7895,
           "hv_kv": 154.0,
           "lv_kv": 77.0,
           "n_lines": 1,
@@ -3550,8 +3550,8 @@
         },
         {
           "site": "駿河変電所 275kV",
-          "bus": 1877,
-          "new_bus": 7935,
+          "bus": 1857,
+          "new_bus": 7896,
           "hv_kv": 275.0,
           "lv_kv": 77.0,
           "n_lines": 2,
@@ -3567,8 +3567,8 @@
         },
         {
           "site": "沼津変電所",
-          "bus": 1929,
-          "new_bus": 7936,
+          "bus": 1909,
+          "new_bus": 7897,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3583,8 +3583,8 @@
         },
         {
           "site": "hokuriku junction 36.3754:136.4818:154",
-          "bus": 2496,
-          "new_bus": 7937,
+          "bus": 2447,
+          "new_bus": 7898,
           "hv_kv": 154.0,
           "lv_kv": 77.0,
           "n_lines": 1,
@@ -3599,8 +3599,8 @@
         },
         {
           "site": "kansai junction 34.6988:135.6509:154",
-          "bus": 3022,
-          "new_bus": 7938,
+          "bus": 2991,
+          "new_bus": 7899,
           "hv_kv": 275.0,
           "lv_kv": 154.0,
           "n_lines": 2,
@@ -3616,8 +3616,8 @@
         },
         {
           "site": "kansai junction 34.4025:135.8216:0",
-          "bus": 3258,
-          "new_bus": 7939,
+          "bus": 3227,
+          "new_bus": 7900,
           "hv_kv": 500.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3632,8 +3632,8 @@
         },
         {
           "site": "kansai junction 35.2158:136.2535:77",
-          "bus": 3430,
-          "new_bus": 7940,
+          "bus": 3399,
+          "new_bus": 7901,
           "hv_kv": 154.0,
           "lv_kv": 77.0,
           "n_lines": 2,
@@ -3649,8 +3649,8 @@
         },
         {
           "site": "kansai junction 34.8588:135.6413:77",
-          "bus": 3482,
-          "new_bus": 7941,
+          "bus": 3451,
+          "new_bus": 7902,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3665,8 +3665,8 @@
         },
         {
           "site": "kansai junction 35.0584:134.746:66",
-          "bus": 3516,
-          "new_bus": 7942,
+          "bus": 3485,
+          "new_bus": 7903,
           "hv_kv": 275.0,
           "lv_kv": 66.0,
           "n_lines": 2,
@@ -3682,8 +3682,8 @@
         },
         {
           "site": "kansai junction 34.7704:135.4428:66",
-          "bus": 3555,
-          "new_bus": 7943,
+          "bus": 3524,
+          "new_bus": 7904,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3698,8 +3698,8 @@
         },
         {
           "site": "尼崎変電所",
-          "bus": 4063,
-          "new_bus": 7944,
+          "bus": 4032,
+          "new_bus": 7905,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3714,8 +3714,8 @@
         },
         {
           "site": "潮江変電所",
-          "bus": 4348,
-          "new_bus": 7945,
+          "bus": 4319,
+          "new_bus": 7906,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3730,8 +3730,8 @@
         },
         {
           "site": "須崎変電所",
-          "bus": 6285,
-          "new_bus": 7946,
+          "bus": 6242,
+          "new_bus": 7907,
           "hv_kv": 110.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3746,8 +3746,8 @@
         },
         {
           "site": "九州電力 南佐賀変電所",
-          "bus": 7423,
-          "new_bus": 7947,
+          "bus": 7380,
+          "new_bus": 7908,
           "hv_kv": 110.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3762,8 +3762,8 @@
         },
         {
           "site": "小国町変電所",
-          "bus": 7765,
-          "new_bus": 7948,
+          "bus": 7725,
+          "new_bus": 7909,
           "hv_kv": 110.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3778,8 +3778,8 @@
         },
         {
           "site": "萩之茶屋変電所",
-          "bus": 7900,
-          "new_bus": 7949,
+          "bus": 7861,
+          "new_bus": 7910,
           "hv_kv": 154.0,
           "lv_kv": 77.0,
           "n_lines": 1,
@@ -3794,8 +3794,8 @@
         },
         {
           "site": "堺港変電所",
-          "bus": 7901,
-          "new_bus": 7950,
+          "bus": 7862,
+          "new_bus": 7911,
           "hv_kv": 154.0,
           "lv_kv": 77.0,
           "n_lines": 1,
@@ -3810,8 +3810,8 @@
         },
         {
           "site": "久礼変電所",
-          "bus": 7904,
-          "new_bus": 7951,
+          "bus": 7865,
+          "new_bus": 7912,
           "hv_kv": 110.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3826,8 +3826,8 @@
         },
         {
           "site": "押岡変電所",
-          "bus": 7905,
-          "new_bus": 7952,
+          "bus": 7866,
+          "new_bus": 7913,
           "hv_kv": 110.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -3843,7 +3843,7 @@
       ],
       "unknown_kv_reclass_ledger": [
         {
-          "bus": 1556,
+          "bus": 1540,
           "name": "諏訪三丁目変電所",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -3853,7 +3853,7 @@
           "mixed": false
         },
         {
-          "bus": 1033,
+          "bus": 1023,
           "name": "chubu junction 35.2391:138.5894:0",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -3864,7 +3864,7 @@
           "mixed": true
         },
         {
-          "bus": 1244,
+          "bus": 1229,
           "name": "chubu junction 36.1351:137.7215:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -3874,7 +3874,7 @@
           "mixed": false
         },
         {
-          "bus": 1245,
+          "bus": 1230,
           "name": "chubu junction 36.1343:137.7222:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -3884,7 +3884,7 @@
           "mixed": false
         },
         {
-          "bus": 1247,
+          "bus": 1232,
           "name": "chubu junction 36.1365:137.7265:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -3894,7 +3894,7 @@
           "mixed": false
         },
         {
-          "bus": 2733,
+          "bus": 2696,
           "name": "友江変電所",
           "from_kv": 66.0,
           "to_kv": 500.0,
@@ -3904,7 +3904,7 @@
           "mixed": false
         },
         {
-          "bus": 4620,
+          "bus": 4591,
           "name": "関西電力送配電 上尾町変電所",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -3914,7 +3914,7 @@
           "mixed": false
         },
         {
-          "bus": 4551,
+          "bus": 4522,
           "name": "上野変電所_2",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -3924,7 +3924,7 @@
           "mixed": false
         },
         {
-          "bus": 4200,
+          "bus": 4171,
           "name": "豊岡変電所",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -3934,7 +3934,7 @@
           "mixed": false
         },
         {
-          "bus": 50,
+          "bus": 49,
           "name": "清水区変電所",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -3944,7 +3944,7 @@
           "mixed": false
         },
         {
-          "bus": 52,
+          "bus": 51,
           "name": "清水区変電所_2",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -3954,7 +3954,7 @@
           "mixed": false
         },
         {
-          "bus": 60,
+          "bus": 59,
           "name": "大字御代田変電所",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -3964,7 +3964,7 @@
           "mixed": false
         },
         {
-          "bus": 61,
+          "bus": 60,
           "name": "小諸市変電所",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -3974,7 +3974,7 @@
           "mixed": false
         },
         {
-          "bus": 3992,
+          "bus": 3961,
           "name": "岡崎変電所",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -3984,7 +3984,7 @@
           "mixed": false
         },
         {
-          "bus": 72,
+          "bus": 71,
           "name": "tokyo_sub_1791",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -3994,7 +3994,7 @@
           "mixed": false
         },
         {
-          "bus": 73,
+          "bus": 72,
           "name": "tokyo_sub_1792",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -4004,17 +4004,7 @@
           "mixed": false
         },
         {
-          "bus": 77,
-          "name": "tokyo_sub_1797",
-          "from_kv": 66.0,
-          "to_kv": 77.0,
-          "line_classes": [
-            77.0
-          ],
-          "mixed": false
-        },
-        {
-          "bus": 6757,
+          "bus": 6714,
           "name": "kyushu junction 33.4627:129.9543:0",
           "from_kv": 66.0,
           "to_kv": 220.0,
@@ -4024,7 +4014,7 @@
           "mixed": false
         },
         {
-          "bus": 5235,
+          "bus": 5202,
           "name": "chugoku junction 34.7827:133.5522:0",
           "from_kv": 66.0,
           "to_kv": 110.0,
@@ -4034,7 +4024,7 @@
           "mixed": false
         },
         {
-          "bus": 619,
+          "bus": 613,
           "name": "chubu junction 35.3027:137.5231:0",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -4044,7 +4034,7 @@
           "mixed": false
         },
         {
-          "bus": 3309,
+          "bus": 3278,
           "name": "kansai junction 34.5709:135.4354:0",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -4054,7 +4044,7 @@
           "mixed": false
         },
         {
-          "bus": 5154,
+          "bus": 5121,
           "name": "chugoku junction 34.5189:133.7186:0",
           "from_kv": 66.0,
           "to_kv": 110.0,
@@ -4064,7 +4054,7 @@
           "mixed": false
         },
         {
-          "bus": 6980,
+          "bus": 6937,
           "name": "kyushu junction 33.2555:131.877:0",
           "from_kv": 66.0,
           "to_kv": 220.0,
@@ -4074,7 +4064,7 @@
           "mixed": false
         },
         {
-          "bus": 3258,
+          "bus": 3227,
           "name": "kansai junction 34.4025:135.8216:0",
           "from_kv": 66.0,
           "to_kv": 500.0,
@@ -4085,7 +4075,7 @@
           "mixed": true
         },
         {
-          "bus": 523,
+          "bus": 517,
           "name": "chubu junction 34.7137:137.4912:0",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -4095,7 +4085,7 @@
           "mixed": false
         },
         {
-          "bus": 558,
+          "bus": 552,
           "name": "chubu junction 34.9144:137.1164:0",
           "from_kv": 66.0,
           "to_kv": 275.0,
@@ -4105,7 +4095,7 @@
           "mixed": false
         },
         {
-          "bus": 735,
+          "bus": 728,
           "name": "chubu junction 35.4325:136.6087:0",
           "from_kv": 66.0,
           "to_kv": 275.0,
@@ -4115,7 +4105,7 @@
           "mixed": false
         },
         {
-          "bus": 626,
+          "bus": 620,
           "name": "chubu junction 35.5914:136.455:0",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -4125,7 +4115,7 @@
           "mixed": false
         },
         {
-          "bus": 698,
+          "bus": 692,
           "name": "chubu junction 35.4932:137.5087:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -4135,7 +4125,7 @@
           "mixed": false
         },
         {
-          "bus": 873,
+          "bus": 866,
           "name": "chubu junction 35.3263:137.814:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -4145,7 +4135,7 @@
           "mixed": false
         },
         {
-          "bus": 954,
+          "bus": 944,
           "name": "chubu junction 35.766:138.0841:0",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -4155,7 +4145,7 @@
           "mixed": false
         },
         {
-          "bus": 1046,
+          "bus": 1036,
           "name": "chubu junction 35.5327:137.9389:0",
           "from_kv": 66.0,
           "to_kv": 500.0,
@@ -4165,7 +4155,7 @@
           "mixed": false
         },
         {
-          "bus": 1049,
+          "bus": 1039,
           "name": "chubu junction 35.0058:138.0832:0",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -4175,7 +4165,7 @@
           "mixed": false
         },
         {
-          "bus": 1122,
+          "bus": 1107,
           "name": "chubu junction 36.2945:137.3703:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -4185,7 +4175,7 @@
           "mixed": false
         },
         {
-          "bus": 1136,
+          "bus": 1121,
           "name": "chubu junction 35.8344:137.2324:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -4195,7 +4185,7 @@
           "mixed": false
         },
         {
-          "bus": 1283,
+          "bus": 1267,
           "name": "chubu junction 35.9442:137.7897:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -4205,7 +4195,7 @@
           "mixed": false
         },
         {
-          "bus": 2474,
+          "bus": 2425,
           "name": "hokuriku junction 36.3017:136.639:0",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -4215,7 +4205,7 @@
           "mixed": false
         },
         {
-          "bus": 2545,
+          "bus": 2496,
           "name": "hokuriku junction 35.651:136.092:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -4225,7 +4215,7 @@
           "mixed": false
         },
         {
-          "bus": 2982,
+          "bus": 2951,
           "name": "kansai junction 34.8427:135.564:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -4235,7 +4225,7 @@
           "mixed": false
         },
         {
-          "bus": 3449,
+          "bus": 3418,
           "name": "kansai junction 35.2368:134.8568:0",
           "from_kv": 66.0,
           "to_kv": 500.0,
@@ -4245,7 +4235,7 @@
           "mixed": false
         },
         {
-          "bus": 3492,
+          "bus": 3461,
           "name": "kansai junction 35.1059:136.3736:0",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -4255,7 +4245,7 @@
           "mixed": false
         },
         {
-          "bus": 3507,
+          "bus": 3476,
           "name": "kansai junction 34.7568:134.7661:0",
           "from_kv": 66.0,
           "to_kv": 275.0,
@@ -4265,7 +4255,7 @@
           "mixed": false
         },
         {
-          "bus": 5066,
+          "bus": 5033,
           "name": "chugoku junction 34.7528:134.3646:0",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -4275,7 +4265,7 @@
           "mixed": false
         },
         {
-          "bus": 5148,
+          "bus": 5115,
           "name": "chugoku junction 34.3999:133.0997:0",
           "from_kv": 66.0,
           "to_kv": 110.0,
@@ -4285,7 +4275,7 @@
           "mixed": false
         },
         {
-          "bus": 5257,
+          "bus": 5224,
           "name": "chugoku junction 34.682:132.7386:0",
           "from_kv": 66.0,
           "to_kv": 110.0,
@@ -4295,7 +4285,7 @@
           "mixed": false
         },
         {
-          "bus": 5258,
+          "bus": 5225,
           "name": "chugoku junction 34.3909:131.4054:0",
           "from_kv": 66.0,
           "to_kv": 110.0,
@@ -4305,7 +4295,7 @@
           "mixed": false
         },
         {
-          "bus": 5260,
+          "bus": 5227,
           "name": "chugoku junction 34.4511:131.4962:0",
           "from_kv": 66.0,
           "to_kv": 110.0,
@@ -4315,7 +4305,7 @@
           "mixed": false
         },
         {
-          "bus": 5847,
+          "bus": 5805,
           "name": "shikoku junction 34.4021:132.4141:0",
           "from_kv": 66.0,
           "to_kv": 110.0,
@@ -4325,7 +4315,7 @@
           "mixed": false
         },
         {
-          "bus": 5955,
+          "bus": 5909,
           "name": "shikoku junction 34.2288:133.1545:0",
           "from_kv": 66.0,
           "to_kv": 110.0,
@@ -4335,7 +4325,7 @@
           "mixed": false
         },
         {
-          "bus": 5976,
+          "bus": 5930,
           "name": "shikoku junction 34.2577:133.1641:0",
           "from_kv": 66.0,
           "to_kv": 110.0,
@@ -4345,7 +4335,7 @@
           "mixed": false
         },
         {
-          "bus": 6315,
+          "bus": 6272,
           "name": "kyushu junction 31.9876:130.4941:0",
           "from_kv": 66.0,
           "to_kv": 110.0,
@@ -4355,7 +4345,7 @@
           "mixed": false
         },
         {
-          "bus": 6488,
+          "bus": 6445,
           "name": "kyushu junction 31.9199:131.1338:0",
           "from_kv": 66.0,
           "to_kv": 110.0,
@@ -4365,7 +4355,7 @@
           "mixed": false
         },
         {
-          "bus": 6491,
+          "bus": 6448,
           "name": "kyushu junction 32.2538:131.3769:0",
           "from_kv": 66.0,
           "to_kv": 220.0,
@@ -4375,7 +4365,7 @@
           "mixed": false
         },
         {
-          "bus": 6600,
+          "bus": 6557,
           "name": "kyushu junction 33.327:130.0967:0",
           "from_kv": 66.0,
           "to_kv": 220.0,
@@ -4385,7 +4375,7 @@
           "mixed": false
         },
         {
-          "bus": 2178,
+          "bus": 2128,
           "name": "大町市変電所_2",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -4395,7 +4385,7 @@
           "mixed": false
         },
         {
-          "bus": 2188,
+          "bus": 2137,
           "name": "松川村変電所",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -4405,7 +4395,7 @@
           "mixed": false
         },
         {
-          "bus": 776,
+          "bus": 769,
           "name": "chubu junction 35.8342:137.2335:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -4415,7 +4405,7 @@
           "mixed": false
         },
         {
-          "bus": 895,
+          "bus": 888,
           "name": "chubu junction 35.1895:138.6427:0",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -4425,7 +4415,7 @@
           "mixed": false
         },
         {
-          "bus": 6301,
+          "bus": 6258,
           "name": "kyushu junction 32.5721:130.4851:0",
           "from_kv": 66.0,
           "to_kv": 500.0,
@@ -4435,7 +4425,7 @@
           "mixed": false
         },
         {
-          "bus": 6630,
+          "bus": 6587,
           "name": "kyushu junction 33.0256:130.426:0",
           "from_kv": 66.0,
           "to_kv": 110.0,
@@ -4445,7 +4435,7 @@
           "mixed": false
         },
         {
-          "bus": 605,
+          "bus": 599,
           "name": "chubu junction 34.9665:136.8264:0",
           "from_kv": 66.0,
           "to_kv": 275.0,
@@ -4455,7 +4445,7 @@
           "mixed": false
         },
         {
-          "bus": 5287,
+          "bus": 5254,
           "name": "chugoku junction 33.9474:132.0934:0",
           "from_kv": 66.0,
           "to_kv": 220.0,
@@ -4465,7 +4455,7 @@
           "mixed": false
         },
         {
-          "bus": 228,
+          "bus": 222,
           "name": "chubu junction 35.362:136.5504:0",
           "from_kv": 66.0,
           "to_kv": 275.0,
@@ -4475,7 +4465,7 @@
           "mixed": false
         },
         {
-          "bus": 627,
+          "bus": 621,
           "name": "chubu junction 35.4659:136.4629:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -4485,7 +4475,7 @@
           "mixed": false
         },
         {
-          "bus": 715,
+          "bus": 708,
           "name": "chubu junction 35.3389:136.6515:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -4495,7 +4485,7 @@
           "mixed": false
         },
         {
-          "bus": 947,
+          "bus": 937,
           "name": "chubu junction 34.6895:137.6716:0",
           "from_kv": 66.0,
           "to_kv": 154.0,
@@ -4505,7 +4495,7 @@
           "mixed": false
         },
         {
-          "bus": 2497,
+          "bus": 2448,
           "name": "hokuriku junction 36.3631:136.4308:0",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -4515,7 +4505,7 @@
           "mixed": false
         },
         {
-          "bus": 2820,
+          "bus": 2791,
           "name": "kansai junction 35.4134:136.2776:0",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -4525,7 +4515,7 @@
           "mixed": false
         },
         {
-          "bus": 3553,
+          "bus": 3522,
           "name": "kansai junction 34.7989:134.7363:0",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -4535,7 +4525,7 @@
           "mixed": false
         },
         {
-          "bus": 3623,
+          "bus": 3592,
           "name": "kansai junction 34.9465:135.727:0",
           "from_kv": 66.0,
           "to_kv": 77.0,
@@ -4545,7 +4535,7 @@
           "mixed": false
         },
         {
-          "bus": 5253,
+          "bus": 5220,
           "name": "chugoku junction 35.3148:132.895:0",
           "from_kv": 66.0,
           "to_kv": 110.0,
@@ -4555,7 +4545,7 @@
           "mixed": false
         },
         {
-          "bus": 5277,
+          "bus": 5244,
           "name": "chugoku junction 34.1338:132.205:0",
           "from_kv": 66.0,
           "to_kv": 110.0,
@@ -4578,14 +4568,14 @@
           "n_line_ends": 4,
           "moved": [
             {
-              "line": 6235,
+              "line": 6183,
               "name": "八代変電所~頭地開閉所線",
               "kv": 0.0,
               "from_kv": 220.0,
               "to_kv": 66.0
             },
             {
-              "line": 6236,
+              "line": 6184,
               "name": "八代変電所~頭地開閉所線",
               "kv": 66.0,
               "from_kv": 220.0,
@@ -4594,7 +4584,7 @@
           ],
           "created": [
             {
-              "bus": 7920,
+              "bus": 7881,
               "kv": 66.0
             }
           ]
@@ -4622,7 +4612,7 @@
           "n_line_ends": 4,
           "moved": [
             {
-              "line": 1425,
+              "line": 1411,
               "name": "中部送電線_711",
               "kv": 0.0,
               "from_kv": 500.0,
@@ -4642,14 +4632,14 @@
           "n_line_ends": 5,
           "moved": [
             {
-              "line": 219,
+              "line": 212,
               "name": "西日本電線新城線",
               "kv": 0.0,
               "from_kv": 275.0,
               "to_kv": 77.0
             },
             {
-              "line": 221,
+              "line": 214,
               "name": "西日本電線新城線",
               "kv": 0.0,
               "from_kv": 275.0,
@@ -4669,7 +4659,7 @@
           "n_line_ends": 4,
           "moved": [
             {
-              "line": 426,
+              "line": 419,
               "name": "豊田市変電所~愛知変電所線",
               "kv": 0.0,
               "from_kv": 154.0,
@@ -4704,13 +4694,13 @@
         }
       ],
       "region_reattribution": {
-        "n_nodes": 15628,
+        "n_nodes": 15526,
         "n_changed": 0,
         "changes": {},
         "skipped_freq": {
-          "tokyo->chubu": 47,
-          "chubu->tohoku": 23,
-          "chubu->tokyo": 17,
+          "tokyo->chubu": 46,
+          "chubu->tohoku": 22,
+          "chubu->tokyo": 15,
           "hokuriku->tohoku": 15
         },
         "freq_fixed": {},
@@ -4851,7 +4841,7 @@
         },
         {
           "kv": 77.0,
-          "load_mw": 253.3,
+          "load_mw": 253.4,
           "downstream_mw": 0.0,
           "n_bus": 14,
           "cluster_names": [
@@ -4867,7 +4857,7 @@
         },
         {
           "kv": 66.0,
-          "load_mw": 175.9,
+          "load_mw": 176.0,
           "downstream_mw": 0.0,
           "n_bus": 13,
           "cluster_names": [
@@ -4945,7 +4935,7 @@
         },
         {
           "kv": 66.0,
-          "load_mw": 103.4,
+          "load_mw": 105.2,
           "downstream_mw": 0.0,
           "n_bus": 6,
           "cluster_names": [
@@ -4978,8 +4968,8 @@
       "implicit_stepdown": [
         {
           "site": "軽井沢町変電所",
-          "bus": 67,
-          "new_bus": 7921,
+          "bus": 66,
+          "new_bus": 7882,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -4994,8 +4984,8 @@
         },
         {
           "site": "chubu junction 34.9388:137.1585:77",
-          "bus": 264,
-          "new_bus": 7922,
+          "bus": 258,
+          "new_bus": 7883,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5010,8 +5000,8 @@
         },
         {
           "site": "chubu junction 35.2331:136.7553:66",
-          "bus": 292,
-          "new_bus": 7923,
+          "bus": 286,
+          "new_bus": 7884,
           "hv_kv": 154.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5026,8 +5016,8 @@
         },
         {
           "site": "chubu junction 35.4641:137.0143:77",
-          "bus": 393,
-          "new_bus": 7924,
+          "bus": 387,
+          "new_bus": 7885,
           "hv_kv": 154.0,
           "lv_kv": 77.0,
           "n_lines": 1,
@@ -5042,8 +5032,8 @@
         },
         {
           "site": "chubu junction 34.8369:136.5183:77",
-          "bus": 466,
-          "new_bus": 7925,
+          "bus": 460,
+          "new_bus": 7886,
           "hv_kv": 154.0,
           "lv_kv": 77.0,
           "n_lines": 2,
@@ -5059,8 +5049,8 @@
         },
         {
           "site": "chubu junction 34.725:136.5012:66",
-          "bus": 524,
-          "new_bus": 7926,
+          "bus": 518,
+          "new_bus": 7887,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5075,8 +5065,8 @@
         },
         {
           "site": "chubu junction 35.1587:137.4328:154",
-          "bus": 647,
-          "new_bus": 7927,
+          "bus": 641,
+          "new_bus": 7888,
           "hv_kv": 275.0,
           "lv_kv": 154.0,
           "n_lines": 1,
@@ -5091,8 +5081,8 @@
         },
         {
           "site": "chubu junction 35.1449:139.0341:77",
-          "bus": 846,
-          "new_bus": 7928,
+          "bus": 839,
+          "new_bus": 7889,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5107,8 +5097,8 @@
         },
         {
           "site": "chubu junction 35.2391:138.5894:0",
-          "bus": 1033,
-          "new_bus": 7929,
+          "bus": 1023,
+          "new_bus": 7890,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 2,
@@ -5124,8 +5114,8 @@
         },
         {
           "site": "chubu junction 36.2906:138.4977:77",
-          "bus": 1143,
-          "new_bus": 7930,
+          "bus": 1128,
+          "new_bus": 7891,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5140,8 +5130,8 @@
         },
         {
           "site": "chubu junction 36.3045:138.4506:77",
-          "bus": 1174,
-          "new_bus": 7931,
+          "bus": 1159,
+          "new_bus": 7892,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5156,8 +5146,8 @@
         },
         {
           "site": "chubu junction 36.3259:138.3021:77",
-          "bus": 1241,
-          "new_bus": 7932,
+          "bus": 1226,
+          "new_bus": 7893,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5172,8 +5162,8 @@
         },
         {
           "site": "篠田変電所 275kV",
-          "bus": 1713,
-          "new_bus": 7933,
+          "bus": 1697,
+          "new_bus": 7894,
           "hv_kv": 275.0,
           "lv_kv": 154.0,
           "n_lines": 1,
@@ -5188,8 +5178,8 @@
         },
         {
           "site": "塩浜町変電所",
-          "bus": 1849,
-          "new_bus": 7934,
+          "bus": 1829,
+          "new_bus": 7895,
           "hv_kv": 154.0,
           "lv_kv": 77.0,
           "n_lines": 1,
@@ -5204,8 +5194,8 @@
         },
         {
           "site": "駿河変電所 275kV",
-          "bus": 1877,
-          "new_bus": 7935,
+          "bus": 1857,
+          "new_bus": 7896,
           "hv_kv": 275.0,
           "lv_kv": 77.0,
           "n_lines": 2,
@@ -5221,8 +5211,8 @@
         },
         {
           "site": "沼津変電所",
-          "bus": 1929,
-          "new_bus": 7936,
+          "bus": 1909,
+          "new_bus": 7897,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5237,8 +5227,8 @@
         },
         {
           "site": "hokuriku junction 36.3754:136.4818:154",
-          "bus": 2496,
-          "new_bus": 7937,
+          "bus": 2447,
+          "new_bus": 7898,
           "hv_kv": 154.0,
           "lv_kv": 77.0,
           "n_lines": 1,
@@ -5253,8 +5243,8 @@
         },
         {
           "site": "kansai junction 34.6988:135.6509:154",
-          "bus": 3022,
-          "new_bus": 7938,
+          "bus": 2991,
+          "new_bus": 7899,
           "hv_kv": 275.0,
           "lv_kv": 154.0,
           "n_lines": 2,
@@ -5270,8 +5260,8 @@
         },
         {
           "site": "kansai junction 34.4025:135.8216:0",
-          "bus": 3258,
-          "new_bus": 7939,
+          "bus": 3227,
+          "new_bus": 7900,
           "hv_kv": 500.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5286,8 +5276,8 @@
         },
         {
           "site": "kansai junction 35.2158:136.2535:77",
-          "bus": 3430,
-          "new_bus": 7940,
+          "bus": 3399,
+          "new_bus": 7901,
           "hv_kv": 154.0,
           "lv_kv": 77.0,
           "n_lines": 2,
@@ -5303,8 +5293,8 @@
         },
         {
           "site": "kansai junction 34.8588:135.6413:77",
-          "bus": 3482,
-          "new_bus": 7941,
+          "bus": 3451,
+          "new_bus": 7902,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5319,8 +5309,8 @@
         },
         {
           "site": "kansai junction 35.0584:134.746:66",
-          "bus": 3516,
-          "new_bus": 7942,
+          "bus": 3485,
+          "new_bus": 7903,
           "hv_kv": 275.0,
           "lv_kv": 66.0,
           "n_lines": 2,
@@ -5336,8 +5326,8 @@
         },
         {
           "site": "kansai junction 34.7704:135.4428:66",
-          "bus": 3555,
-          "new_bus": 7943,
+          "bus": 3524,
+          "new_bus": 7904,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5352,8 +5342,8 @@
         },
         {
           "site": "尼崎変電所",
-          "bus": 4063,
-          "new_bus": 7944,
+          "bus": 4032,
+          "new_bus": 7905,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5368,8 +5358,8 @@
         },
         {
           "site": "潮江変電所",
-          "bus": 4348,
-          "new_bus": 7945,
+          "bus": 4319,
+          "new_bus": 7906,
           "hv_kv": 77.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5384,8 +5374,8 @@
         },
         {
           "site": "須崎変電所",
-          "bus": 6285,
-          "new_bus": 7946,
+          "bus": 6242,
+          "new_bus": 7907,
           "hv_kv": 110.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5400,8 +5390,8 @@
         },
         {
           "site": "九州電力 南佐賀変電所",
-          "bus": 7423,
-          "new_bus": 7947,
+          "bus": 7380,
+          "new_bus": 7908,
           "hv_kv": 110.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5416,8 +5406,8 @@
         },
         {
           "site": "小国町変電所",
-          "bus": 7765,
-          "new_bus": 7948,
+          "bus": 7725,
+          "new_bus": 7909,
           "hv_kv": 110.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5432,8 +5422,8 @@
         },
         {
           "site": "萩之茶屋変電所",
-          "bus": 7900,
-          "new_bus": 7949,
+          "bus": 7861,
+          "new_bus": 7910,
           "hv_kv": 154.0,
           "lv_kv": 77.0,
           "n_lines": 1,
@@ -5448,8 +5438,8 @@
         },
         {
           "site": "堺港変電所",
-          "bus": 7901,
-          "new_bus": 7950,
+          "bus": 7862,
+          "new_bus": 7911,
           "hv_kv": 154.0,
           "lv_kv": 77.0,
           "n_lines": 1,
@@ -5464,8 +5454,8 @@
         },
         {
           "site": "久礼変電所",
-          "bus": 7904,
-          "new_bus": 7951,
+          "bus": 7865,
+          "new_bus": 7912,
           "hv_kv": 110.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5480,8 +5470,8 @@
         },
         {
           "site": "押岡変電所",
-          "bus": 7905,
-          "new_bus": 7952,
+          "bus": 7866,
+          "new_bus": 7913,
           "hv_kv": 110.0,
           "lv_kv": 66.0,
           "n_lines": 1,
@@ -5504,15 +5494,15 @@
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.7261642245,
-      "ac_vm_max": 1.039107895,
-      "ac_max_loading_pct": 605.6234186,
+      "ac_vm_min": 0.7168301925,
+      "ac_vm_max": 1.039108854,
+      "ac_max_loading_pct": 605.6306327,
       "dc_max_loading_pct": 686.5878559,
-      "ac_total_loss_mw": 1134.636186,
+      "ac_total_loss_mw": 1134.628676,
       "slack_spread": {
         "dc": {
           "applied": true,
-          "slack": "slack_4203",
+          "slack": "slack_4174",
           "n_gen": 8016,
           "slack_before_mw": 0.0,
           "slack_after_mw": 0.0,
@@ -5520,14 +5510,14 @@
         },
         "ac": {
           "applied": true,
-          "slack": "slack_4203",
+          "slack": "slack_4174",
           "n_gen": 8016,
-          "slack_before_mw": 1336.6,
-          "slack_after_mw": 4.0,
-          "spread_mw": 1332.6
+          "slack_before_mw": 1337.0,
+          "slack_after_mw": 3.9,
+          "spread_mw": 1333.1
         }
       },
-      "solve_seconds": 122.0
+      "solve_seconds": 82.4
     },
     "okinawa": {
       "frequency_hz": 60,
@@ -5552,13 +5542,13 @@
       "n_junction_cuts": 0,
       "junction_cuts_ledger": [],
       "region_reattribution": {
-        "n_nodes": 15628,
+        "n_nodes": 15526,
         "n_changed": 0,
         "changes": {},
         "skipped_freq": {
-          "tokyo->chubu": 47,
-          "chubu->tohoku": 23,
-          "chubu->tokyo": 17,
+          "tokyo->chubu": 46,
+          "chubu->tohoku": 22,
+          "chubu->tokyo": 15,
           "hokuriku->tohoku": 15
         },
         "freq_fixed": {},
@@ -5607,7 +5597,7 @@
           "spread_mw": 33.4
         }
       },
-      "solve_seconds": 1.6
+      "solve_seconds": 2.9
     }
   },
   "regions": {
@@ -5627,11 +5617,11 @@
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.8595,
+      "vm_min": 0.8596,
       "vm_max": 1.0085,
-      "n_buses": 2059,
-      "n_buses_exported": 2059,
-      "n_lines_exported": 2129
+      "n_buses": 2051,
+      "n_buses_exported": 2051,
+      "n_lines_exported": 2121
     },
     "tokyo": {
       "island": "east",
@@ -5640,9 +5630,9 @@
       "dc_converged": true,
       "vm_min": 0.856,
       "vm_max": 1.0229,
-      "n_buses": 4154,
-      "n_buses_exported": 4154,
-      "n_lines_exported": 4310
+      "n_buses": 4153,
+      "n_buses_exported": 4153,
+      "n_lines_exported": 4305
     },
     "chubu": {
       "island": "west",
@@ -5650,32 +5640,32 @@
       "ac_converged": true,
       "dc_converged": true,
       "vm_min": 0.9312,
-      "vm_max": 1.0144,
-      "n_buses": 2294,
-      "n_buses_exported": 2293,
-      "n_lines_exported": 2342
+      "vm_max": 1.0142,
+      "n_buses": 2279,
+      "n_buses_exported": 2278,
+      "n_lines_exported": 2321
     },
     "chugoku": {
       "island": "west",
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.7262,
-      "vm_max": 1.0152,
-      "n_buses": 1095,
-      "n_buses_exported": 1095,
-      "n_lines_exported": 1123
+      "vm_min": 0.7168,
+      "vm_max": 1.0151,
+      "n_buses": 1089,
+      "n_buses_exported": 1089,
+      "n_lines_exported": 1115
     },
     "hokuriku": {
       "island": "west",
       "solved_mode": "ac",
       "ac_converged": true,
       "dc_converged": true,
-      "vm_min": 0.9821,
+      "vm_min": 0.9817,
       "vm_max": 1.0391,
-      "n_buses": 662,
-      "n_buses_exported": 662,
-      "n_lines_exported": 709
+      "n_buses": 653,
+      "n_buses_exported": 653,
+      "n_lines_exported": 688
     },
     "kansai": {
       "island": "west",
@@ -5684,9 +5674,9 @@
       "dc_converged": true,
       "vm_min": 0.9354,
       "vm_max": 1.0174,
-      "n_buses": 1766,
-      "n_buses_exported": 1766,
-      "n_lines_exported": 1769
+      "n_buses": 1760,
+      "n_buses_exported": 1760,
+      "n_lines_exported": 1765
     },
     "kyushu": {
       "island": "west",
@@ -5695,9 +5685,9 @@
       "dc_converged": true,
       "vm_min": 0.9585,
       "vm_max": 1.0045,
-      "n_buses": 1638,
-      "n_buses_exported": 1638,
-      "n_lines_exported": 1717
+      "n_buses": 1636,
+      "n_buses_exported": 1636,
+      "n_lines_exported": 1715
     },
     "shikoku": {
       "island": "west",
@@ -5706,9 +5696,9 @@
       "dc_converged": true,
       "vm_min": 0.8876,
       "vm_max": 1.0043,
-      "n_buses": 499,
-      "n_buses_exported": 499,
-      "n_lines_exported": 491
+      "n_buses": 498,
+      "n_buses_exported": 498,
+      "n_lines_exported": 489
     },
     "okinawa": {
       "island": "okinawa",
