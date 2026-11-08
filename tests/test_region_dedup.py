@@ -152,3 +152,102 @@ def test_load_point_aliases_checks_the_current_canon(tmp_path):
     # 寄せた点がまだ正典にある(帳簿が古い・#59 を切った)ときは使わない
     assert load_point_aliases({(35.0, 137.1), (35.0002, 137.1002)}, str(p)) == {}
     assert load_point_aliases(set(), str(tmp_path / "none.json")) == {}
+
+
+# ---- 介入#60(案): 区切りの違う写しの区切りをそろえる ----
+from src.topology.region_dedup import align_copy_splits, heal_copy_splits  # noqa: E402
+
+P = [(35.0, 137.0 + 0.01 * k) for k in range(7)]          # 1 本の way の頂点 P0..P6
+Q = (35.05, 137.03)                                     # P3 から出る枝の先
+SAME = lambda la, lo, reg: "east"                       # 島はすべて同じ
+
+
+def _line(a, b, lo, hi, kv=66.0, name="L"):
+    return {"a": list(a), "b": list(b), "kv": kv, "par": 1, "name": name, "path": [list(x) for x in P[lo:hi + 1]]}
+
+
+def _run(col, owner, island_of=SAME):
+    c1, ls = align_copy_splits(col, island_of=island_of)
+    c2, _ = align_copy_ends(c1, owner_of=owner, island_of=island_of)
+    c3, _ = dedup_region_copies(c2, owner_of=owner)
+    c4, lh = heal_copy_splits(c3)
+    return c4, ls, lh
+
+
+def _ab(v):
+    return sorted((tuple(e["a"]), tuple(e["b"])) for e in v["edges"])
+
+
+def test_branch_point_of_one_region_splits_the_other_copy():
+    """tokyo は P3 に分岐があって区切り、chubu は通り抜ける。chubu の写しを P3 で区切ってから #58 でまとめる。"""
+    col = {
+        "tokyo": {"nodes": [_n(*P[0], 66.0), _n(*P[3], 66.0), _n(*P[6], 66.0), _n(*Q, 66.0)],
+                  "edges": [_line(P[0], P[3], 0, 3), _line(P[3], P[6], 3, 6),
+                            {"a": list(P[3]), "b": list(Q), "kv": 66.0, "par": 1, "name": "枝"}]},
+        "chubu": {"nodes": [_n(*P[0], 66.0), _n(*P[6], 66.0)], "edges": [_line(P[0], P[6], 0, 6)]},
+    }
+    out, ls, lh = _run(col, owner=lambda la, lo: "chubu")
+    assert ls["n_edges_split"] == 1 and ls["rows"][0]["why"] == ["end"]
+    assert _ab(out["chubu"]) == [(P[0], P[3]), (P[3], P[6])]            # 領土の chubu の写しを残し、P3 で区切る
+    assert [e["name"] for e in out["tokyo"]["edges"]] == ["枝"]           # tokyo の写しは落ち、枝は P3 に付いたまま
+    assert any("_jct_split_" in n["id"] for n in out["chubu"]["nodes"])
+    assert lh["n_joints_healed"] == 0
+
+
+def test_split_is_healed_when_nothing_else_needs_it():
+    """tokyo の区切り P3 に何も付かないなら、tokyo の写しが落ちたあと chubu の枝をつなぎ直す(区切る前に戻る)。"""
+    col = {
+        "tokyo": {"nodes": [_n(*P[0], 66.0), _n(*P[3], 66.0), _n(*P[6], 66.0)],
+                  "edges": [_line(P[0], P[3], 0, 3), _line(P[3], P[6], 3, 6)]},
+        "chubu": {"nodes": [_n(*P[0], 66.0), _n(*P[6], 66.0)], "edges": [_line(P[0], P[6], 0, 6)]},
+    }
+    out, _, lh = _run(col, owner=lambda la, lo: "chubu")
+    assert lh["n_joints_healed"] == 1 and out["tokyo"]["edges"] == []
+    assert out["chubu"]["edges"] == [_line(P[0], P[6], 0, 6)]
+    assert not any("_jct_split_" in n["id"] for n in out["chubu"]["nodes"])
+    assert not any(k.startswith("_") for v in out.values() for x in v["edges"] + v["nodes"] for k in x)
+
+
+def test_truncated_copy_joins_the_longer_copy():
+    """tokyo の写しは P3 で止まる(先の way が取り出しに無い)。重なる所は領土の写しを残し、P3 でつながる。"""
+    col = {
+        "tokyo": {"nodes": [_n(*P[0], 66.0), _n(*P[3], 66.0)], "edges": [_line(P[0], P[3], 0, 3)]},
+        "chubu": {"nodes": [_n(*P[0], 66.0), _n(*P[6], 66.0)], "edges": [_line(P[0], P[6], 0, 6)]},
+    }
+    out, _, _ = _run(col, owner=lambda la, lo: "tokyo" if lo < P[3][1] else "chubu")
+    assert _ab(out["tokyo"]) == [(P[0], P[3])] and _ab(out["chubu"]) == [(P[3], P[6])]
+
+
+def test_vertex_with_two_voltages_is_not_split():
+    """電圧の違う併架の頂点は区切らない(同じ座標に電圧の違う点ができ、潮流計算が変圧器を作るため)。"""
+    col = {
+        "tokyo": {"nodes": [_n(*P[0], 66.0), _n(*P[3], 66.0), _n(*P[6], 66.0)],
+                  "edges": [_line(P[0], P[3], 0, 3), _line(P[3], P[6], 3, 6)]},
+        "chubu": {"nodes": [_n(*P[0], 154.0), _n(*P[6], 154.0)], "edges": [_line(P[0], P[6], 0, 6, kv=154.0)]},
+    }
+    _, ls = align_copy_splits(col, island_of=SAME)
+    assert ls["n_points_skipped_kv"] == 1 and ls["n_edges_split"] == 0
+
+
+def test_copies_of_different_islands_are_not_split():
+    """区切りの理由になった地域と潮流計算の島が違えば区切らない(周波数の境)。"""
+    col = {
+        "tokyo": {"nodes": [_n(*P[0], 66.0), _n(*P[3], 66.0), _n(*P[6], 66.0)],
+                  "edges": [_line(P[0], P[3], 0, 3), _line(P[3], P[6], 3, 6)]},
+        "chubu": {"nodes": [_n(*P[0], 66.0), _n(*P[6], 66.0)], "edges": [_line(P[0], P[6], 0, 6)]},
+    }
+    _, ls = align_copy_splits(col, island_of=lambda la, lo, reg: "east" if reg == "tokyo" else "west")
+    assert ls["n_skipped_island"] == 1 and ls["n_edges_split"] == 0
+
+
+def test_substation_the_line_enters_is_kept():
+    """tokyo の写しは P3 で変電所 S に入り、chubu の写し(S が取り出しに無い)は通り抜ける。区切った点を S に寄せ、
+    継ぎ目に S があるのでつなぎ直さない(変電所の点を分岐点の方へ寄せて消さない。#59 の寄せ先は変電所の点が先)。"""
+    S = (35.0008, 137.03)
+    col = {
+        "tokyo": {"nodes": [_n(*P[0], 66.0), _n(*S, 66.0, sub=1, nid="S")], "edges": [_line(P[0], S, 0, 3)]},
+        "chubu": {"nodes": [_n(*P[0], 66.0), _n(*P[6], 66.0)], "edges": [_line(P[0], P[6], 0, 6)]},
+    }
+    out, _, lh = _run(col, owner=lambda la, lo: "chubu")
+    assert _ab(out["chubu"]) == [(P[0], S), (S, P[6])] and out["tokyo"]["edges"] == []
+    assert [n["id"] for n in out["tokyo"]["nodes"]] == ["S"] and lh["n_joints_healed"] == 0

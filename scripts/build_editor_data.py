@@ -179,6 +179,9 @@ def main():
     ap.add_argument("--region-dedup-ends", action=argparse.BooleanOptionalAction, default=None,
                     help="介入#59(案) 形が同じで端を結ぶ点だけが違う地域の写しの端の点を、#58 の前に 1 つに寄せる。"
                          "既定=region_dedup.END_ALIGN_DEFAULT(環境変数 AJG_REGION_DEDUP_ENDS=1/0)")
+    ap.add_argument("--region-dedup-splits", action=argparse.BooleanOptionalAction, default=None,
+                    help="介入#60(案) 区切りの違う地域の写しの区切りを #59 の前にそろえ、#58 のあとに要らなくなった区切りを戻す。"
+                         "既定=region_dedup.SPLIT_ALIGN_DEFAULT(環境変数 AJG_REGION_DEDUP_SPLITS=1/0)")
     args = ap.parse_args()
 
     regions = args.regions or REGIONS_ALL
@@ -217,10 +220,17 @@ def main():
 
     if do_national and collected:
         # 介入#58(案): 地域をまたぐ写しを 1 つにまとめる(src/topology/region_dedup.py)。地域ごとの正典(<地域>.json)は変えない
-        from src.topology.region_dedup import (END_ALIGN_DEFAULT, REGION_DEDUP_DEFAULT, align_copy_ends,
-                                               dedup_region_copies)
+        from src.topology.region_dedup import (END_ALIGN_DEFAULT, REGION_DEDUP_DEFAULT, SPLIT_ALIGN_DEFAULT,
+                                               align_copy_ends, align_copy_splits, dedup_region_copies,
+                                               heal_copy_splits)
         if args.region_dedup if args.region_dedup is not None else REGION_DEDUP_DEFAULT:
-            led_ends = None
+            led_ends = led_splits = None
+            # 介入#60(案): 区切りの違う写しの区切りをそろえる(#59・#58 の前)
+            if args.region_dedup_splits if args.region_dedup_splits is not None else SPLIT_ALIGN_DEFAULT:
+                collected, led_splits = align_copy_splits(collected)
+                print(f"  介入#60 region-dedup-splits: 枝 {led_splits['n_edges_split']} を {led_splits['n_pieces']} 本に区切り、"
+                      f"点 {led_splits['n_nodes_made']} を作った(電圧の違う頂点 {led_splits['n_points_skipped_kv']}・"
+                      f"島の違う区切り {led_splits['n_skipped_island']} は区切らない)")
             # 介入#59(案): 端を結ぶ点だけが違う写しの端の点を寄せてから、#58 でまとめる
             if args.region_dedup_ends if args.region_dedup_ends is not None else END_ALIGN_DEFAULT:
                 collected, led_ends = align_copy_ends(collected)
@@ -229,6 +239,12 @@ def main():
             collected, led = dedup_region_copies(collected)
             if led_ends is not None:
                 led["ends"] = led_ends
+            if led_splits is not None:
+                collected, led_heal = heal_copy_splits(collected)
+                led_splits.update(led_heal)
+                led["splits"] = led_splits
+                print(f"  介入#60 region-dedup-splits: 継ぎ目 {led_heal['n_joints_healed']} をつなぎ直し、"
+                      f"区切りの点 {led_heal['n_split_nodes_left']} が残った")
             lp = os.path.join(PROJECT_ROOT, "docs", "data", "fragments", "region_dedup_ledger.json")
             os.makedirs(os.path.dirname(lp), exist_ok=True)
             with open(lp, "w", encoding="utf-8") as fh:
