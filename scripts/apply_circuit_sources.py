@@ -135,8 +135,11 @@ def norm_sub(name) -> str:
 # 飛ばして直線に回線数が付く(2026-11-08: 本四の中国側の端を東岡山に直したら、東岡山〜讃岐の直線が瀬戸大橋の
 # 500 kV 線より短くなり、本四の 2 回線が直線に付いた)。通してよいのは、実在の線の切れ目を代表して通電のまま
 # 残しているタイだけ = src/powerflow/full_from_built.KEEP_LIVE_TIES(同じ集合であることは試験で確かめる。
-# あちらは pandapower を読むので --light から import しない)
-ROUTABLE_TIES = {"東北東京間連系線"}
+# あちらは pandapower を読むので --light から import しない。どちらも region_dedup.live_synthetic_ties を使う)。
+# 東北東京間連系線は 2026-11-09 に外した(#58〜#60 が切れ端を縫った)ので、既定では空
+from src.topology.region_dedup import live_synthetic_ties  # noqa: E402
+
+ROUTABLE_TIES = live_synthetic_ties()
 
 
 def routable(e: dict) -> bool:
