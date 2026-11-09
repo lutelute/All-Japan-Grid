@@ -8,7 +8,7 @@
   月次CSV(当月ファイルが日次更新・前日分まで):
     tokyo(03)/chubu(04)/hokuriku(05)/chugoku(07)/shikoku(08)/kyushu(09)
     = eria_jukyu_YYYYMM_NN.csv
-  tohoku(02) = 同形式だが公表が約2か月遅れ(2026-08時点で6月分まで)
+  tohoku(02) = 同形式だが公表が約2か月遅れ(2026-08時点で6月分まで)。毎時の取り込みでは取らない(HOURLY_SKIP)
   hokkaido   = 日別ファイル YYYYMMDD_hokkaido_jukyu.csv(当日も随時更新)
   kansai     = jisseki.json(当日のみ・万kW・30分48枠) → 日々の蓄積で埋める
   okinawa    = 燃料別の機械可読公表を未特定(独立島・ほぼ火力のみ) → 対象外
@@ -185,11 +185,20 @@ def fetch_kansai_today() -> tuple[dict | None, str | None]:
     return (out if out.get("demand") else None), date_s
 
 
-def fetch_date(date: dt.date) -> dict:
-    """{zone: {fuels, source_url, updated}} — 取れたzoneのみ。"""
+# 毎時の取り込み(--date を付けない前日と当日)で取りに行かないエリア。
+# 東北の月次 CSV は公表が 1〜2 か月遅れ、前日と当日の月のファイルはいつも無い(2026-11-09: 202608・202609 は
+# 10-30 に出て、202610・202611 は 404。08-28 から毎時 2 回の 404 が cycle.log に並んでいた)。
+# 公表された月は --date YYYYMMDD を付けて取り直す(そのときは東北も取りに行く)。
+HOURLY_SKIP = frozenset({"tohoku"})
+
+
+def fetch_date(date: dt.date, skip=frozenset()) -> dict:
+    """{zone: {fuels, source_url, updated}} — 取れたzoneのみ。skip のエリアは取りに行かない。"""
     ym, ymd = date.strftime("%Y%m"), date.strftime("%Y%m%d")
     zones: dict[str, dict] = {}
     for zone, pat in MONTHLY.items():
+        if zone in skip:
+            continue
         url = pat.format(ym=ym)
         txt = _get(url)
         time.sleep(0.5)
@@ -309,18 +318,20 @@ def main() -> int:
     args = ap.parse_args()
     if args.date:
         dates = [dt.datetime.strptime(x, "%Y%m%d").date() for x in args.date]
+        skip = frozenset()
     else:
         today = dt.date.today()
         dates = [today - dt.timedelta(days=1), today]
+        skip = HOURLY_SKIP
     STORE.mkdir(parents=True, exist_ok=True)
     for date in dates:
         ds = date.strftime("%Y%m%d")
-        zones = fetch_date(date)
+        zones = fetch_date(date, skip=skip)
         p = STORE / f"fuelmix_{ds}.json"
         cur = {"date": ds, "unit": "MW", "zones": {},
                "note": ("各一般送配電事業者「エリア需給実績」(燃料別・30分値)を"
                         "1時間平均MW化。出典=各zonesのsource_url。負値(揚水・蓄電池)"
-                        "=充電。tohokuは公表約2か月遅れ・kansaiは当日配信の蓄積・"
+                        "=充電。tohokuは公表約2か月遅れ(毎時の取り込みでは取らず --date で取り直す)・kansaiは当日配信の蓄積・"
                         "okinawaは燃料別公表を未特定のため対象外")}
         if p.exists():
             cur = json.loads(p.read_text())
