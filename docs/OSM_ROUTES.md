@@ -59,10 +59,10 @@ OSM の送電線は細切れの way で描かれている（全国 35,605 本）
 ## 作り直し方
 
 ```bash
-PYTHONPATH=. python scripts/export_osm_routes.py            # 既定で nas03 の 20261105 の抽出を読む
+AJG_OSM_RAW_TOWERS=<研究室の NAS の json_20261109> PYTHONPATH=. python scripts/export_osm_routes.py
 ```
 
-- 入力の鉄塔データは **git の外で、NAS に置く**（取得データは Mac に置かない決まり・2026-11-07）。nas03 の `PWS_DB/osm_jp_power/20261105_agj_transmission/json/tw_japan_t0.json`（Geofabrik の日本の抽出 2026-11-05 を `scripts/osm_pbf_to_power_json.py` で Overpass の JSON と同じ形にしたもの、51 MB、SHA256 は同じ場所の `MANIFEST.sha256`）。読む場所は `osm_routes.default_raw_dir()`: 環境変数 `AJG_OSM_RAW_TOWERS`（旧名 `AGJ_OSM_RAW_TOWERS`）→ `/mnt/nas03/…/json`（pws-160core）→ `/Volumes/PWS_DB/…/json`（Mac で nas03 をつないだとき）。Mac の `data/osm_raw_towers/`（6 月の Overpass の取得分）は読まない。CI では作り直せないので、出力（17 MB）を git に入れている
+- 入力の鉄塔データは **git の外で、研究室の NAS に置く**（取得データは Mac に置かない決まり・2026-11-07）。`osm_jp_power/20261105_agj_transmission/json_20261109/tw_japan_t0.json`（Geofabrik の日本の抽出 2026-11-05 を `scripts/osm_pbf_to_power_json.py` で Overpass の JSON と同じ形にしたもの、52 MB、SHA256 `d070e1ae…f5fce4`、同じ場所の `MANIFEST.sha256`）。場所は公開のリポジトリに書かない決まりなので、環境変数 `AJG_OSM_RAW_TOWERS`（旧名 `AGJ_OSM_RAW_TOWERS`）か `--raw` で渡す（`osm_routes.default_raw_dir()` は環境変数だけを見る。渡さなければ止まる）。同じ場所の `json/`（11-07）は東北の四角を広げる前（#61 の前）の分で、新潟の西と佐渡が入っていない。Mac の `data/osm_raw_towers/`（6 月の Overpass の取得分）は読まない。CI では作り直せないので、出力（17 MB）を git に入れている
 - 出力は、入力が同じなら毎回同じバイトになる（実行日は書かない）。`meta.json` に入力の SHA256・OSM の取得時刻・正典（`built/all.json`）の SHA256 を書く
 - 正典を作り直したあとも、枝と路線の対応（`edge_routes.json`）は枝の始点・終点・頂点数を鍵にしているので、形の変わらない枝はそのまま引ける。形が変わった枝は「対応づけられない」と出るだけで、間違った路線は出さない。正典が大きく変わったら作り直す
 - 規則の検査は `tests/test_osm_routes.py`、画面の検査は `tests/test_pages_map_ui.py`（路線・鉄塔・共有の URL・検索）
@@ -93,5 +93,6 @@ OSM に無い値は、根拠のある推定だけで埋め、地図のカード�
 | 回線数 | OSM の `circuits`。無い線は、交流は導体数 ÷ 3（3 の倍数のとき）、直流は導体数 ÷ 2、それも無ければその線を通る `route=power` の relation の数 | 「2 回線（推定：導体数 ÷ 3）」など |
 
 - 取り直し（2026-11-07）: Geofabrik の日本の抽出（`japan-261105.osm.pbf`、OSM 2026-11-05）を pws-160core から nas03 の `PWS_DB/osm_jp_power/20261105_agj_transmission/` に取り、osmium で送電線・鉄塔・`route=power` に絞った（タグは全部）。`scripts/osm_pbf_to_power_json.py` が Overpass の JSON と同じ形に直す。Overpass で取る `scripts/fetch_osm_power.py`（地域ごとの 3×3）も残したが、1 区画に 1〜2 分かかり全国で 2 時間を超えるので使っていない
+- 絞り直し（2026-11-09）: 東北の外接矩形を広げた（#175・介入#61、lon_min 139.0 → 137.8）ので、同じ抽出を新しい四角で `osm_pbf_to_power_json.py` にかけ直し、`json_20261109/` に置いた。前の四角では新潟の西（上越・柏崎・長岡・十日町・魚沼）と佐渡がどの地域の四角にも入らず、鉄塔 3,800 基が落ちていた。正典の #58〜#61 に合わせた作り直しとあわせて `docs/reports/osm_routes_refresh_2026-11-09.md`
 - 前と後の地域ごとの数、正典の回線数と OSM の回線数が食い違う線の一覧、公表値との一致率（集計だけ）は `scripts/report_osm_completion.py` が書く（`docs/reports/osm_completion_<日付>.md`）
 - 公表の回線数（`data/reference/circuit_counts.jsonl`）は検証にだけ使い、出すのは一致率などの集計だけ

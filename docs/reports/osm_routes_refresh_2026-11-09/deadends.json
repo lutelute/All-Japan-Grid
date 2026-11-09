@@ -1,0 +1,192 @@
+{
+ "before": {
+  "audit_built_sha": "c6c6a9108212",
+  "dead_ends": 2268
+ },
+ "after": {
+  "audit_built_sha": "96af806152ac",
+  "dead_ends": 2764
+ },
+ "new": 603,
+ "gone": 107,
+ "new_by_kind": {
+  "copies_overlapped": 574,
+  "new_point": 24,
+  "tail_from_substation": 3,
+  "copies_shifted": 2
+ },
+ "examples": {
+  "copies_overlapped": [
+   {
+    "lat": 33.39376,
+    "lon": 132.09182,
+    "kv": 0.0,
+    "names_before": [
+     "九州送電線_366",
+     "四国送電線_105"
+    ],
+    "deg_before": 2
+   },
+   {
+    "lat": 33.66907,
+    "lon": 133.33273,
+    "kv": 0.0,
+    "names_before": [
+     "中国送電線_448",
+     "四国送電線_174"
+    ],
+    "deg_before": 2
+   },
+   {
+    "lat": 33.71768,
+    "lon": 133.26915,
+    "kv": 0.0,
+    "names_before": [
+     "中国送電線_448",
+     "四国送電線_174"
+    ],
+    "deg_before": 2
+   },
+   {
+    "lat": 33.77128,
+    "lon": 130.97601,
+    "kv": 66.0,
+    "names_before": [
+     "苅田行橋線"
+    ],
+    "deg_before": 2
+   },
+   {
+    "lat": 33.77665,
+    "lon": 130.98152,
+    "kv": 66.0,
+    "names_before": [
+     "苅田雨窪線"
+    ],
+    "deg_before": 2
+   }
+  ],
+  "copies_shifted": [
+   {
+    "lat": 33.92293,
+    "lon": 130.79511,
+    "kv": 66.0,
+    "names_before": [
+     "安瀬東邦チタニウム線"
+    ],
+    "deg_before": 2
+   },
+   {
+    "lat": 35.13425,
+    "lon": 138.62448,
+    "kv": 0.0,
+    "names_before": [
+     "中部送電線_272",
+     "東京送電線_46"
+    ],
+    "deg_before": 2
+   }
+  ],
+  "tail_from_substation": [
+   {
+    "lat": 34.48086,
+    "lon": 132.13139,
+    "kv": 110.0,
+    "names_before": [
+     "友和変電所~美和町西畑変電所線",
+     "東広島変電所~吉和変電所線"
+    ],
+    "deg_before": 2
+   },
+   {
+    "lat": 37.06688,
+    "lon": 140.87029,
+    "kv": 66.0,
+    "names_before": [
+     "好間線",
+     "東北電力ネットワーク 66.0kV線"
+    ],
+    "deg_before": 2
+   },
+   {
+    "lat": 37.23712,
+    "lon": 141.00975,
+    "kv": 500.0,
+    "names_before": [
+     "広野火力線",
+     "東北送電線_67"
+    ],
+    "deg_before": 2
+   }
+  ],
+  "new_point": [
+   {
+    "lat": 36.55901,
+    "lon": 138.11072,
+    "kv": 0.0,
+    "names_before": [],
+    "deg_before": 0
+   },
+   {
+    "lat": 37.04736,
+    "lon": 138.94733,
+    "kv": 66.0,
+    "names_before": [],
+    "deg_before": 0
+   },
+   {
+    "lat": 37.05313,
+    "lon": 138.97616,
+    "kv": 66.0,
+    "names_before": [],
+    "deg_before": 0
+   },
+   {
+    "lat": 37.07397,
+    "lon": 138.87714,
+    "kv": 66.0,
+    "names_before": [],
+    "deg_before": 0
+   },
+   {
+    "lat": 37.07561,
+    "lon": 137.98466,
+    "kv": 66.0,
+    "names_before": [],
+    "deg_before": 0
+   }
+  ]
+ },
+ "tails": [
+  {
+   "lat": 34.48086,
+   "lon": 132.13139,
+   "kv": 110.0,
+   "names_before": [
+    "友和変電所~美和町西畑変電所線",
+    "東広島変電所~吉和変電所線"
+   ],
+   "deg_before": 2
+  },
+  {
+   "lat": 37.06688,
+   "lon": 140.87029,
+   "kv": 66.0,
+   "names_before": [
+    "好間線",
+    "東北電力ネットワーク 66.0kV線"
+   ],
+   "deg_before": 2
+  },
+  {
+   "lat": 37.23712,
+   "lon": 141.00975,
+   "kv": 500.0,
+   "names_before": [
+    "広野火力線",
+    "東北送電線_67"
+   ],
+   "deg_before": 2
+  }
+ ]
+}

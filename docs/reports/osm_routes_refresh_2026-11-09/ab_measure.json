@@ -1,0 +1,197 @@
+{
+ "main": {
+  "counts": {
+   "ways": 36526,
+   "routes": 26975,
+   "towers": 246609,
+   "towers_on_line": 244841,
+   "towers_ref": 31090,
+   "map_edges": 19909,
+   "map_edges_mapped": 14342,
+   "edge_keys": 12407
+  },
+  "source_sha": "df029f9cc046",
+  "built_sha": "c6c6a9108212",
+  "towers_by_region": {
+   "hokkaido": 31651,
+   "tohoku": 44175,
+   "tokyo": 43258,
+   "chubu": 33285,
+   "hokuriku": 11061,
+   "kansai": 25469,
+   "chugoku": 21293,
+   "shikoku": 9242,
+   "kyushu": 26031,
+   "okinawa": 1144
+  },
+  "routes_by_region": {
+   "hokkaido": 2268,
+   "tohoku": 4700,
+   "tokyo": 6588,
+   "chubu": 2899,
+   "hokuriku": 2274,
+   "kansai": 2774,
+   "chugoku": 1952,
+   "shikoku": 903,
+   "kyushu": 2410,
+   "okinawa": 207
+  },
+  "towers_band_mainland": 2049,
+  "towers_sado": 0,
+  "link": {
+   "shaped": 16105,
+   "shaped_hit": 12155,
+   "shaped_rate": 0.7547,
+   "km_all": 76808,
+   "km_hit": 70277,
+   "km_rate": 0.915,
+   "band_km_all": 1797,
+   "band_km_hit": 421
+  },
+  "audit": {
+   "canon_dead_end": 2268,
+   "canon_mixed_kv": 59,
+   "obs_near_line": 3017,
+   "obs_near_sub": 234,
+   "obs_nothing": 2871,
+   "obs_outside": 47,
+   "obs_split": 12
+  },
+  "audit_cols": [
+   "種類(classes の番号)",
+   "lat×1e5",
+   "lon×1e5",
+   "kV"
+  ]
+ },
+ "A": {
+  "counts": {
+   "ways": 36526,
+   "routes": 26975,
+   "towers": 246609,
+   "towers_on_line": 244841,
+   "towers_ref": 31090,
+   "map_edges": 17416,
+   "map_edges_mapped": 12403,
+   "edge_keys": 12314
+  },
+  "source_sha": "df029f9cc046",
+  "built_sha": "96af806152ac",
+  "towers_by_region": {
+   "hokkaido": 31651,
+   "tohoku": 45049,
+   "tokyo": 42342,
+   "chubu": 33202,
+   "hokuriku": 11240,
+   "kansai": 25447,
+   "chugoku": 21469,
+   "shikoku": 8961,
+   "kyushu": 26104,
+   "okinawa": 1144
+  },
+  "routes_by_region": {
+   "hokkaido": 2268,
+   "tohoku": 4730,
+   "tokyo": 6556,
+   "chubu": 2867,
+   "hokuriku": 2312,
+   "kansai": 2774,
+   "chugoku": 1949,
+   "shikoku": 891,
+   "kyushu": 2421,
+   "okinawa": 207
+  },
+  "towers_band_mainland": 2049,
+  "towers_sado": 0,
+  "link": {
+   "shaped": 16105,
+   "shaped_hit": 12323,
+   "shaped_rate": 0.7652,
+   "km_all": 76808,
+   "km_hit": 72413,
+   "km_rate": 0.9428,
+   "band_km_all": 1797,
+   "band_km_hit": 755
+  },
+  "audit": {
+   "canon_dead_end": 2764,
+   "canon_mixed_kv": 51,
+   "obs_near_line": 3017,
+   "obs_near_sub": 236,
+   "obs_nothing": 2888,
+   "obs_outside": 24,
+   "obs_split": 12
+  },
+  "audit_cols": [
+   "種類(classes の番号)",
+   "lat×1e5",
+   "lon×1e5",
+   "kV"
+  ]
+ },
+ "B": {
+  "counts": {
+   "ways": 36939,
+   "routes": 27316,
+   "towers": 250409,
+   "towers_on_line": 248590,
+   "towers_ref": 31126,
+   "map_edges": 17416,
+   "map_edges_mapped": 12597,
+   "edge_keys": 12507
+  },
+  "source_sha": "f631c841323a",
+  "built_sha": "96af806152ac",
+  "towers_by_region": {
+   "hokkaido": 31651,
+   "tohoku": 48764,
+   "tokyo": 42413,
+   "chubu": 33216,
+   "hokuriku": 11240,
+   "kansai": 25447,
+   "chugoku": 21469,
+   "shikoku": 8961,
+   "kyushu": 26104,
+   "okinawa": 1144
+  },
+  "routes_by_region": {
+   "hokkaido": 2268,
+   "tohoku": 5055,
+   "tokyo": 6572,
+   "chubu": 2867,
+   "hokuriku": 2312,
+   "kansai": 2774,
+   "chugoku": 1949,
+   "shikoku": 891,
+   "kyushu": 2421,
+   "okinawa": 207
+  },
+  "towers_band_mainland": 5546,
+  "towers_sado": 303,
+  "link": {
+   "shaped": 16105,
+   "shaped_hit": 12512,
+   "shaped_rate": 0.7769,
+   "km_all": 76808,
+   "km_hit": 73332,
+   "km_rate": 0.9547,
+   "band_km_all": 1797,
+   "band_km_hit": 1674
+  },
+  "audit": {
+   "canon_dead_end": 2764,
+   "canon_mixed_kv": 51,
+   "obs_near_line": 3027,
+   "obs_near_sub": 239,
+   "obs_nothing": 2915,
+   "obs_outside": 24,
+   "obs_split": 12
+  },
+  "audit_cols": [
+   "種類(classes の番号)",
+   "lat×1e5",
+   "lon×1e5",
+   "kV"
+  ]
+ }
+}
