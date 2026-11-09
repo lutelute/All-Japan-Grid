@@ -3,7 +3,7 @@
     "source": "docs/data/built/all.json",
     "n_nodes": 15349,
     "n_edges": 17242,
-    "generated": "2026-11-09 03:14:20",
+    "generated": "2026-11-09 09:11:48",
     "scale": "full (no voltage-class reduction)"
   },
   "islands": {
@@ -158,7 +158,7 @@
           "spread_mw": 114.5
         }
       },
-      "solve_seconds": 5.8
+      "solve_seconds": 5.6
     },
     "east": {
       "frequency_hz": 50,
@@ -880,7 +880,7 @@
       "n_edge_dup_removed": 3,
       "n_site_trafo": 0,
       "n_deenergized": 7,
-      "n_tie_nis": 0,
+      "n_tie_nis": 1,
       "cap_calib": false,
       "cap_calib_ledger": null,
       "n_btb_split": 0,
@@ -2016,18 +2016,18 @@
       ],
       "lv_aggregate": null,
       "total_load_mw": 55250.0,
-      "n_components": 233,
-      "n_slack": 233,
-      "n_synthetic_slack": 222,
+      "n_components": 234,
+      "n_slack": 234,
+      "n_synthetic_slack": 223,
       "ac_converged": true,
       "ac_solver": "nr",
       "ac_error": null,
       "dc_converged": true,
-      "ac_vm_min": 0.8559268723,
+      "ac_vm_min": 0.8559268724,
       "ac_vm_max": 1.008679404,
-      "ac_max_loading_pct": 895.4680436,
+      "ac_max_loading_pct": 895.467878,
       "dc_max_loading_pct": 789.3059969,
-      "ac_total_loss_mw": 1304.104025,
+      "ac_total_loss_mw": 1304.09811,
       "slack_spread": {
         "dc": {
           "applied": true,
@@ -2046,7 +2046,7 @@
           "spread_mw": 1651.7
         }
       },
-      "solve_seconds": 64.8
+      "solve_seconds": 54.2
     },
     "west": {
       "frequency_hz": 60,
@@ -5549,7 +5549,7 @@
           "spread_mw": 1351.2
         }
       },
-      "solve_seconds": 80.8
+      "solve_seconds": 73.1
     },
     "okinawa": {
       "frequency_hz": 60,
@@ -5629,7 +5629,7 @@
           "spread_mw": 33.4
         }
       },
-      "solve_seconds": 1.2
+      "solve_seconds": 1.1
     }
   },
   "regions": {
@@ -5653,7 +5653,7 @@
       "vm_max": 1.0085,
       "n_buses": 2041,
       "n_buses_exported": 2041,
-      "n_lines_exported": 2109
+      "n_lines_exported": 2108
     },
     "tokyo": {
       "island": "east",

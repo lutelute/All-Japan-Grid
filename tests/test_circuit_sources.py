@@ -89,7 +89,8 @@ def test_route_does_not_take_synthetic_ties():
     assert sorted(res["edges"]) == [0, 1, 2]                                # 実在の線に当たり、直線(5)には当たらない
     assert not m.routable({"tie": 1, "name": "甲乙間連系線"})
     assert not m.routable({"dc_tie": True, "name": "阿南紀北直流幹線(DC連系)"})
-    assert m.routable({"tie": 1, "name": "東北東京間連系線"})              # 実在の線の切れ目を代表している
+    # 東北東京間連系線: 実在の線の切れ目の代わりをしていたが、#58〜#60 が縫ったので既定では通さない(2026-11-09)
+    assert m.routable({"tie": 1, "name": "東北東京間連系線"}) == ("東北東京間連系線" in m.ROUTABLE_TIES)
     assert m.routable({"kv": 500.0, "name": "幹線区間"})
 
 
@@ -98,6 +99,19 @@ def test_routable_ties_match_the_live_ties_of_the_power_flow():
     pytest.importorskip("pandapower")
     from src.powerflow.full_from_built import KEEP_LIVE_TIES
     assert _mod().ROUTABLE_TIES == KEEP_LIVE_TIES
+
+
+def test_seam_tie_is_live_only_when_region_dedup_is_off(monkeypatch):
+    """介入#31 の例外(東北東京間連系線)は、#58〜#60 がすべて有効なら外れ、どれかを切ると戻る(2026-11-09)。"""
+    from src.topology import region_dedup as rd
+    flags = ("REGION_DEDUP_DEFAULT", "END_ALIGN_DEFAULT", "SPLIT_ALIGN_DEFAULT")
+    for f in flags:
+        monkeypatch.setattr(rd, f, True)
+    assert rd.live_synthetic_ties() == set()
+    for off in flags:
+        for f in flags:
+            monkeypatch.setattr(rd, f, f != off)
+        assert rd.live_synthetic_ties() == {"東北東京間連系線"}, off
 
 
 def test_real_canon_honshi_circuits_stay_on_the_bridge_lines():

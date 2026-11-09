@@ -1,15 +1,15 @@
 {
-  "model_version": "e1b915d2",
+  "model_version": "96657bb1",
   "git_dirty": false,
-  "generated_at": "2026-11-08T18:12:38+00:00",
+  "generated_at": "2026-11-09T00:10:12+00:00",
   "steps": {
     "build_structures": {
       "status": "ok",
-      "elapsed_s": 5.2
+      "elapsed_s": 5.9
     },
     "build_editor_data": {
       "status": "ok",
-      "elapsed_s": 14.3
+      "elapsed_s": 13.8
     },
     "apply_disclosure_v1": {
       "status": "ok",
@@ -17,7 +17,7 @@
     },
     "apply_disclosure_v2": {
       "status": "ok",
-      "elapsed_s": 1.2
+      "elapsed_s": 1.0
     },
     "route_disclosure": {
       "status": "ok",
@@ -25,27 +25,27 @@
     },
     "fragment_recovery": {
       "status": "ok",
-      "elapsed_s": 2.1
+      "elapsed_s": 2.0
     },
     "fragment_recovery_chains": {
       "status": "ok",
-      "elapsed_s": 20.8
+      "elapsed_s": 19.6
     },
     "fragment_recovery_third_wave": {
       "status": "ok",
-      "elapsed_s": 23.3
+      "elapsed_s": 21.0
     },
     "node_hygiene": {
       "status": "ok",
-      "elapsed_s": 5.8
+      "elapsed_s": 5.4
     },
     "mixed_voltage_circuits": {
       "status": "ok",
-      "elapsed_s": 0.7
+      "elapsed_s": 0.9
     },
     "apply_circuit_sources": {
       "status": "ok",
-      "elapsed_s": 6.0
+      "elapsed_s": 5.0
     },
     "satellite_connections": {
       "status": "ok",
@@ -57,31 +57,31 @@
     },
     "node_hygiene_final": {
       "status": "ok",
-      "elapsed_s": 3.2
+      "elapsed_s": 3.0
     },
     "substation_properties": {
       "status": "ok",
-      "elapsed_s": 1.8
+      "elapsed_s": 1.6
     },
     "subsld_pages": {
       "status": "ok",
-      "elapsed_s": 2.1
+      "elapsed_s": 1.9
     },
     "subsld_ways": {
       "status": "ok",
-      "elapsed_s": 1.3
+      "elapsed_s": 1.2
     },
     "loops": {
       "status": "ok",
-      "elapsed_s": 0.4
+      "elapsed_s": 0.3
     },
     "export_map_tiers": {
       "status": "ok",
-      "elapsed_s": 7.8
+      "elapsed_s": 6.9
     },
     "run_full_powerflow": {
       "status": "ok",
-      "elapsed_s": 157.0
+      "elapsed_s": 138.2
     },
     "gen_sld": {
       "status": "ok",
@@ -93,7 +93,7 @@
     },
     "n1_screening": {
       "status": "ok",
-      "elapsed_s": 207.7
+      "elapsed_s": 204.6
     },
     "export_n1_pages": {
       "status": "ok",
@@ -101,27 +101,27 @@
     },
     "export_matpower_canonical": {
       "status": "ok",
-      "elapsed_s": 144.7
+      "elapsed_s": 281.0
     },
     "export_cim": {
       "status": "ok",
-      "elapsed_s": 4.5
+      "elapsed_s": 8.6
     },
     "export_cim_canonical": {
       "status": "ok",
-      "elapsed_s": 155.2
+      "elapsed_s": 361.5
     },
     "build_static_site": {
       "status": "ok",
-      "elapsed_s": 1.8
+      "elapsed_s": 4.8
     },
     "apply_capacity_sources": {
       "status": "ok",
-      "elapsed_s": 0.4
+      "elapsed_s": 1.1
     },
     "build_pages_editor": {
       "status": "ok",
-      "elapsed_s": 0.1
+      "elapsed_s": 0.2
     }
   },
   "note": "全出力を単一モデルから一括再生成した版(全面改修Phase4)。git_dirty=true は未コミット変更がある状態での再生成(=コミット推奨)。",

@@ -1,6 +1,6 @@
 {
  "date": "2026-11-09",
- "git_head": "e1b915d2",
+ "git_head": "96657bb1",
  "args": {
   "islands": [
    "hokkaido",
@@ -55,7 +55,7 @@
    "sec_build_ptdf": 0.01,
    "sec_screen_physical": 0.01,
    "sec_screen_all": 0.0,
-   "sec_total": 6.7,
+   "sec_total": 6.3,
    "top_physical": [
     {
      "ppc_idx": 596,
@@ -2534,20 +2534,20 @@
   },
   {
    "island": "east",
-   "n_bus": 5762,
+   "n_bus": 5760,
    "n_bus_full": 6191,
-   "n_branch": 6857,
-   "n_in_service": 6853,
-   "n_outage_evaluated": 5914,
-   "n_islanding": 939,
+   "n_branch": 6855,
+   "n_in_service": 6851,
+   "n_outage_evaluated": 5913,
+   "n_islanding": 938,
    "n_islanding_pseudo": 0,
    "single_circuit": true,
    "min_kv": 154.0,
    "min_kv_requested": 154.0,
    "capacity_factor": 1.0,
    "cap_calib": false,
-   "n_monitor_physical": 1399,
-   "n_monitor_all": 2098,
+   "n_monitor_physical": 1398,
+   "n_monitor_all": 2096,
    "base_n_over_physical": 56,
    "base_n_over_all": 118,
    "base_max_loading_physical_pct": 415.0,
@@ -2559,20 +2559,19 @@
    "elem_class_counts": {
     "disclosure_edge": 61,
     "leadin": 279,
-    "osm_line": 5738,
+    "osm_line": 5737,
     "osm_recovered": 70,
     "same_site_tie": 47,
-    "synthetic_tie": 1,
     "trafo_heuristic": 653,
     "trafo_nameplate": 8
    },
-   "sec_build_ptdf": 2.45,
-   "sec_screen_physical": 1.04,
-   "sec_screen_all": 0.81,
-   "sec_total": 79.8,
+   "sec_build_ptdf": 2.19,
+   "sec_screen_physical": 1.81,
+   "sec_screen_all": 1.86,
+   "sec_total": 88.4,
    "top_physical": [
     {
-     "ppc_idx": 6565,
+     "ppc_idx": 6563,
      "table": "trafo",
      "elem": 369,
      "name": "trafo_500/275kV@pairmed@osm",
@@ -2622,7 +2621,7 @@
      }
     },
     {
-     "ppc_idx": 6557,
+     "ppc_idx": 6555,
      "table": "trafo",
      "elem": 361,
      "name": "trafo_500/275kV",
@@ -2672,7 +2671,7 @@
      }
     },
     {
-     "ppc_idx": 6668,
+     "ppc_idx": 6666,
      "table": "trafo",
      "elem": 472,
      "name": "trafo_500/275kV@pairmed@osm",
@@ -2722,7 +2721,7 @@
      }
     },
     {
-     "ppc_idx": 6826,
+     "ppc_idx": 6824,
      "table": "trafo",
      "elem": 630,
      "name": "trafo_500/275kV",
@@ -2772,7 +2771,7 @@
      }
     },
     {
-     "ppc_idx": 6755,
+     "ppc_idx": 6753,
      "table": "trafo",
      "elem": 559,
      "name": "trafo_500/275kV@pairmed@osm",
@@ -2922,7 +2921,7 @@
      }
     },
     {
-     "ppc_idx": 6472,
+     "ppc_idx": 6470,
      "table": "trafo",
      "elem": 276,
      "name": "trafo_500/154kV@pairmed@pub",
@@ -3022,7 +3021,7 @@
      }
     },
     {
-     "ppc_idx": 6844,
+     "ppc_idx": 6842,
      "table": "trafo",
      "elem": 648,
      "name": "trafo_275/66kV#43a@推定",
@@ -3072,7 +3071,7 @@
      }
     },
     {
-     "ppc_idx": 6465,
+     "ppc_idx": 6463,
      "table": "trafo",
      "elem": 269,
      "name": "trafo_500/275kV@pairmed@osm",
@@ -3372,7 +3371,7 @@
      }
     },
     {
-     "ppc_idx": 6749,
+     "ppc_idx": 6747,
      "table": "trafo",
      "elem": 553,
      "name": "trafo_500/154kV@pairmed@osm",
@@ -3574,7 +3573,7 @@
    ],
    "top_synthetic_worst": [
     {
-     "ppc_idx": 6441,
+     "ppc_idx": 6439,
      "table": "trafo",
      "elem": 245,
      "name": "trafo_154/66kV@pairmed@osm",
@@ -3593,7 +3592,7 @@
      "post_n_over": 133,
      "post_n_new_over": 15,
      "worst": {
-      "ppc_idx": 6452,
+      "ppc_idx": 6450,
       "table": "trafo",
       "elem": 256,
       "name": "trafo_154/66kV",
@@ -3608,7 +3607,7 @@
       "base_loading_pct": 92.0
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -3624,7 +3623,7 @@
      }
     },
     {
-     "ppc_idx": 6010,
+     "ppc_idx": 6008,
      "table": "line",
      "elem": 6209,
      "name": "南池上線",
@@ -3643,7 +3642,7 @@
      "post_n_over": 123,
      "post_n_new_over": 7,
      "worst": {
-      "ppc_idx": 6411,
+      "ppc_idx": 6409,
       "table": "trafo",
       "elem": 215,
       "name": "trafo_154/66kV",
@@ -3658,7 +3657,7 @@
       "base_loading_pct": 96.0
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -3693,7 +3692,7 @@
      "post_n_over": 121,
      "post_n_new_over": 6,
      "worst": {
-      "ppc_idx": 6839,
+      "ppc_idx": 6837,
       "table": "trafo",
       "elem": 643,
       "name": "trafo_154/66kV#43a@推定",
@@ -3708,7 +3707,7 @@
       "base_loading_pct": 70.6
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -3724,7 +3723,7 @@
      }
     },
     {
-     "ppc_idx": 6844,
+     "ppc_idx": 6842,
      "table": "trafo",
      "elem": 648,
      "name": "trafo_275/66kV#43a@推定",
@@ -3743,7 +3742,7 @@
      "post_n_over": 121,
      "post_n_new_over": 6,
      "worst": {
-      "ppc_idx": 6839,
+      "ppc_idx": 6837,
       "table": "trafo",
       "elem": 643,
       "name": "trafo_154/66kV#43a@推定",
@@ -3758,7 +3757,7 @@
       "base_loading_pct": 70.6
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -3774,7 +3773,7 @@
      }
     },
     {
-     "ppc_idx": 6550,
+     "ppc_idx": 6548,
      "table": "trafo",
      "elem": 354,
      "name": "trafo_275/66kV@pairmed@osm",
@@ -3793,7 +3792,7 @@
      "post_n_over": 124,
      "post_n_new_over": 6,
      "worst": {
-      "ppc_idx": 6540,
+      "ppc_idx": 6538,
       "table": "trafo",
       "elem": 344,
       "name": "trafo_275/66kV",
@@ -3808,7 +3807,7 @@
       "base_loading_pct": 58.3
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -3843,7 +3842,7 @@
      "post_n_over": 121,
      "post_n_new_over": 5,
      "worst": {
-      "ppc_idx": 6831,
+      "ppc_idx": 6829,
       "table": "trafo",
       "elem": 635,
       "name": "trafo_154/66kV",
@@ -3858,7 +3857,7 @@
       "base_loading_pct": 79.4
      },
      "worst_incl_base": {
-      "ppc_idx": 6831,
+      "ppc_idx": 6829,
       "table": "trafo",
       "elem": 635,
       "name": "trafo_154/66kV",
@@ -3874,7 +3873,7 @@
      }
     },
     {
-     "ppc_idx": 6842,
+     "ppc_idx": 6840,
      "table": "trafo",
      "elem": 646,
      "name": "trafo_275/66kV#43a@推定",
@@ -3893,7 +3892,7 @@
      "post_n_over": 122,
      "post_n_new_over": 5,
      "worst": {
-      "ppc_idx": 6843,
+      "ppc_idx": 6841,
       "table": "trafo",
       "elem": 647,
       "name": "trafo_275/66kV#43a@推定",
@@ -3908,7 +3907,7 @@
       "base_loading_pct": 96.6
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -3924,7 +3923,7 @@
      }
     },
     {
-     "ppc_idx": 6074,
+     "ppc_idx": 6072,
      "table": "line",
      "elem": 6273,
      "name": "新淀線",
@@ -3943,7 +3942,7 @@
      "post_n_over": 121,
      "post_n_new_over": 5,
      "worst": {
-      "ppc_idx": 6411,
+      "ppc_idx": 6409,
       "table": "trafo",
       "elem": 215,
       "name": "trafo_154/66kV",
@@ -3958,7 +3957,7 @@
       "base_loading_pct": 96.0
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -3993,7 +3992,7 @@
      "post_n_over": 120,
      "post_n_new_over": 5,
      "worst": {
-      "ppc_idx": 6590,
+      "ppc_idx": 6588,
       "table": "trafo",
       "elem": 394,
       "name": "trafo_500/275kV",
@@ -4008,7 +4007,7 @@
       "base_loading_pct": 77.1
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -4024,7 +4023,7 @@
      }
     },
     {
-     "ppc_idx": 6668,
+     "ppc_idx": 6666,
      "table": "trafo",
      "elem": 472,
      "name": "trafo_500/275kV@pairmed@osm",
@@ -4043,7 +4042,7 @@
      "post_n_over": 122,
      "post_n_new_over": 5,
      "worst": {
-      "ppc_idx": 6671,
+      "ppc_idx": 6669,
       "table": "trafo",
       "elem": 475,
       "name": "trafo_500/66kV",
@@ -4058,7 +4057,7 @@
       "base_loading_pct": 81.8
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -4074,7 +4073,7 @@
      }
     },
     {
-     "ppc_idx": 6516,
+     "ppc_idx": 6514,
      "table": "trafo",
      "elem": 320,
      "name": "trafo_275/66kV",
@@ -4093,7 +4092,7 @@
      "post_n_over": 121,
      "post_n_new_over": 5,
      "worst": {
-      "ppc_idx": 6411,
+      "ppc_idx": 6409,
       "table": "trafo",
       "elem": 215,
       "name": "trafo_154/66kV",
@@ -4108,7 +4107,7 @@
       "base_loading_pct": 96.0
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -4124,7 +4123,7 @@
      }
     },
     {
-     "ppc_idx": 6553,
+     "ppc_idx": 6551,
      "table": "trafo",
      "elem": 357,
      "name": "trafo_154/66kV",
@@ -4143,7 +4142,7 @@
      "post_n_over": 122,
      "post_n_new_over": 5,
      "worst": {
-      "ppc_idx": 6558,
+      "ppc_idx": 6556,
       "table": "trafo",
       "elem": 362,
       "name": "trafo_154/66kV",
@@ -4158,7 +4157,7 @@
       "base_loading_pct": 96.8
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -4174,7 +4173,7 @@
      }
     },
     {
-     "ppc_idx": 6843,
+     "ppc_idx": 6841,
      "table": "trafo",
      "elem": 647,
      "name": "trafo_275/66kV#43a@推定",
@@ -4193,7 +4192,7 @@
      "post_n_over": 122,
      "post_n_new_over": 4,
      "worst": {
-      "ppc_idx": 6848,
+      "ppc_idx": 6846,
       "table": "trafo",
       "elem": 652,
       "name": "trafo_275/66kV#43a@推定",
@@ -4208,7 +4207,7 @@
       "base_loading_pct": 86.7
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -4224,7 +4223,7 @@
      }
     },
     {
-     "ppc_idx": 6075,
+     "ppc_idx": 6073,
      "table": "line",
      "elem": 6274,
      "name": "淀橋和田堀方面(図p12)",
@@ -4243,7 +4242,7 @@
      "post_n_over": 120,
      "post_n_new_over": 4,
      "worst": {
-      "ppc_idx": 6411,
+      "ppc_idx": 6409,
       "table": "trafo",
       "elem": 215,
       "name": "trafo_154/66kV",
@@ -4258,7 +4257,7 @@
       "base_loading_pct": 96.0
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -4274,7 +4273,7 @@
      }
     },
     {
-     "ppc_idx": 6472,
+     "ppc_idx": 6470,
      "table": "trafo",
      "elem": 276,
      "name": "trafo_500/154kV@pairmed@pub",
@@ -4293,7 +4292,7 @@
      "post_n_over": 121,
      "post_n_new_over": 4,
      "worst": {
-      "ppc_idx": 6470,
+      "ppc_idx": 6468,
       "table": "trafo",
       "elem": 274,
       "name": "trafo_500/154kV",
@@ -4308,7 +4307,7 @@
       "base_loading_pct": 82.1
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -4324,7 +4323,7 @@
      }
     },
     {
-     "ppc_idx": 6749,
+     "ppc_idx": 6747,
      "table": "trafo",
      "elem": 553,
      "name": "trafo_500/154kV@pairmed@osm",
@@ -4343,7 +4342,7 @@
      "post_n_over": 121,
      "post_n_new_over": 4,
      "worst": {
-      "ppc_idx": 6761,
+      "ppc_idx": 6759,
       "table": "trafo",
       "elem": 565,
       "name": "trafo_500/66kV",
@@ -4358,7 +4357,7 @@
       "base_loading_pct": 95.2
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -4374,7 +4373,7 @@
      }
     },
     {
-     "ppc_idx": 6615,
+     "ppc_idx": 6613,
      "table": "trafo",
      "elem": 419,
      "name": "trafo_154/66kV",
@@ -4393,7 +4392,7 @@
      "post_n_over": 122,
      "post_n_new_over": 4,
      "worst": {
-      "ppc_idx": 6558,
+      "ppc_idx": 6556,
       "table": "trafo",
       "elem": 362,
       "name": "trafo_154/66kV",
@@ -4408,7 +4407,7 @@
       "base_loading_pct": 96.8
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -4424,7 +4423,7 @@
      }
     },
     {
-     "ppc_idx": 6655,
+     "ppc_idx": 6653,
      "table": "trafo",
      "elem": 459,
      "name": "trafo_154/66kV",
@@ -4443,7 +4442,7 @@
      "post_n_over": 122,
      "post_n_new_over": 4,
      "worst": {
-      "ppc_idx": 6558,
+      "ppc_idx": 6556,
       "table": "trafo",
       "elem": 362,
       "name": "trafo_154/66kV",
@@ -4458,7 +4457,7 @@
       "base_loading_pct": 96.8
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -4474,7 +4473,7 @@
      }
     },
     {
-     "ppc_idx": 6558,
+     "ppc_idx": 6556,
      "table": "trafo",
      "elem": 362,
      "name": "trafo_154/66kV",
@@ -4493,7 +4492,7 @@
      "post_n_over": 122,
      "post_n_new_over": 4,
      "worst": {
-      "ppc_idx": 6615,
+      "ppc_idx": 6613,
       "table": "trafo",
       "elem": 419,
       "name": "trafo_154/66kV",
@@ -4508,7 +4507,7 @@
       "base_loading_pct": 95.2
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -4524,7 +4523,7 @@
      }
     },
     {
-     "ppc_idx": 6422,
+     "ppc_idx": 6420,
      "table": "trafo",
      "elem": 226,
      "name": "trafo_154/66kV",
@@ -4543,7 +4542,7 @@
      "post_n_over": 121,
      "post_n_new_over": 4,
      "worst": {
-      "ppc_idx": 6456,
+      "ppc_idx": 6454,
       "table": "trafo",
       "elem": 260,
       "name": "trafo_154/66kV",
@@ -4558,7 +4557,7 @@
       "base_loading_pct": 99.3
      },
      "worst_incl_base": {
-      "ppc_idx": 6312,
+      "ppc_idx": 6310,
       "table": "trafo",
       "elem": 116,
       "name": "trafo_275/66kV",
@@ -4576,7 +4575,7 @@
    ],
    "islanding_top": [
     {
-     "ppc_idx": 6587,
+     "ppc_idx": 6585,
      "table": "trafo",
      "elem": 391,
      "name": "trafo_275/66kV",
@@ -4612,7 +4611,7 @@
      "isolated_gen_mw": 57.3
     },
     {
-     "ppc_idx": 6616,
+     "ppc_idx": 6614,
      "table": "trafo",
      "elem": 420,
      "name": "trafo_154/66kV",
@@ -4630,7 +4629,7 @@
      "isolated_gen_mw": 0.0
     },
     {
-     "ppc_idx": 6240,
+     "ppc_idx": 6238,
      "table": "trafo",
      "elem": 44,
      "name": "trafo_154/66kV@pairmed@osm",
@@ -4648,7 +4647,7 @@
      "isolated_gen_mw": 0.0
     },
     {
-     "ppc_idx": 6267,
+     "ppc_idx": 6265,
      "table": "trafo",
      "elem": 71,
      "name": "trafo_154/66kV",
@@ -4792,7 +4791,7 @@
      "isolated_gen_mw": 57.3
     },
     {
-     "ppc_idx": 6092,
+     "ppc_idx": 6090,
      "table": "line",
      "elem": 6291,
      "name": "(154kV・旭→横浜大黒)",
@@ -4846,7 +4845,7 @@
      "isolated_gen_mw": 0.2
     },
     {
-     "ppc_idx": 6195,
+     "ppc_idx": 6193,
      "table": "line",
      "elem": 6397,
      "name": "衛星判読回収線 sat-001-ojiya66",
@@ -4940,7 +4939,7 @@
    "islanding_n_over_100mw": 3,
    "ac_verify": [
     {
-     "ppc_idx": 6565,
+     "ppc_idx": 6563,
      "name": "trafo_500/275kV@pairmed@osm",
      "table": "trafo",
      "elem": 369,
@@ -4951,7 +4950,7 @@
      "dc_n_new_over": 6,
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "ac_sec": 2.3,
+     "ac_sec": 3.7,
      "ac_post_max_new_loading_pct": 123.0,
      "ac_worst": "北千葉線",
      "ac_post_max_loading_pct": 427.6,
@@ -4961,7 +4960,7 @@
      "ac_n_over_physical": 61
     },
     {
-     "ppc_idx": 6557,
+     "ppc_idx": 6555,
      "name": "trafo_500/275kV",
      "table": "trafo",
      "elem": 361,
@@ -4972,7 +4971,7 @@
      "dc_n_new_over": 4,
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "ac_sec": 2.3,
+     "ac_sec": 2.4,
      "ac_post_max_new_loading_pct": 112.8,
      "ac_worst": "鹿島線",
      "ac_post_max_loading_pct": 428.0,
@@ -4982,7 +4981,7 @@
      "ac_n_over_physical": 57
     },
     {
-     "ppc_idx": 6668,
+     "ppc_idx": 6666,
      "name": "trafo_500/275kV@pairmed@osm",
      "table": "trafo",
      "elem": 472,
@@ -4993,7 +4992,7 @@
      "dc_n_new_over": 4,
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "ac_sec": 3.9,
+     "ac_sec": 3.5,
      "ac_post_max_new_loading_pct": 109.7,
      "ac_worst": "新新田線;佐波線",
      "ac_post_max_loading_pct": 427.3,
@@ -5003,7 +5002,7 @@
      "ac_n_over_physical": 61
     },
     {
-     "ppc_idx": 6826,
+     "ppc_idx": 6824,
      "name": "trafo_500/275kV",
      "table": "trafo",
      "elem": 630,
@@ -5014,7 +5013,7 @@
      "dc_n_new_over": 4,
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "ac_sec": 3.5,
+     "ac_sec": 3.8,
      "ac_post_max_new_loading_pct": 105.7,
      "ac_worst": "東京北線",
      "ac_post_max_loading_pct": 427.1,
@@ -5024,7 +5023,7 @@
      "ac_n_over_physical": 60
     },
     {
-     "ppc_idx": 6755,
+     "ppc_idx": 6753,
      "name": "trafo_500/275kV@pairmed@osm",
      "table": "trafo",
      "elem": 559,
@@ -5035,7 +5034,7 @@
      "dc_n_new_over": 3,
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "ac_sec": 4.8,
+     "ac_sec": 3.5,
      "ac_post_max_new_loading_pct": 158.6,
      "ac_worst": "西水戸線",
      "ac_post_max_loading_pct": 427.3,
@@ -5081,10 +5080,10 @@
     "trafo_heuristic": 954,
     "trafo_nameplate": 5
    },
-   "sec_build_ptdf": 4.66,
-   "sec_screen_physical": 1.82,
-   "sec_screen_all": 1.18,
-   "sec_total": 114.2,
+   "sec_build_ptdf": 3.95,
+   "sec_screen_physical": 1.75,
+   "sec_screen_all": 2.22,
+   "sec_total": 103.6,
    "top_physical": [
     {
      "ppc_idx": 8015,
@@ -7466,7 +7465,7 @@
      "dc_n_new_over": 6,
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "ac_sec": 5.9,
+     "ac_sec": 4.3,
      "ac_post_max_new_loading_pct": 167.8,
      "ac_worst": "駒ヶ根変電所~田畑変電所線",
      "ac_post_max_loading_pct": 249.8,
@@ -7487,7 +7486,7 @@
      "dc_n_new_over": 6,
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "ac_sec": 8.1,
+     "ac_sec": 6.1,
      "ac_post_max_new_loading_pct": 165.5,
      "ac_worst": "住吉町五丁目変電所~岩滑西町三丁目変電所線",
      "ac_post_max_loading_pct": 249.5,
@@ -7508,7 +7507,7 @@
      "dc_n_new_over": 6,
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "ac_sec": 5.8,
+     "ac_sec": 6.7,
      "ac_post_max_new_loading_pct": 159.5,
      "ac_worst": "住吉町五丁目変電所~岩滑西町三丁目変電所線",
      "ac_post_max_loading_pct": 249.5,
@@ -7529,7 +7528,7 @@
      "dc_n_new_over": 6,
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "ac_sec": 3.7,
+     "ac_sec": 3.9,
      "ac_post_max_new_loading_pct": 158.5,
      "ac_worst": "まきの木台二丁目変電所~赤水町変電所線",
      "ac_post_max_loading_pct": 261.8,
@@ -7550,7 +7549,7 @@
      "dc_n_new_over": 6,
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "ac_sec": 7.5,
+     "ac_sec": 7.1,
      "ac_post_max_new_loading_pct": 136.1,
      "ac_worst": "まきの木台二丁目変電所~赤水町変電所線",
      "ac_post_max_loading_pct": 249.2,
@@ -7593,7 +7592,7 @@
    "sec_build_ptdf": 0.0,
    "sec_screen_physical": 0.0,
    "sec_screen_all": 0.0,
-   "sec_total": 1.6,
+   "sec_total": 1.7,
    "top_physical": [
     {
      "ppc_idx": 1,
@@ -9225,7 +9224,7 @@
      "dc_n_new_over": 0,
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "ac_sec": 0.0,
+     "ac_sec": 0.1,
      "ac_post_max_new_loading_pct": 87.3,
      "ac_worst": "うるま市変電所~仲泊変電所線",
      "ac_post_max_loading_pct": 123.2,
@@ -9246,7 +9245,7 @@
      "dc_n_new_over": 0,
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "ac_sec": 0.0,
+     "ac_sec": 0.1,
      "ac_post_max_new_loading_pct": 87.3,
      "ac_worst": "うるま市変電所~仲泊変電所線",
      "ac_post_max_loading_pct": 123.3,
@@ -9267,7 +9266,7 @@
      "dc_n_new_over": 0,
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "ac_sec": 0.0,
+     "ac_sec": 0.1,
      "ac_post_max_new_loading_pct": 87.3,
      "ac_worst": "うるま市変電所~仲泊変電所線",
      "ac_post_max_loading_pct": 123.2,
@@ -9288,7 +9287,7 @@
      "dc_n_new_over": 0,
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "ac_sec": 0.0,
+     "ac_sec": 0.1,
      "ac_post_max_new_loading_pct": 87.3,
      "ac_worst": "うるま市変電所~仲泊変電所線",
      "ac_post_max_loading_pct": 123.2,
@@ -9309,7 +9308,7 @@
      "dc_n_new_over": 0,
      "ac_converged": true,
      "ac_served_frac": 1.0,
-     "ac_sec": 0.0,
+     "ac_sec": 0.1,
      "ac_post_max_new_loading_pct": 87.3,
      "ac_worst": "うるま市変電所~仲泊変電所線",
      "ac_post_max_loading_pct": 123.3,

@@ -70,6 +70,7 @@ import pandapower as pp
 from src.converter.line_parameters import get_line_parameters_safe
 from src.powerflow.load_estimator import load_demand_config
 from src.powerflow.batch_solve import run_powerflow
+from src.topology.region_dedup import live_synthetic_ties
 
 # AGJ_BUILT_PATH: 適用候補モデル(scratch)での影響測定用。正典を書かずに before/after を取る。
 BUILT = os.environ.get("AGJ_BUILT_PATH",
@@ -220,9 +221,9 @@ def _get_nameplates():
 
 
 # 介入#31: 通電のまま残す合成タイ(実線形が未完で連結を代表している断面のみ)。
-# 東北東京=相馬双葉幹線の南いわき地点に340m切れ端未縫合(tie_duplication_audit)。
-# 縫合が完了したらこの集合から外して除外に揃える。
-KEEP_LIVE_TIES = {"東北東京間連系線"}
+# 東北東京=相馬双葉幹線の南いわき地点に340m切れ端未縫合(tie_duplication_audit)だったが、
+# 2026-11-09 に #58〜#60 が縫ったので既定では空(#58〜#60 のどれかを切ると戻る。region_dedup.live_synthetic_ties)。
+KEEP_LIVE_TIES = live_synthetic_ties()
 
 # 介入#32(2026-08-19): 南福光BTBのAC素通し切断。中部北陸間は南福光連系所の
 # BTB(back-to-back DC・非同期)による連系で、交流の直通は実在しない。モデルは
@@ -462,8 +463,8 @@ def build_island_net(island, nodes, edges, freq, geom_out, nameplates="auto",
         # 介入#31(2026-08-17 オーナー承認): 合成連系タイ(tie)とDC連系枝(dc_tie/dc)は
         # in_service=False で建てる。実連系線の実線形が既にあり二重計上(タイは直線・
         # kv=0が500継承で低Z並列路)、DCは交流ループを形成してはならない。
-        # 例外=東北東京間連系線: 相馬双葉幹線の南いわき地点に340mの切れ端未縫合が
-        # あり実線形が未完のため、縫合完了まで通電のまま残す(台帳に記録)。
+        # 例外=KEEP_LIVE_TIES(既定は空): 東北東京間連系線は相馬双葉幹線の南いわき地点の340mの
+        # 切れ端の代わりに通電のまま残していた。#58〜#60 が縫ったので 2026-11-09 に外した(台帳に記録)。
         synthetic = bool(e.get("tie") or e.get("dc_tie") or e.get("dc"))
         keep_live = str(e.get("name") or "") in KEEP_LIVE_TIES
         # 介入#45: 運用容量較正(係数は (エリア, 階級) → 全国 → 全体 の順に引き帳簿へ)

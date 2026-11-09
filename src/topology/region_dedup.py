@@ -45,6 +45,23 @@ REGIONS = ["hokkaido", "tohoku", "tokyo", "chubu", "hokuriku", "kansai", "chugok
 REGION_DEDUP_DEFAULT = (os.environ.get("AJG_REGION_DEDUP", "1") == "1")
 END_ALIGN_DEFAULT = (os.environ.get("AJG_REGION_DEDUP_ENDS", "1") == "1")
 SPLIT_ALIGN_DEFAULT = (os.environ.get("AJG_REGION_DEDUP_SPLITS", "1") == "1")
+# 介入#31 の例外(2026-11-09 に外した): 合成タイのうち東北東京間連系線だけを潮流で通電のまま残していた。相馬双葉幹線の
+# 南いわき地点の 340 m の切れ端(tie_duplication_audit_2026-08-17.md)の代わりをしていたため。#58〜#60 がそろうと、
+# 東京の写しの端が南いわき開閉所に寄ってこの切れ端が縫われ、タイの流れは 0 MW になる
+# (canon_region_dedup_splits_2026-11-08.md)。どれかを切ると切れ端が戻るので、そのときだけ例外を戻す。
+SEAM_TIES = frozenset({"東北東京間連系線"})
+
+
+def live_synthetic_ties() -> set:
+    """潮流で通電のまま残す合成タイ(介入#31 の例外)。#58〜#60 がすべて有効なら空。
+
+    full_from_built.KEEP_LIVE_TIES と apply_circuit_sources.ROUTABLE_TIES はこれを使う(同じ集合になる)。
+    スイッチは環境変数だけを見る。build_editor_data.py の --no-region-dedup* で切ったときは、環境変数も 0 にする。
+    """
+    sewn = REGION_DEDUP_DEFAULT and END_ALIGN_DEFAULT and SPLIT_ALIGN_DEFAULT
+    return set() if sewn else set(SEAM_TIES)
+
+
 # 寄せる 2 点の間の上限。67 組の実測の最大は 507 m(線の端を変電所の点に結ぶ距離)。これを超える組は寄せない
 END_GAP_MAX_M = 600.0
 
