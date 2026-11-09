@@ -28,6 +28,8 @@
          地域の重なりのほかの所と同じ扱い。発電所は osm_id で 1 回だけ採る: full_from_built の plants dedup)
        - どこにも無い → 抽出の地物を足す
      ファイルの末尾に足す(前からの地物の並びと番号を変えない。UC の発電機 id は番号で引く)。
+     足した地物には _added_by = osm_bbox_supplement:2026-11-09 を付ける。
+  3. 取り消し: python3 scripts/osm_bbox_supplement.py undo [--write](印のある地物と記録を外す)
 
 帯は config/regions.yaml の東北の外接矩形のうち、旧 lon_min(139.0)より西。
 """
@@ -44,6 +46,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 
 REGION = "tohoku"
+#: 足した地物に付ける印(写しにも付ける。ほかの地域のファイルの元の地物は変えない)。undo はこの印で外す
+MARK_KEY, MARK = "_added_by", "osm_bbox_supplement:2026-11-09"
 #: 足す帯(南・北・西・東)。東北の外接矩形を lon_min 139.0 → 137.8 に広げた分
 BAND = {"lat_min": 36.8, "lat_max": 41.5, "lon_min": 137.8, "lon_max": 139.0}
 REGIONS = ["hokkaido", "tohoku", "tokyo", "chubu", "hokuriku",
@@ -243,6 +247,7 @@ def merge(gap_dir: str, write: bool) -> dict:
                 nm = (g.get("properties") or {}).get("name")
                 if nm:
                     added_names.append(nm)
+            g.setdefault("properties", {})[MARK_KEY] = MARK
             mine["features"].append(g)
             index[REGION][k] = g
         mine.setdefault("supplements", []).append(
@@ -264,6 +269,22 @@ def merge(gap_dir: str, write: bool) -> dict:
     return rep
 
 
+def undo(write: bool) -> None:
+    """足した地物(印のあるもの)と supplements の記録を外す(介入の台帳の ③無効化)。"""
+    for layer in LAYERS:
+        p = os.path.join(ROOT, "data", f"{REGION}_{layer}.geojson")
+        fc = json.load(open(p, encoding="utf-8"))
+        keep = [f for f in fc["features"] if (f.get("properties") or {}).get(MARK_KEY) != MARK]
+        n = len(fc["features"]) - len(keep)
+        fc["features"] = keep
+        fc["supplements"] = [x for x in fc.get("supplements", []) if x.get("date") != "2026-11-09"]
+        if not fc["supplements"]:
+            fc.pop("supplements")
+        print(f"{layer:11}: 外す {n}")
+        if write:
+            _dump(p, fc)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -274,7 +295,12 @@ def main() -> int:
     b.add_argument("gap_dir")
     b.add_argument("--write", action="store_true")
     b.add_argument("--report")
+    c = sub.add_parser("undo")
+    c.add_argument("--write", action="store_true")
     args = ap.parse_args()
+    if args.cmd == "undo":
+        undo(args.write)
+        return 0
     if args.cmd == "extract":
         extract(args.pbf, args.out_dir)
         return 0
