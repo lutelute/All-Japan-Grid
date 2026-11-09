@@ -39,36 +39,36 @@
   },
   "tohoku": {
    "region": "tohoku",
-   "n_features": 904,
-   "n_sites": 904,
+   "n_features": 1005,
+   "n_sites": 1005,
    "dup_features": 0,
    "n_errors": 0,
    "errors": [],
-   "n_terminals": 6921,
+   "n_terminals": 7351,
    "terminal_binding": {
-    "leadin": 4164,
-    "polygon": 1311,
-    "vertex-shared": 1446
+    "leadin": 4397,
+    "polygon": 1453,
+    "vertex-shared": 1501
    },
-   "n_busbars": 656,
+   "n_busbars": 707,
    "n_busbars_inferred": 0,
-   "n_bays": 1562,
+   "n_bays": 1639,
    "internal_way_membership": {
     "bay:ambiguous": 1,
-    "bay:buffer": 274,
-    "bay:covered": 1492,
+    "bay:buffer": 295,
+    "bay:covered": 1560,
     "bay:crossing_sites": 7,
     "bay:outside": 36,
-    "bay:partly_covered": 323,
-    "busbar:covered": 632
+    "bay:partly_covered": 333,
+    "busbar:covered": 658
    },
-   "n_transformers": 627,
+   "n_transformers": 653,
    "n_trafo_osm_observed": 181,
    "n_trafo_published": 187,
    "n_vl_published": 160,
    "n_trafo_nameplate": 3,
-   "sites_with_known_kv": 838,
-   "n_connections": 1491
+   "sites_with_known_kv": 910,
+   "n_connections": 1547
   },
   "tokyo": {
    "region": "tokyo",
@@ -341,12 +341,12 @@
   }
  },
  "totals": {
-  "sites": 7239,
-  "terminals": 47126,
-  "busbars": 4392,
-  "bays": 6283,
-  "transformers": 4325,
-  "connections": 10334,
-  "cross_region_alias_pairs": 1093
+  "sites": 7340,
+  "terminals": 47556,
+  "busbars": 4443,
+  "bays": 6360,
+  "transformers": 4351,
+  "connections": 10390,
+  "cross_region_alias_pairs": 1112
  }
 }

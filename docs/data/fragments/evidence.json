@@ -7,12 +7,12 @@
    "same_site": 0
   },
   "east": {
-   "fragments": 256,
-   "osm_bridges": 23,
+   "fragments": 263,
+   "osm_bridges": 26,
    "same_site": 6
   },
   "west": {
-   "fragments": 531,
+   "fragments": 530,
    "osm_bridges": 70,
    "same_site": 0
   },
@@ -24,29 +24,29 @@
  },
  "osm_bridges": [
   {
-   "score": 0.0005,
+   "score": 0.0291,
    "island": "east",
    "frag": {
     "k": [
-     37.24299,
-     138.96697
+     37.35889,
+     138.5814
     ],
-    "name": "tohoku junction 37.243:138.967:66",
-    "kv": 66.0
+    "name": "tohoku_sub_964",
+    "kv": 0.0
    },
    "main": {
     "k": [
-     37.26138,
-     138.98315
+     37.359,
+     138.58093
     ],
-    "name": "tokyo junction 37.2614:138.9832:66",
+    "name": "東北電力ネットワーク(株）茨目変電所",
     "kv": 66.0
    },
-   "line_name": "東北電力ネットワーク 66.0kV線",
-   "line_kv": 66.0,
+   "line_name": "",
+   "line_kv": null,
    "d_frag_m": 0,
-   "d_main_m": 0,
-   "n_frag_nodes": 6
+   "d_main_m": 29,
+   "n_frag_nodes": 4
   },
   {
    "score": 0.0303,
@@ -92,7 +92,7 @@
     "name": "中島町変電所",
     "kv": 66.0
    },
-   "line_name": "東京送電線_113",
+   "line_name": "中部送電線_845",
    "line_kv": null,
    "d_frag_m": 0,
    "d_main_m": 1,
@@ -196,6 +196,81 @@
    "line_kv": 275.0,
    "d_frag_m": 46,
    "d_main_m": 32,
+   "n_frag_nodes": 2
+  },
+  {
+   "score": 0.0425,
+   "island": "east",
+   "frag": {
+    "k": [
+     37.22793,
+     138.76248
+    ],
+    "name": "tohoku junction 37.2279:138.7625:0",
+    "kv": 0.0
+   },
+   "main": {
+    "k": [
+     37.22477,
+     138.76023
+    ],
+    "name": "tohoku junction 37.2248:138.7602:154",
+    "kv": 154.0
+   },
+   "line_name": "",
+   "line_kv": 154.0,
+   "d_frag_m": 42,
+   "d_main_m": 0,
+   "n_frag_nodes": 2
+  },
+  {
+   "score": 0.0162,
+   "island": "east",
+   "frag": {
+    "k": [
+     37.1869,
+     138.26337
+    ],
+    "name": "tohoku junction 37.1869:138.2634:0",
+    "kv": 0.0
+   },
+   "main": {
+    "k": [
+     37.18717,
+     138.26298
+    ],
+    "name": "tohoku junction 37.1872:138.263:66",
+    "kv": 66.0
+   },
+   "line_name": "",
+   "line_kv": null,
+   "d_frag_m": 0,
+   "d_main_m": 16,
+   "n_frag_nodes": 2
+  },
+  {
+   "score": 0.0533,
+   "island": "east",
+   "frag": {
+    "k": [
+     36.97145,
+     138.80002
+    ],
+    "name": "tohoku junction 36.9714:138.8:0",
+    "kv": 0.0
+   },
+   "main": {
+    "k": [
+     36.97017,
+     138.80026
+    ],
+    "name": "tohoku junction 36.9702:138.8003:0",
+    "kv": 154.0
+   },
+   "line_name": "湯沢変電所~南魚沼変電所線",
+   "line_kv": null,
+   "d_frag_m": 53,
+   "d_main_m": 0,
    "n_frag_nodes": 2
   },
   {
@@ -399,31 +474,6 @@
    "n_frag_nodes": 2
   },
   {
-   "score": 0.0533,
-   "island": "east",
-   "frag": {
-    "k": [
-     36.97145,
-     138.80002
-    ],
-    "name": "tokyo junction 36.9714:138.8:0",
-    "kv": 0.0
-   },
-   "main": {
-    "k": [
-     36.97017,
-     138.80026
-    ],
-    "name": "tokyo junction 36.9702:138.8003:0",
-    "kv": 154.0
-   },
-   "line_name": "湯沢変電所~南魚沼変電所線",
-   "line_kv": null,
-   "d_frag_m": 53,
-   "d_main_m": 0,
-   "n_frag_nodes": 2
-  },
-  {
    "score": 0.0777,
    "island": "east",
    "frag": {
@@ -446,6 +496,31 @@
    "line_kv": null,
    "d_frag_m": 0,
    "d_main_m": 77,
+   "n_frag_nodes": 2
+  },
+  {
+   "score": 0.1453,
+   "island": "east",
+   "frag": {
+    "k": [
+     37.35787,
+     140.95874
+    ],
+    "name": "tokyo junction 37.3579:140.9587:500",
+    "kv": 500.0
+   },
+   "main": {
+    "k": [
+     37.35927,
+     140.96077
+    ],
+    "name": "新福島変電所 500kV",
+    "kv": 500.0
+   },
+   "line_name": "東京電力パワーグリッド 500.0kV線",
+   "line_kv": 500.0,
+   "d_frag_m": 78,
+   "d_main_m": 67,
    "n_frag_nodes": 2
   },
   {
@@ -1117,7 +1192,7 @@
     "name": "chubu junction 36.2486:137.5071:0",
     "kv": 0.0
    },
-   "line_name": "北陸送電線_126",
+   "line_name": "中部送電線_764",
    "line_kv": null,
    "d_frag_m": 0,
    "d_main_m": 34,
@@ -1167,7 +1242,7 @@
     "name": "chubu junction 35.761:137.2126:154",
     "kv": 154.0
    },
-   "line_name": "北陸送電線_6",
+   "line_name": "中部送電線_9",
    "line_kv": null,
    "d_frag_m": 62,
    "d_main_m": 0,
@@ -1267,7 +1342,7 @@
     "name": "hokuriku junction 36.5433:137.4364:0",
     "kv": 0.0
    },
-   "line_name": "中部送電線_376",
+   "line_name": "北陸送電線_50",
    "line_kv": null,
    "d_frag_m": 11,
    "d_main_m": 78,
@@ -1417,7 +1492,7 @@
     "name": "hokuriku junction 36.5716:137.3779:66",
     "kv": 66.0
    },
-   "line_name": "中部送電線_664",
+   "line_name": "北陸送電線_113",
    "line_kv": null,
    "d_frag_m": 27,
    "d_main_m": 0,

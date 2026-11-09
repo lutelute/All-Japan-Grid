@@ -1,15 +1,15 @@
 {
-  "model_version": "96657bb1",
-  "git_dirty": false,
-  "generated_at": "2026-11-09T00:10:12+00:00",
+  "model_version": "f113e573",
+  "git_dirty": true,
+  "generated_at": "2026-11-09T03:29:03+00:00",
   "steps": {
     "build_structures": {
       "status": "ok",
-      "elapsed_s": 5.9
+      "elapsed_s": 4.9
     },
     "build_editor_data": {
       "status": "ok",
-      "elapsed_s": 13.8
+      "elapsed_s": 13.6
     },
     "apply_disclosure_v1": {
       "status": "ok",
@@ -29,23 +29,23 @@
     },
     "fragment_recovery_chains": {
       "status": "ok",
-      "elapsed_s": 19.6
+      "elapsed_s": 19.4
     },
     "fragment_recovery_third_wave": {
       "status": "ok",
-      "elapsed_s": 21.0
+      "elapsed_s": 20.8
     },
     "node_hygiene": {
       "status": "ok",
-      "elapsed_s": 5.4
+      "elapsed_s": 5.3
     },
     "mixed_voltage_circuits": {
       "status": "ok",
-      "elapsed_s": 0.9
+      "elapsed_s": 0.7
     },
     "apply_circuit_sources": {
       "status": "ok",
-      "elapsed_s": 5.0
+      "elapsed_s": 4.8
     },
     "satellite_connections": {
       "status": "ok",
@@ -77,11 +77,11 @@
     },
     "export_map_tiers": {
       "status": "ok",
-      "elapsed_s": 6.9
+      "elapsed_s": 6.6
     },
     "run_full_powerflow": {
       "status": "ok",
-      "elapsed_s": 138.2
+      "elapsed_s": 127.8
     },
     "gen_sld": {
       "status": "ok",
@@ -93,7 +93,7 @@
     },
     "n1_screening": {
       "status": "ok",
-      "elapsed_s": 204.6
+      "elapsed_s": 178.9
     },
     "export_n1_pages": {
       "status": "ok",
@@ -101,27 +101,27 @@
     },
     "export_matpower_canonical": {
       "status": "ok",
-      "elapsed_s": 281.0
+      "elapsed_s": 127.9
     },
     "export_cim": {
       "status": "ok",
-      "elapsed_s": 8.6
+      "elapsed_s": 3.9
     },
     "export_cim_canonical": {
       "status": "ok",
-      "elapsed_s": 361.5
+      "elapsed_s": 139.4
     },
     "build_static_site": {
       "status": "ok",
-      "elapsed_s": 4.8
+      "elapsed_s": 1.6
     },
     "apply_capacity_sources": {
       "status": "ok",
-      "elapsed_s": 1.1
+      "elapsed_s": 0.3
     },
     "build_pages_editor": {
       "status": "ok",
-      "elapsed_s": 0.2
+      "elapsed_s": 0.0
     }
   },
   "note": "全出力を単一モデルから一括再生成した版(全面改修Phase4)。git_dirty=true は未コミット変更がある状態での再生成(=コミット推奨)。",
