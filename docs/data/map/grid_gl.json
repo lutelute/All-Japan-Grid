@@ -1,10 +1,10 @@
 {
  "_about": "docs/map_gl.html が読む。scripts/build_map_gl_tiles.py が書く。sources の sha256 が今のファイルと違えば作り直す(tests/test_map_gl_tiles.py)。",
  "sources": {
-  "docs/data/map/lines_all.geojson": "eca24aeabaa716c5bc7de68b2e041e91479a44641a38c10fc68d718f6be00f14",
-  "docs/data/map/subs_all.geojson": "aea41ffb8b939bf75d42e6eb4057559701ed51ce00ec71f3f16c595f6efb922a",
-  "docs/data/plants_utility.geojson": "606ebeaf122af1e39b58d666e5ac42c4971aca9b8e8faad147bcfadb42e1cc21",
-  "docs/data/map/regions.json": "3fe31a369101b901d300da994d3f25cc0f65d80e6400816932308f20e2aff313"
+  "docs/data/map/lines_all.geojson": "eaaebf902f9914bd9c5b0d81add538c0550d4c3b7548609fc36a4e74e62b25f2",
+  "docs/data/map/subs_all.geojson": "0d125ff67b60bc4934f1073efef5e86085640a41593262339e042345d61090c5",
+  "docs/data/plants_utility.geojson": "ace836cb04baa707464938e32b3225289f7ddfbfdaa3ecdfaa77c0be997f1a73",
+  "docs/data/map/regions.json": "3193565005f8197a28fd6ef0c1f4384eb237a8bcd7120e11ac7794d5890d4c7f"
  },
  "names_en_from": [
   "data/chubu_substations.geojson",
@@ -44,8 +44,8 @@
   "data/tokyo_plants_supplement.geojson"
  ],
  "outputs": {
-  "docs/data/map/grid.pmtiles": 7817410,
-  "docs/data/map/names_en.json": 58663
+  "docs/data/map/grid.pmtiles": 7876839,
+  "docs/data/map/names_en.json": 59050
  },
  "zoom": [
   3,
@@ -53,45 +53,45 @@
  ],
  "tippecanoe": "tippecanoe v2.79.0",
  "features": {
-  "lines": 17242,
-  "subs": 8209,
-  "plants": 544
+  "lines": 17416,
+  "subs": 8290,
+  "plants": 547
  },
  "names_en": {
-  "entries": 1346,
+  "entries": 1353,
   "osm_conflicts": 26,
   "features_with_en": {
-   "lines": 1594,
-   "subs": 1186,
+   "lines": 1598,
+   "subs": 1196,
    "plants": 140
   }
  },
  "counts": {
   "all": {
    "500": {
-    "lines": 583,
-    "subs": 248,
-    "plants": 544
+    "lines": 587,
+    "subs": 249,
+    "plants": 547
    },
    "275": {
-    "lines": 1747,
-    "subs": 748,
-    "plants": 544
+    "lines": 1765,
+    "subs": 750,
+    "plants": 547
    },
    "154": {
-    "lines": 5271,
-    "subs": 2148,
-    "plants": 544
+    "lines": 5337,
+    "subs": 2169,
+    "plants": 547
    },
    "66": {
-    "lines": 15993,
-    "subs": 7563,
-    "plants": 544
+    "lines": 16159,
+    "subs": 7638,
+    "plants": 547
    },
    "0": {
-    "lines": 17242,
-    "subs": 8209,
-    "plants": 544
+    "lines": 17416,
+    "subs": 8290,
+    "plants": 547
    }
   },
   "hokkaido": {
@@ -123,55 +123,55 @@
   },
   "tohoku": {
    "500": {
-    "lines": 52,
-    "subs": 25,
-    "plants": 104
+    "lines": 58,
+    "subs": 27,
+    "plants": 107
    },
    "275": {
-    "lines": 219,
-    "subs": 99,
-    "plants": 104
+    "lines": 236,
+    "subs": 104,
+    "plants": 107
    },
    "154": {
-    "lines": 678,
-    "subs": 294,
-    "plants": 104
+    "lines": 755,
+    "subs": 322,
+    "plants": 107
    },
    "66": {
-    "lines": 2113,
-    "subs": 1077,
-    "plants": 104
+    "lines": 2334,
+    "subs": 1181,
+    "plants": 107
    },
    "0": {
-    "lines": 2200,
-    "subs": 1110,
-    "plants": 104
+    "lines": 2443,
+    "subs": 1229,
+    "plants": 107
    }
   },
   "tokyo": {
    "500": {
-    "lines": 189,
-    "subs": 84,
+    "lines": 187,
+    "subs": 83,
     "plants": 84
    },
    "275": {
-    "lines": 528,
-    "subs": 253,
+    "lines": 529,
+    "subs": 250,
     "plants": 84
    },
    "154": {
-    "lines": 1388,
-    "subs": 630,
+    "lines": 1376,
+    "subs": 623,
     "plants": 84
    },
    "66": {
-    "lines": 4670,
-    "subs": 2216,
+    "lines": 4614,
+    "subs": 2187,
     "plants": 84
    },
    "0": {
-    "lines": 4892,
-    "subs": 2317,
+    "lines": 4822,
+    "subs": 2279,
     "plants": 84
    }
   },
@@ -187,17 +187,17 @@
     "plants": 142
    },
    "154": {
-    "lines": 1114,
+    "lines": 1115,
     "subs": 402,
     "plants": 142
    },
    "66": {
-    "lines": 2158,
+    "lines": 2159,
     "subs": 824,
     "plants": 142
    },
    "0": {
-    "lines": 2456,
+    "lines": 2457,
     "subs": 991,
     "plants": 142
    }
