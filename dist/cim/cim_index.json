@@ -47,10 +47,10 @@
     0.05
   ],
   "totals": {
-    "substations": 7240,
-    "lines": 40087,
-    "plants": 19138,
-    "transformers": 4325
+    "substations": 7341,
+    "lines": 40529,
+    "plants": 19169,
+    "transformers": 4351
   },
   "regions": [
     {
@@ -88,21 +88,22 @@
     {
       "region": "tohoku",
       "counts": {
-        "substations": 904,
-        "lines": 6644,
-        "plants": 1311,
-        "transformers": 627,
-        "busbar_sections": 642,
-        "busbar_sections_inferred": 320,
-        "bays": 1544,
-        "switches": 1496
+        "substations": 1005,
+        "lines": 7086,
+        "plants": 1342,
+        "transformers": 653,
+        "busbar_sections": 690,
+        "busbar_sections_inferred": 347,
+        "bays": 1619,
+        "switches": 1565
       },
-      "eq_objects": 47332,
-      "gl_objects": 76674,
+      "eq_objects": 50357,
+      "gl_objects": 83208,
       "base_voltages_kv": [
         500.0,
         275.0,
         250.0,
+        220.0,
         187.0,
         154.0,
         66.0,

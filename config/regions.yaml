@@ -36,10 +36,13 @@ regions:
       level_1_kv: 500
       level_2_kv: 275
       lower_kv: [154, 66]
+    # lon_min 139.0 → 137.8(2026-11-09): 139.0 だと、東京・中部(lat_max 37.0)と北陸(lon_max 137.9)との間で
+    # 新潟県の西(上越・柏崎・長岡・十日町・魚沼)と佐渡がどの地域にも入らなかった(柏崎刈羽が無い issue #37)。
+    # 広げた帯の OSM は scripts/osm_bbox_supplement.py で足した
     bounding_box:
       lat_min: 36.8
       lat_max: 41.5
-      lon_min: 139.0
+      lon_min: 137.8
       lon_max: 142.1
     status: "active"
 
