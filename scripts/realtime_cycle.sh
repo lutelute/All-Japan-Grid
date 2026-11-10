@@ -76,12 +76,12 @@ mkdir -p data/realtime
   PYTHONPATH=. python3 scripts/build_structures_batch.py --all > data/realtime/structures_build.log 2>&1 \
     || echo "構造 DB の作成に失敗(data/realtime/structures_build.log)"
   python3 scripts/export_flow_map_data.py --realtime
-  # 日付別断面: 前日分が未生成なら生成(1日1回だけ走る)
+  # 日付別断面: 前日分。燃料別の実績は需要より遅れて出るので、前日分も毎回呼ぶ。入力(需要・燃料別実績の
+  # ある区域)が前回と同じ時刻は再利用し、全部同じなら網を組む前に終わる(2026-11-10。前は「無ければ作る」
+  # だったので、当日に継ぎ足した断面が、実績の出そろったあとも作り直されなかった)
   YD=$(date -v-1d +%Y%m%d 2>/dev/null || date -d yesterday +%Y%m%d)
-  if [ ! -f "docs/data/flow_map/days/${YD}.json" ]; then
-    PYTHONPATH=. python3 scripts/export_day_flows.py --date "$YD" || true
-  fi
-  # 当日断面の増分更新(新しい実績時刻だけPF・既計算分は再利用)
+  PYTHONPATH=. python3 scripts/export_day_flows.py --date "$YD" || true
+  # 当日断面の増分更新(新しい実績時刻と、入力が変わった時刻だけPF・ほかは再利用)
   PYTHONPATH=. python3 scripts/export_day_flows.py --date "$(date +%Y%m%d)" || true
   python3 scripts/slim_flow_map.py || true
   # 表紙・埋め込み用の軽い断面(docs/pulse.html・docs/js/pulse.js が読む)。失敗しても公開は続ける
