@@ -1,0 +1,23 @@
+# ユニット別の発電実績(OCCTO)の発電所名 → モデルの発電機の名前(介入 #63 の案の台帳)。
+#
+# 名前をそろえても結べない発電所だけを書く(src/powerflow/unit_actuals.py の match_plants が先に読む)。
+# zone は公表の「エリア」、hks は公表の「発電所名」そのまま、model はモデルの発電機の名前(OSM 由来)。
+# sure: 確か = 事業者と所在地が一致 / もっともらしい = 所在地と燃料・規模が一致(名前は別の言語・別の呼び方)
+# 2026-11-10 作成。モデルに入っていない発電所(五井・新小野田・姫路天然ガス・田子倉・奥只見・大河内など)は、
+# ここでは結べない(docs/reports/sync_scoreboard_2026-11-10.md の「モデルに無い大型の発電所」)。
+aliases:
+  - {zone: kansai, hks: "神戸発電所", model: "神鋼神戸発電所", sure: 確か, note: "神戸製鋼所の神戸発電所(石炭)"}
+  - {zone: tokyo, hks: "川崎天然ガス発電所", model: "Kawasaki Natural Gas Power Generation (KNGPG) Plant", sure: 確か}
+  - {zone: chubu, hks: "名古屋発電所", model: "Nakayama Nagoya Power Plant", sure: もっともらしい, note: "中山名古屋共同発電(石炭)。規模が合う"}
+  - {zone: okinawa, hks: "具志川1号", model: "Gushikawa Power Plant", sure: 確か}
+  - {zone: okinawa, hks: "具志川2号", model: "Gushikawa Power Plant", sure: 確か}
+  - {zone: shikoku, hks: "新居浜西火力発電所", model: "Niihama Nishi power station", sure: 確か}
+  - {zone: hokkaido, hks: "釧路火力発電所", model: "Kushiro Power Plant", sure: もっともらしい}
+  - {zone: chugoku, hks: "海田発電所", model: "Kaita power station", sure: 確か, note: "海田バイオマスパワー"}
+  - {zone: kyushu, hks: "ひびき灘石炭・バイオマス発電所", model: "Orix Hibikinada Power Plant", sure: もっともらしい}
+  - {zone: tohoku, hks: "相馬石炭・バイオマス発電所", model: "Orix Soma Energy Power Plant", sure: もっともらしい}
+  - {zone: tokyo, hks: "扇島パワー", model: "扇島パワーステーション", sure: 確か}
+  - {zone: tohoku, hks: "酒田共同火力発電所", model: "酒田火力発電所", sure: もっともらしい, note: "酒田共同火力発電(石炭)。モデルの名前は酒田火力発電所"}
+  - {zone: chugoku, hks: "俣野川発電所", model: "俣野川ダム", sure: 確か, note: "揚水。モデルではダムの名前で入っている"}
+  - {zone: okinawa, hks: "石川石炭火力発電所１号機", model: "石川火力発電所", sure: もっともらしい, note: "電源開発の石川石炭火力。沖縄電力の石川火力と同じ構内"}
+  - {zone: okinawa, hks: "石川石炭火力発電所２号機", model: "石川火力発電所", sure: もっともらしい, note: "同上"}

@@ -213,13 +213,15 @@ def _spread(p, cap, amount: float):
     return add, over
 
 
-def close_zone_balance(net, targets: dict, island: str | None = None, tol_mw: float = 1.0) -> dict:
+def close_zone_balance(net, targets: dict, island: str | None = None, tol_mw: float = 1.0,
+                       exclude: set | None = None) -> dict:
     """主系統の中で、区域ごとの(発電 − 需要)を targets(域外へ出す量、MW)に合わせる。net.gen.p_mw を書き換える。
 
     - 配り先は、その区域の動いている発電機(出力 > 0)。出力の比で配る(分散スラックと同じ形)。止まっている
       発電機は動かさない。太陽光・風力は、ほかに動いている発電機があれば使わない
     - 増やす分は容量まで。動いている発電機の容量を使い切ったら、超えた分も出力比で載せ、帳簿の over_capacity_mw に書く
     - 区域の本籍の島だけで当てる(境の点が別の島の網に入っていても、そこでは当てない)
+    - exclude(発電機の番号): 出力が観測で決まっている発電機(介入 #63 の案)。ほかに動いている発電機があれば使わない
     返り値 {区域: {before_mw, target_mw, moved_mw, over_capacity_mw, n_units}}。
     """
     import numpy as np
@@ -250,6 +252,10 @@ def close_zone_balance(net, targets: dict, island: str | None = None, tol_mw: fl
         if abs(move) > tol_mw:
             p_all = g.loc[gm, "p_mw"].astype(float)
             pick = (p_all > 0) & ~g.loc[gm, "type"].isin(WEATHER_TYPES)
+            if exclude:
+                free = pick & ~p_all.index.isin(list(exclude))
+                if free.any():
+                    pick = free
             if not pick.any():
                 pick = p_all > 0
             if pick.any():
