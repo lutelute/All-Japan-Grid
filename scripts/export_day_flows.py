@@ -240,19 +240,21 @@ def hour_inputs(dem: dict, fm: dict | None, ic: dict | None, hours: list,
     当日の断面は 1 時間ごとに継ぎ足すが、燃料別の実績は需要より遅れて出る。先に計算した時刻を、
     あとから実績が出ても再利用していたので、公開中の断面は実績が当たらない時刻が混ざっていた
     (2026-11-09 は 24 時刻のうち 13〜20 時刻だけ。docs/reports/sync_scoreboard_2026-11-10.md)。
-    署名(需要のある区域・燃料別実績のある区域・収支の直しの出どころ・ユニット別の実績のある発電所の数)が
-    前回と同じ時刻だけ再利用する。
+    署名(モデルの組み方の印・需要のある区域・燃料別実績のある区域・収支の直しの出どころ・ユニット別の実績の
+    ある発電所の数)が前回と同じ時刻だけ再利用する。組み方の印は台帳(#55)などを変えると変わる。
     """
     zc = None
     if ic:
         from src.powerflow import zone_closure as zc
+    from scripts.run_full_powerflow_from_db import model_recipe_tag
+    recipe = model_recipe_tag()
     out = {}
     for h in hours:
         dz = sorted(z for z, hh in dem.items() if h in hh)
         fz = sorted(z for z, zd in ((fm or {}).get("zones") or {}).items()
                     if h < len((zd.get("fuels") or {}).get("demand") or [])
                     and zd["fuels"]["demand"][h] is not None)
-        sig = "需要:" + ",".join(dz) + "|燃料:" + ",".join(fz)
+        sig = f"組:{recipe}|需要:" + ",".join(dz) + "|燃料:" + ",".join(fz)
         if ic and zc.targets_at(ic, h):
             sig += "|収支:" + ic["kind"]
         if plants:
@@ -461,8 +463,9 @@ def main() -> int:
 
     import src.powerflow.point_demand as pdm
     from scripts.run_full_powerflow_from_db import (
-        add_per_component_slacks, allocate_loads, attach_generators,
-        balance_by_zone, build_island_net, load_demand_config, solve_island)
+        CONNECTED_DISPATCH, GEN_ZONE_BY_OPERATOR, add_per_component_slacks, allocate_loads,
+        attach_generators, balance_by_zone, build_island_net, load_demand_config,
+        model_attach_kwargs, solve_island)
     from src.powerflow.pref_demand import pref_zone_gwh
     from src.powerflow.line_keys import keys_signature, line_keys
     built = json.loads((ROOT / "docs/data/built/all.json").read_text())
@@ -539,8 +542,9 @@ def main() -> int:
             continue
         t0 = time.time()
         net, bus_of, _ = build_island_net(island, nodes, edges, freq, {})
-        attach_generators(net, bus_of, nodes, island, attach_mode="cap",
-                          stats=True)
+        # 付け方・需給の合わせ方は正典と同じ既定(#24・#41・#55・#26・#54)。2026-11-12 まで "cap" 固定で台帳なし
+        attach_generators(net, bus_of, nodes, island, stats=True,
+                          **model_attach_kwargs(island))
         pinned, _ = pdm.match_buses(net, demand_pd)
         allocate_loads(net, cfg, pref_gwh=pref_gwh, point_demand=pinned)
         from src.powerflow.compensation import add_reactive_compensation
@@ -602,7 +606,8 @@ def main() -> int:
                 mask = nt.load.bus.map(nt.bus["zone"]) == z
                 nt.load.loc[mask, "p_mw"] *= sc
                 nt.load.loc[mask, "q_mvar"] *= sc
-            balance_by_zone(nt, cfg, use_zone_src=True)
+            balance_by_zone(nt, cfg, use_zone_src=GEN_ZONE_BY_OPERATOR,
+                            connected=CONNECTED_DISPATCH)
             pinned = ua.pinned_at(nt, pins, plants, h) if pins else {}
             fa_led = {}
             if fm:
@@ -634,7 +639,8 @@ def main() -> int:
                     led = zc.close_zone_balance(nt, tg, island=island, exclude=set(pinned))
                     if led:
                         zc_hourly.setdefault(h, {}).update(led)
-            net_dc, dc, net_ac, ac = solve_island(nt, max_ac_buses=99999)
+            net_dc, dc, net_ac, ac = solve_island(nt, max_ac_buses=99999,
+                                                  spread=CONNECTED_DISPATCH)
             conv = bool(ac.get("converged"))
             nu = net_ac if conv else net_dc
             if not (conv or dc.get("converged")):

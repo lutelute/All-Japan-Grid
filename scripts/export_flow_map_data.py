@@ -73,13 +73,15 @@ def export_island(island: str, freq: int, nodes, edges, cfg, pref_gwh,
     """realtime_mw: {zone: 実績需要MW}を与えるとzone負荷をその値へスケールした
     「NOW断面」を計算し、flows_now_*.geojsonとして出力する(でんき予報連携)。"""
     from scripts.run_full_powerflow_from_db import (
-        add_per_component_slacks, allocate_loads, attach_generators,
-        balance_by_zone, build_island_net, solve_island)
+        CONNECTED_DISPATCH, GEN_ZONE_BY_OPERATOR, add_per_component_slacks, allocate_loads,
+        attach_generators, balance_by_zone, build_island_net, model_attach_kwargs, solve_island)
     import src.powerflow.point_demand as pdm
 
     geom = {}  # (k5(lat,lon)from, k5to) -> [[lon,lat],...] 実線形(build時に充填)
     net, bus_of, _ = build_island_net(island, nodes, edges, freq, geom)
-    attach_generators(net, bus_of, nodes, island, attach_mode="cap", stats=True)
+    # 発電機の付け方・需給の合わせ方は正典と同じ既定(#24・#41・#55・#26・#54)。2026-11-12 まで "cap" 固定で
+    # 台帳を渡さず、需給も旧挙動だった(docs/reports/sync_scoreboard_2026-11-10.md §11)
+    attach_generators(net, bus_of, nodes, island, stats=True, **model_attach_kwargs(island))
     pinned, _ = pdm.match_buses(net, demand)
     allocate_loads(net, cfg, pref_gwh=pref_gwh, point_demand=pinned)
     from src.powerflow.compensation import add_reactive_compensation
@@ -97,8 +99,8 @@ def export_island(island: str, freq: int, nodes, edges, cfg, pref_gwh,
             net.load.loc[mask, "p_mw"] *= sc
             net.load.loc[mask, "q_mvar"] *= sc
     add_per_component_slacks(net)
-    balance_by_zone(net, cfg, use_zone_src=True)
-    net_dc, dc, net_ac, ac = solve_island(net, max_ac_buses=99999)
+    balance_by_zone(net, cfg, use_zone_src=GEN_ZONE_BY_OPERATOR, connected=CONNECTED_DISPATCH)
+    net_dc, dc, net_ac, ac = solve_island(net, max_ac_buses=99999, spread=CONNECTED_DISPATCH)
     conv = bool(ac.get("converged"))
     net_u = net_ac if conv else net_dc
 
