@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>正典の作り方 — All-Japan-Grid</title>
+<!-- 作り方: PYTHONPATH=. python scripts/build_desk_demos.py recipe(正本は scripts/templates/demo_canon_recipe.src.html) -->
+<style>
+:root{--bg:#0b1320;--card:rgba(12,21,35,.86);--fg:#e8eef6;--mut:#9fb0c4;--line:rgba(160,185,215,.2);--acc:#ffb547;--chip:#1a283e;--chipon:#ffb547;--chipfg:#0b1320}
+:root[data-theme=light]{--bg:#eef2f6;--card:rgba(255,255,255,.93);--fg:#15202e;--mut:#4f6074;--line:rgba(30,50,80,.16);--acc:#c8650f;--chip:#e2e8ef;--chipon:#c8650f;--chipfg:#ffffff}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--fg);font:14px/1.65 -apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",sans-serif}
+#map{position:fixed;inset:0;width:100vw;height:100vh;display:block;cursor:grab;touch-action:none}
+#map:active{cursor:grabbing}
+#panel{position:fixed;left:16px;top:16px;width:clamp(250px,27vw,360px);max-height:calc(100vh - 96px);overflow:auto;box-sizing:border-box;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 18px 14px;box-shadow:0 8px 30px rgba(0,0,0,.22);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.eyebrow{font-size:11px;letter-spacing:.12em;color:var(--mut);font-weight:600}
+.tbtn{font:inherit;font-size:12px;background:none;border:1px solid var(--line);color:var(--mut);border-radius:999px;padding:1px 10px;cursor:pointer}
+h1{font-size:clamp(20px,2.2vw,27px);line-height:1.3;margin:6px 0 8px}
+h2{font-size:15px;margin:2px 0 4px;color:var(--acc)}
+#sbody{margin:0 0 8px}
+#stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}
+.stat{background:rgba(127,140,160,.1);border-radius:10px;padding:5px 10px}
+.stat b{display:block;font-size:19px;font-variant-numeric:tabular-nums;line-height:1.25}
+.stat b small{font-size:13px;font-weight:600;color:var(--mut)}
+.stat span{font-size:11px;color:var(--mut)}
+.stat.wide{grid-column:1/3}
+#legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--mut);margin:6px 0 0}
+.sw{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;vertical-align:middle;margin:0 6px 1px 2px}
+.ringi{display:inline-block;width:7px;height:7px;border-radius:50%;border:2px solid;vertical-align:middle;margin:0 6px 1px 2px}
+.sq{display:inline-block;width:7px;height:7px;border:1.5px solid;vertical-align:middle;margin:0 6px 1px 2px}
+.caveat{font-size:11px;line-height:1.55;color:var(--mut);margin:10px 0 0;border-top:1px solid var(--line);padding-top:8px}
+#panel.folded h1,#panel.folded #sbody,#panel.folded #legend,#panel.folded .caveat{display:none}
+#bar{position:fixed;left:16px;right:16px;bottom:14px;display:flex;align-items:center;gap:10px;box-sizing:border-box;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px 6px 6px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+#play{width:34px;height:34px;border-radius:50%;border:0;background:var(--acc);color:var(--chipfg);font-size:13px;cursor:pointer;flex:none}
+#chips{display:flex;gap:4px;flex:none}
+.chip{font:inherit;font-size:12px;border:0;background:var(--chip);color:var(--fg);border-radius:999px;padding:4px 10px;cursor:pointer;white-space:nowrap}
+.chip .num{font-weight:700;margin-right:5px;opacity:.7}
+.chip.on{background:var(--chipon);color:var(--chipfg)}
+.chip.done{opacity:.72}
+#time{flex:1;min-width:50px;accent-color:var(--acc)}
+#tip{position:fixed;pointer-events:none;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12px;max-width:300px;z-index:5}
+#ledger{position:fixed;right:16px;top:16px;width:min(470px,calc(100vw - 440px));max-height:calc(100vh - 100px);overflow:auto;box-sizing:border-box;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px 14px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .4s}
+#ledger.show{opacity:1;pointer-events:auto}
+#ledger h3{margin:0 0 8px;font-size:14px}
+#lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(34px,1fr));gap:4px}
+.lc{font:inherit;font-size:12px;font-weight:700;border:0;border-radius:7px;padding:4px 0 2px;cursor:pointer;background:var(--c);color:#0b1320;line-height:1.1;font-variant-numeric:tabular-nums}
+.lc i{display:block;font-style:normal;font-size:8px;letter-spacing:-1px;opacity:.75}
+.lc.hot{outline:2px solid var(--fg);outline-offset:1px}
+#ltxt{min-height:3.2em;font-size:12px;margin:8px 0 4px;color:var(--fg)}
+#llegend{display:flex;flex-wrap:wrap;gap:2px 12px;font-size:11px;color:var(--mut)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+@media (max-width:1180px){.chip .lab{display:none}.chip .num{margin:0;opacity:1}}
+@media (max-width:1000px){#ledger{width:min(360px,calc(100vw - 330px))}}
+@media (max-width:880px){#panel{left:10px;right:10px;width:auto;top:auto;bottom:62px;max-height:44vh}#bar{left:10px;right:10px;bottom:10px}#ledger{left:10px;right:10px;width:auto;top:10px;max-height:48vh}}
+@media (max-height:640px){h1{font-size:19px;margin:4px 0 6px}#panel{padding:10px 14px 12px}.stat b{font-size:16px}#sbody{font-size:13px;line-height:1.55}}
+</style>
+</head>
+<body>
+<canvas id="map" aria-label="新潟県の中越で、OSM の線から正典を作る手順を順に見せる地図"></canvas>
+<aside id="panel" aria-live="polite">
+  <div class="top"><span class="eyebrow">ALL-JAPAN-GRID</span><span><button class="tbtn" id="themeb" type="button" title="配色を切り替える(T)">配色</button> <button class="tbtn" id="fold" type="button" title="説明を畳む・開く">説明</button></span></div>
+  <h1 id="headline">正典の作り方。</h1>
+  <h2 id="stitle"></h2>
+  <p id="sbody"></p>
+  <div id="stats"></div>
+  <div id="legend"></div>
+  <p class="caveat" id="caveat"></p>
+</aside>
+<section id="ledger" aria-label="介入台帳">
+  <h3 id="ltitle"></h3>
+  <div id="lgrid"></div>
+  <div id="ltxt"></div>
+  <div id="llegend"></div>
+</section>
+<div id="bar"><button id="play" type="button" aria-label="再生">▶</button><div id="chips"></div><input id="time" type="range" min="0" step="1" value="0" aria-label="時刻"></div>
+<div id="tip" hidden></div>
+<script>
+const D = /*__DATA__*/null;
+/*__ENGINE__*/
+
+const PAL = {
+  dark: { bg: '#0b1320', land: '#13202f', coast: '#25394f', kv: { 500: '#ffb547', 275: '#4cc6ff', 220: '#5fe0d0', 154: '#7be0a0', 66: '#b7a3ff', 0: '#8b98a8' },
+          disc: '#ff5fd2', rec: '#a6ff6a', add: '#ff8f2a', loose: '#ffd23f', ok: 'rgba(200,215,235,.55)', win: '#ffffff', star: '#ffffff',
+          lab: 'rgba(232,238,246,.92)', halo: 'rgba(11,19,32,.88)', glow: true, gap: 'rgba(255,143,42,.13)', box: 'rgba(232,238,246,.75)',
+          cat: { '構造': '#6ea8ff', '値': '#ffb547', '配分': '#7be0a0', '属性': '#d59cff', '需要': '#ff8f8f', '接続': '#5fe0d0', '入力': '#ff8f2a' } },
+  light: { bg: '#eef2f6', land: '#ffffff', coast: '#c3cfdc', kv: { 500: '#d06a12', 275: '#1d78c1', 220: '#0f9d8f', 154: '#2f9e5e', 66: '#7a5bd6', 0: '#7d8794' },
+           disc: '#c2189b', rec: '#3c9a14', add: '#e2620a', loose: '#c99400', ok: 'rgba(40,60,90,.45)', win: '#15202e', star: '#15202e',
+           lab: 'rgba(21,32,46,.92)', halo: 'rgba(255,255,255,.92)', glow: false, gap: 'rgba(226,98,10,.12)', box: 'rgba(21,32,46,.7)',
+           cat: { '構造': '#8fb4ff', '値': '#ffc56b', '配分': '#8fdfaa', '属性': '#dcb0ff', '需要': '#ffaaaa', '接続': '#7fe3d6', '入力': '#ffae66' } },
+};
+let theme = themeOf(); applyTheme(theme); let C = PAL[theme];
+setupPanel();
+
+const kvc = kv => kv >= 500 ? 500 : kv >= 275 ? 275 : kv >= 187 ? 220 : kv >= 100 ? 154 : kv > 0 ? 66 : 0;
+const W = D.win, S = D.stat, M = D.made, KK = D.kk;
+const WINB = [W.lon_min, W.lat_min, W.lon_max, W.lat_max], NAT = [129.3, 30.8, 146.1, 45.6];
+const OUT = D.outline.map(a => decode(a, 100));
+const NAT500 = D.nat500.map(a => { const P = decode(a, 1000); return { P, C: cumlen(P) }; });
+const WAYS = D.ways.map((w, j) => { const P = decode(w.q, 1e4); return { ...w, P, C: cumlen(P), j, g: kvc(w.kv) }; });
+const prep = es => es.map(e => { const P = decode(e.q, 1e4); return { ...e, P, C: cumlen(P), g: kvc(e.kv) }; });
+const NOW = { edges: prep(D.now.edges), nodes: D.now.nodes.map(n => ({ ...n, x: n.lon, y: MERC(n.lat), g: kvc(n.kv) })) };
+const OLD = { edges: prep(D.before.edges), nodes: D.before.nodes.map(n => ({ ...n, x: n.lon, y: MERC(n.lat), g: kvc(n.kv) })) };
+const OSUB = D.subs.map(s => ({ ...s, x: s.lon, y: MERC(s.lat) }));
+const KKP = KK ? { x: KK.lon, y: MERC(KK.lat) } : null;
+
+const SCENES = [
+  { id: 'zoom', label: '全国から中越へ', dur: 4.5 },
+  { id: 'osm', label: 'OSM の切れ端', dur: 9 },
+  { id: 'graph', label: '点と線にする', dur: 7 },
+  { id: 'check', label: '公表で確かめる', dur: 7 },
+  { id: 'gap', label: '四角のすき間(#61)', dur: 9 },
+  { id: 'ledger', label: '介入台帳', dur: 4 },
+];
+const cls = S.cls || {};
+const TEXT = [
+  { t: '全国から中越へ', b: 'AJG の正典(潮流の計算に使うモデル)は、OSM の線から網を作り、公表の資料で確かめ、加えた仮定を台帳に書いて作ります。新潟県の中越(長岡・柏崎)で、その手順を順に見ます。' },
+  { t: 'OSM の線は切れ端', b: `OSM では、送電線は描いた人ごとの way(線の切れ端)です。way の番号の順(おおよそ描かれた順)に出します。窓の中に ${fmt(S.ways)} 本あり、端のうち ${fmt(S.loose)} か所はほかの way に触れていません(黄色)。四角は OSM の変電所です。` },
+  { t: '点と線にする', b: `線の頂点で網を作り、近い端を寄せ、変電所の敷地の中の端を 1 つの点にまとめます。点は電圧ごとに分けます。窓の中は ${fmt(S.nodes)} 点(うち変電所 ${fmt(S.subs)})・${fmt(S.edges)} 枝です。` },
+  { t: '公表の資料で確かめる', b: 'OSM だけではつながらない所は、電力会社の公表の系統図を読んで枝を張り(紫)、途中で切れた OSM の線を拾い直します(緑)。公表の資料から足した変電所は輪で示します。名前は OSM の変電所の名前です。' },
+  { t: '介入 #61: 四角のすき間', b: `OSM は地域ごとの四角(外接矩形)で取り出しています。東北は東経 139.0 度より東、東京・中部は北緯 37.0 度より南、北陸は東経 137.9 度より西だけだったので、新潟県の西と佐渡はどの地域にも入っていませんでした(網かけ)。東北の四角を東経 137.8 度まで広げ、この帯の OSM を足しました(橙)。` },
+  { t: '介入台帳', b: `接続・値・配分などの仮定は、どれも ①根拠 ②帳簿 ③無効化(外し方) をそろえて、介入台帳(docs/MODEL_INTERVENTIONS.md)に書きます。台帳の表には ${D.ledger.length} 件あります。` },
+];
+document.getElementById('caveat').textContent =
+  `窓は北緯 ${W.lat_min}〜${W.lat_max} 度・東経 ${W.lon_min}〜${W.lon_max} 度で、数はこの窓の中だけです。正典は版 ${M.model_version}、#61 の前はその直前の main(7f0993b2)の正典。` +
+  '「触れていない端」は、ほかの way の頂点から 25 m より離れた端で、変電所の敷地で正しく終わる端も含みます。#61 で足した OSM は、Geofabrik の日本の抽出(OSM の時点 2026-11-05)から。' +
+  '線と変電所 © OpenStreetMap の協力者(ODbL)。県の形は国土地理院のデータを簡略化したもの。';
+
+let dirty = true, st = null, lastScene = -1;
+const view = new View(document.getElementById('map'), () => { dirty = true; });
+function pads() {
+  const p = document.getElementById('panel').getBoundingClientRect(), b = document.getElementById('bar').getBoundingClientRect();
+  if (window.innerWidth <= 880) return [16, 16, 16, window.innerHeight - p.top + 12];
+  return [p.right + 16, 16, 16, window.innerHeight - b.top + 14];
+}
+const player = new Player(SCENES, () => { dirty = true; });
+function state() {
+  const i = player.scene(), u = player.local();
+  return { i, u };
+}
+function camera(s) {
+  if (view.user) return;
+  const pad = pads(), A = view.target(NAT, pad), B = view.target(WINB, pad);
+  const e = s.i === 0 ? ease(clamp((s.u - .25) / .7, 0, 1)) : 1;
+  view.k = Math.exp(Math.log(A.k) + (Math.log(B.k) - Math.log(A.k)) * e);
+  view.cx = A.cx + (B.cx - A.cx) * e; view.cy = A.cy + (B.cy - A.cy) * e;
+}
+
+function setScene(i) {
+  const tx = TEXT[i];
+  document.getElementById('stitle').textContent = `${i + 1}. ${tx.t}`;
+  document.getElementById('sbody').textContent = tx.b;
+  const k = C.kv, lv = `<span><i class="sw" style="background:${k[500]}"></i>500</span><span><i class="sw" style="background:${k[275]}"></i>275</span><span><i class="sw" style="background:${k[154]}"></i>154</span><span><i class="sw" style="background:${k[66]}"></i>66 kV</span>`;
+  const lg = document.getElementById('legend');
+  if (i === 0) lg.innerHTML = `<span><i class="sw" style="background:${k[500]}"></i>全国の 500 kV</span><span>☆ 柏崎刈羽</span>`;
+  else if (i === 1) lg.innerHTML = lv + `<span><i class="dot" style="background:${C.loose}"></i>触れていない端</span><span><i class="sq" style="color:${C.ok}"></i>OSM の変電所</span>`;
+  else if (i === 2) lg.innerHTML = lv + `<span><i class="dot" style="background:${C.ok}"></i>分岐の点</span><span><i class="ringi" style="color:${C.lab}"></i>変電所の点</span>`;
+  else if (i === 3) lg.innerHTML = `<span><i class="sw" style="background:${C.disc}"></i>系統図の判読で張った枝</span><span><i class="sw" style="background:${C.rec}"></i>OSM の線の回収</span><span><i class="ringi" style="color:${C.disc}"></i>公表から足した変電所</span>`;
+  else if (i === 4) lg.innerHTML = `<span><i class="sw" style="background:${C.add}"></i>#61 で足した枝・点</span><span><i class="sw" style="background:${C.gap};height:8px"></i>どの四角にも入らなかった所</span><span>☆ 柏崎刈羽</span>`;
+  else lg.innerHTML = '';
+  document.getElementById('ledger').classList.toggle('show', i === 5);
+}
+function stat(v, l, wide) { return `<div class="stat${wide ? ' wide' : ''}"><b>${v}</b><span>${l}</span></div>`; }
+function setStats(s) {
+  const el = document.getElementById('stats'); let h = '';
+  if (s.i === 0) h = stat('中越', '新潟県の長岡・柏崎・十日町のあたり', true);
+  else if (s.i === 1) {
+    const shown = WAYS.filter(w => wayFrac(w, s.u) > 0).length, done = WAYS.filter(w => wayFrac(w, s.u) >= 1);
+    h = stat(fmt(shown), 'OSM の way(本)') + stat(fmt(done.reduce((a, w) => a + w.e[0] + w.e[1], 0)), '触れていない端') + stat(fmt(S.subs_osm), 'OSM の変電所', true);
+  } else if (s.i === 2) h = stat(fmt(S.nodes), `点(うち変電所 ${fmt(S.subs)})`) + stat(fmt(S.edges), '枝') + stat(`${fmt(S.ways)} 本 → ${fmt(S.nodes)} 点・${fmt(S.edges)} 枝`, 'OSM の way から正典へ', true);
+  else if (s.i === 3) h = stat(fmt(cls.disclosure || 0), '系統図の判読で張った枝') + stat(fmt(cls.recovery || 0), 'OSM の線の回収') + stat(fmt(S.sup), '公表から足した変電所', true);
+  else if (s.i === 4) h = stat(`${fmt(S.nodes_before)} <small>→</small> ${fmt(S.nodes)}`, '点') + stat(`${fmt(S.edges_before)} <small>→</small> ${fmt(S.edges)}`, '枝') +
+    stat(`${fmt(S.subs_before)} <small>→</small> ${fmt(S.subs)}`, '変電所の点') + (KK ? stat(`${KK.before_km.toFixed(1)} <small>→</small> ${KK.after_km.toFixed(1)}`, '柏崎刈羽からいちばん近い点(km)') : '');
+  else h = stat(String(D.ledger.length), '台帳の表の行(番号ごと)') + stat(fmt(M.nodes), `正典の全国の点(枝 ${fmt(M.edges)})`);
+  el.innerHTML = h;
+}
+const wayFrac = (w, u) => { const t0 = w.j / WAYS.length * .8; return clamp((u - t0) / .2, 0, 1); };
+
+function strokeSet(g, list, color, w, alpha, glow) {
+  if (!list.length) return;
+  g.beginPath(); for (const [e, f] of list) view.path(g, e.P, e.C, f);
+  if (glow && C.glow) { g.globalAlpha = alpha * .22; g.lineWidth = w * 4; g.strokeStyle = color; g.stroke(); }
+  g.globalAlpha = alpha; g.lineWidth = w; g.strokeStyle = color; g.stroke(); g.globalAlpha = 1;
+}
+function byKv(edges, f = 1) { const m = new Map(); for (const e of edges) { if (!m.has(e.g)) m.set(e.g, []); m.get(e.g).push([e, f]); } return m; }
+const WID = { 500: 3.2, 275: 2.6, 220: 2.2, 154: 2, 66: 1.3, 0: 1.1 };
+function drawEdges(g, edges, alpha, scale = 1, f = 1) {
+  const m = byKv(edges, f);
+  for (const kv of [0, 66, 154, 220, 275, 500]) if (m.has(kv)) strokeSet(g, m.get(kv), C.kv[kv], WID[kv] * scale, alpha, kv >= 275);
+}
+function drawNodes(g, nodes, alpha, pop = 1, colorOf = null) {
+  for (const n of nodes) {
+    const x = view.sx(n.x), y = view.sy(n.y);
+    if (x < -20 || y < -20 || x > view.w + 20 || y > view.h + 20) continue;
+    g.globalAlpha = alpha;
+    if (n.s) {
+      const r = (n.g >= 275 ? 5 : n.g >= 154 ? 4 : 3.2) * pop;
+      g.beginPath(); g.arc(x, y, r, 0, 7); g.fillStyle = colorOf ? colorOf(n) : C.kv[n.g]; g.fill(); g.lineWidth = 1.3; g.strokeStyle = C.lab; g.stroke();
+    } else { g.beginPath(); g.arc(x, y, 1.7 * pop, 0, 7); g.fillStyle = colorOf ? colorOf(n) : C.ok; g.fill(); }
+  }
+  g.globalAlpha = 1;
+}
+function star(g, x, y, r, fill) {
+  g.beginPath();
+  for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, rr = k % 2 ? r * .45 : r; g.lineTo(x + rr * Math.cos(a), y + rr * Math.sin(a)); }
+  g.closePath(); g.fillStyle = fill; g.fill(); g.lineWidth = 1.5; g.strokeStyle = C.bg; g.stroke();
+}
+function label(g, text, x, y, color, size = 12, align = 'left') {
+  g.font = `600 ${size}px -apple-system,"Hiragino Sans","Noto Sans JP",sans-serif`; g.textAlign = align; g.textBaseline = 'middle';
+  g.lineWidth = 4; g.strokeStyle = C.halo; g.strokeText(text, x, y); g.fillStyle = color; g.fillText(text, x, y);
+}
+function subLabels(g, nodes, alpha) {
+  if (alpha <= 0 || view.k < 250) return;
+  const placed = [], subs = nodes.filter(n => n.s && n.n).sort((a, b) => b.kv - a.kv);
+  g.font = '600 11px -apple-system,"Hiragino Sans","Noto Sans JP",sans-serif'; g.globalAlpha = alpha;
+  for (const n of subs) {
+    const x = view.sx(n.x) + 7, y = view.sy(n.y), w = g.measureText(n.n).width, r = [x - 2, y - 8, x + w + 2, y + 8];
+    if (r[0] < 0 || r[2] > view.w || r[1] < 0 || r[3] > view.h) continue;
+    if (placed.some(p => !(r[2] < p[0] || r[0] > p[2] || r[3] < p[1] || r[1] > p[3]))) continue;
+    placed.push(r); label(g, n.n, x, y, C.lab, 11);
+  }
+  g.globalAlpha = 1;
+}
+function kkMark(g, target, km, a) {
+  if (!KKP || a <= 0) return;
+  const x = view.sx(KKP.x), y = view.sy(KKP.y);
+  if (target) {
+    const tx = view.sx(target.lon), ty = view.sy(MERC(target.lat));
+    g.globalAlpha = a; g.setLineDash([5, 4]); g.beginPath(); g.moveTo(x, y); g.lineTo(tx, ty); g.lineWidth = 1.6; g.strokeStyle = C.star; g.stroke(); g.setLineDash([]);
+    g.beginPath(); g.arc(tx, ty, 6, 0, 7); g.lineWidth = 2; g.strokeStyle = C.star; g.stroke();
+    const far = Math.hypot(tx - x, ty - y) > 60;
+    if (far) label(g, `いちばん近い点まで ${km.toFixed(1)} km`, (x + tx) / 2 + 8, (y + ty) / 2, C.star, 12);
+    else label(g, `いちばん近い点まで ${km.toFixed(1)} km`, x - 12, y - 16, C.star, 12, 'right');
+  }
+  g.globalAlpha = 1; star(g, x, y, 9, C.add); label(g, '柏崎刈羽', x + 12, y + 1, C.lab, 12);
+}
+
+function draw(now) {
+  const s = st = state();
+  if (s.i !== lastScene) { lastScene = s.i; setScene(s.i); }
+  setStats(s); camera(s);
+  const g = view.begin(C.bg); g.lineJoin = 'round'; g.lineCap = 'round';
+  g.beginPath(); for (const P of OUT) view.ring(g, P); g.fillStyle = C.land; g.fill(); g.lineWidth = 1; g.strokeStyle = C.coast; g.stroke();
+  if (C.glow) g.globalCompositeOperation = 'lighter';
+  const wsc = clamp(Math.sqrt(view.k / 900), .45, 1.6);
+
+  if (s.i === 0) {
+    const a = 1 - ease(clamp((s.u - .55) / .45, 0, 1)) * .7;
+    strokeSet(g, NAT500.map(p => [p, 1]), C.kv[500], 1.4, a * .8, true);
+    g.globalCompositeOperation = 'source-over';
+    const x0 = view.sx(W.lon_min), y0 = view.sy(MERC(W.lat_max)), x1 = view.sx(W.lon_max), y1 = view.sy(MERC(W.lat_min));
+    g.lineWidth = 1.6; g.strokeStyle = C.win; g.globalAlpha = .9; g.strokeRect(x0, y0, x1 - x0, y1 - y0); g.globalAlpha = 1;
+    label(g, '中越(長岡・柏崎)', x1 + 6, y0 + 8, C.lab, 12);
+    kkMark(g, null, 0, 1);
+    return;
+  }
+  if (s.i === 1) {
+    const done = [];
+    const m = new Map();
+    for (const w of WAYS) { const f = wayFrac(w, s.u); if (f <= 0) continue; const k = kvc(w.kv); if (!m.has(k)) m.set(k, []); m.get(k).push([w, f]); if (f >= 1) done.push(w); }
+    for (const kv of [0, 66, 154, 220, 275, 500]) if (m.has(kv)) strokeSet(g, m.get(kv), C.kv[kv], WID[kv] * wsc, .95, kv >= 275);
+    g.globalCompositeOperation = 'source-over';
+    const sa = clamp((s.u - .45) * 3, 0, 1);
+    if (sa > 0) { g.globalAlpha = sa; g.lineWidth = 1.4; g.strokeStyle = C.ok; for (const o of OSUB) { const x = view.sx(o.x), y = view.sy(o.y); g.strokeRect(x - 4, y - 4, 8, 8); } g.globalAlpha = 1; }
+    for (const w of done) for (const k of [0, 1]) {
+      const n = w.P.length / 2, x = view.sx(w.P[k ? 2 * n - 2 : 0]), y = view.sy(w.P[k ? 2 * n - 1 : 1]);
+      g.beginPath(); g.arc(x, y, w.e[k] ? 3.4 : 1.6, 0, 7); g.fillStyle = w.e[k] ? C.loose : C.ok; g.fill();
+    }
+    return;
+  }
+  if (s.i === 2) {
+    const e = ease(s.u);
+    drawEdges(g, WAYS, 1 - .82 * e, wsc);
+    drawEdges(g, NOW.edges, e, wsc);
+    g.globalCompositeOperation = 'source-over';
+    drawNodes(g, NOW.nodes, e, ease(clamp(s.u * 1.6 - .3, 0, 1)));
+    return;
+  }
+  if (s.i === 3 || s.i === 5) {
+    const dim = s.i === 5 ? .35 : 1, hl = s.i === 3 ? ease(clamp(s.u * 1.5, 0, 1)) : 0;
+    drawEdges(g, WAYS, .18 * dim, wsc);
+    drawEdges(g, NOW.edges, (1 - .45 * hl) * dim, wsc);
+    if (hl > 0) {
+      strokeSet(g, NOW.edges.filter(e => e.c === 'disclosure').map(e => [e, 1]), C.disc, 3.2 * wsc, hl, true);
+      strokeSet(g, NOW.edges.filter(e => e.c === 'recovery').map(e => [e, 1]), C.rec, 3.2 * wsc, hl, true);
+    }
+    g.globalCompositeOperation = 'source-over';
+    drawNodes(g, NOW.nodes, dim);
+    if (hl > 0) for (const n of NOW.nodes.filter(n => n.sup)) {
+      g.globalAlpha = hl; g.beginPath(); g.arc(view.sx(n.x), view.sy(n.y), 9 + 2 * Math.sin(now / 300), 0, 7); g.lineWidth = 2; g.strokeStyle = C.disc; g.stroke(); g.globalAlpha = 1;
+    }
+    if (s.i === 3) subLabels(g, NOW.nodes, clamp((s.u - .3) * 2, 0, 1));
+    return;
+  }
+  // 4. 四角のすき間(#61)
+  const a = ease(clamp(s.u / .3, 0, 1)), b = ease(clamp((s.u - .35) / .4, 0, 1)), c = clamp((s.u - .8) / .2, 0, 1);
+  g.globalCompositeOperation = 'source-over';
+  // どの四角にも入らなかった所(東経 137.9〜139.0 度・北緯 37.0 度より北)
+  const gx0 = view.sx(D.band.lon_min), gx1 = view.sx(D.band.lon_max), gy0 = view.sy(MERC(D.band.lat_max)), gy1 = view.sy(MERC(D.band.lat_min));
+  g.globalAlpha = a * (1 - .5 * b); g.fillStyle = C.gap; g.fillRect(gx0, gy0, gx1 - gx0, gy1 - gy0);
+  g.save(); g.beginPath(); g.rect(gx0, gy0, gx1 - gx0, gy1 - gy0); g.clip(); g.strokeStyle = C.gap; g.lineWidth = 6;
+  for (let x = gx0 - (gy1 - gy0); x < gx1; x += 18) { g.beginPath(); g.moveTo(x, gy1); g.lineTo(x + (gy1 - gy0), gy0); g.stroke(); }
+  g.restore(); g.globalAlpha = 1;
+  if (C.glow) g.globalCompositeOperation = 'lighter';
+  drawEdges(g, OLD.edges, .95, wsc);
+  const added = NOW.edges.filter(e => e.new);
+  if (b > 0) strokeSet(g, added.map(e => [e, b]), C.add, 2.4 * wsc, 1, true);
+  g.globalCompositeOperation = 'source-over';
+  drawNodes(g, OLD.nodes, 1);
+  if (b > 0) drawNodes(g, NOW.nodes.filter(n => n.new), b, 1, () => C.add);
+  // #61 の前の四角の境(東北の西の端・東京と中部の北の端)
+  g.globalAlpha = a; g.setLineDash([8, 6]); g.lineWidth = 1.6; g.strokeStyle = C.box;
+  // すき間に面した辺だけ: 東北は西の辺、東京・中部は北の辺、北陸は東の辺
+  const SIDE = { '東北': 'w', '東京': 'n', '中部': 'n', '北陸': 'e' };
+  for (const bx of D.boxes) {
+    const x0 = view.sx(bx.lon_min), x1 = view.sx(bx.lon_max), y0 = view.sy(MERC(bx.lat_max)), y1 = view.sy(MERC(bx.lat_min)), sd = SIDE[bx.r];
+    g.beginPath();
+    if (sd === 'w') { g.moveTo(x0, y0); g.lineTo(x0, y1); } else if (sd === 'e') { g.moveTo(x1, y0); g.lineTo(x1, y1); } else { g.moveTo(x0, y0); g.lineTo(x1, y0); }
+    g.stroke();
+  }
+  g.setLineDash([]); g.globalAlpha = 1;
+  if (a > 0) {
+    const yTop = 18, xT = view.sx(139.0), y37 = view.sy(MERC(37.0));
+    g.globalAlpha = a;
+    label(g, '東北の四角(東経 139.0 度より東)', xT + 6, Math.max(yTop + 8, view.sy(MERC(W.lat_max)) + 12), C.lab, 12);
+    label(g, '東京・中部の四角(北緯 37.0 度より南)', Math.max(pads()[0] + 8, view.sx(W.lon_min) + 8), y37 + 14, C.lab, 12);
+    label(g, 'どの四角にも入らない', (gx0 + Math.min(gx1, view.w)) / 2, (Math.max(gy0, 0) + gy1) / 2, C.add, 14, 'center');
+    g.globalAlpha = 1;
+  }
+  if (KK) { if (c > 0) kkMark(g, KK.after, KK.after_km, c); else kkMark(g, KK.before, KK.before_km, a * (1 - b)); }
+}
+
+// 台帳
+(function ledger() {
+  document.getElementById('ltitle').textContent = `介入台帳の表(${D.ledger.length} 件)`;
+  const grid = document.getElementById('lgrid'), txt = document.getElementById('ltxt');
+  const show = r => { txt.textContent = `#${r.t}(${r.c}・リスク ${'★'.repeat(r.s)})`; };
+  D.ledger.forEach(r => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'lc' + (r.n === 61 ? ' hot' : '');
+    b.innerHTML = `${r.n}<i>${'★'.repeat(r.s)}</i>`; b.title = `#${r.t}`; b.dataset.c = r.c;
+    b.addEventListener('mouseenter', () => show(r)); b.addEventListener('focus', () => show(r)); b.addEventListener('click', () => show(r));
+    grid.appendChild(b);
+  });
+  const r61 = D.ledger.find(r => r.n === 61); if (r61) show(r61);
+  paintLedger();
+})();
+function paintLedger() {
+  for (const b of document.querySelectorAll('.lc')) b.style.setProperty('--c', C.cat[b.dataset.c] || '#9fb0c4');
+  const cnt = {}; for (const r of D.ledger) cnt[r.c] = (cnt[r.c] || 0) + 1;
+  document.getElementById('llegend').innerHTML = Object.entries(cnt).sort((a, b) => b[1] - a[1])
+    .map(([c, n]) => `<span><i class="dot" style="background:${C.cat[c] || '#9fb0c4'}"></i>${c} ${n}</span>`).join('') +
+    '<span>★★★ 実在しないものを実在すると誤らせうる・★★ 量をゆがめる・★ 局所的</span>';
+}
+
+// ふれると中身
+const tip = document.getElementById('tip');
+document.getElementById('map').addEventListener('pointermove', e => {
+  if (e.buttons || !st) { tip.hidden = true; return; }
+  const px = e.clientX, py = e.clientY; let best = null, bd = 8;
+  if (st.i >= 2) {
+    const nodes = st.i === 4 ? OLD.nodes.concat(NOW.nodes.filter(n => n.new)) : NOW.nodes;
+    for (const n of nodes) {
+      if (!n.s) continue; const d = Math.hypot(view.sx(n.x) - px, view.sy(n.y) - py);
+      if (d < bd) { bd = d; best = `${n.n || '名前なし'} — ${n.kv} kV の変電所の点` + (n.sup ? '(公表から足した)' : '') + (st.i === 4 && n.new ? '(#61 で足した)' : ''); }
+    }
+    if (!best) {
+      const edges = st.i === 4 ? OLD.edges.concat(NOW.edges.filter(x => x.new)) : NOW.edges;
+      for (const ed of edges) {
+        const d = view.dist(ed.P, px, py);
+        if (d < bd) { bd = d; best = `${ed.kv || '電圧不明'}${ed.kv ? ' kV' : ''} の枝` + (ed.c === 'disclosure' ? '(系統図の判読で張った)' : ed.c === 'recovery' ? '(OSM の線の回収)' : '') + (st.i === 4 && ed.new ? '(#61 で足した)' : ''); }
+      }
+    }
+  } else if (st.i === 1) {
+    for (const w of WAYS) { if (wayFrac(w, st.u) <= 0) continue; const d = view.dist(w.P, px, py); if (d < bd) { bd = d; best = `OSM の way(${w.kv || '電圧不明'}${w.kv ? ' kV' : ''})` + (w.e[0] + w.e[1] ? `・触れていない端 ${w.e[0] + w.e[1]}` : ''); } }
+  }
+  if (best) { tip.textContent = best; tip.hidden = false; tip.style.left = Math.min(px + 14, window.innerWidth - 310) + 'px'; tip.style.top = (py + 14) + 'px'; }
+  else tip.hidden = true;
+});
+document.getElementById('map').addEventListener('pointerleave', () => { tip.hidden = true; });
+
+function setTheme(t) { theme = t; applyTheme(t); C = PAL[t]; lastScene = -1; paintLedger(); dirty = true; }
+document.getElementById('themeb').addEventListener('click', () => setTheme(theme === 'dark' ? 'light' : 'dark'));
+window.addEventListener('keydown', e => {
+  if (e.key === 't' || e.key === 'T') setTheme(theme === 'dark' ? 'light' : 'dark');
+  if (e.key === '0') { view.user = false; dirty = true; }
+});
+document.getElementById('fold').addEventListener('click', () => { setTimeout(() => { dirty = true; }, 30); });
+window.addEventListener('resize', () => { dirty = true; });
+
+function loop(now) {
+  const a = player.tick(now);
+  const live = st && (st.i === 3);
+  if (a || dirty || live) { draw(now); dirty = false; }
+  requestAnimationFrame(loop);
+}
+const q = new URLSearchParams(location.search);
+const sc = clamp((Number(q.get('scene')) || 1) - 1, 0, SCENES.length - 1);
+if (q.get('autoplay') === '0') player.seek(player.starts[sc] + SCENES[sc].dur - 1e-3);
+else { player.seek(player.starts[sc]); player.play(); }
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

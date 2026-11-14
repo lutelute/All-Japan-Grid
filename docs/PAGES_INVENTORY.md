@@ -20,6 +20,8 @@ GitHub Pages（https://lutelute.github.io/All-Japan-Grid/）を一新するた�
 | └ 比較・接続編集・候補レビューのタブ | 下の 3 ページを iframe で開くだけ | — | — | map | — | **導線から外す**（iframe のタブをやめ、各ページへのリンクにする。各ページはそのまま） | **決定** 10-20 |
 | `flow_map.html` | 時刻別の潮流（現在・日別・UC 24 時間）、発電の稼働率、観測との比較 | flow_map 8.7 MB | 毎時 | トップの主ボタン | クリックは効く。ホバーは元から付けていない | **残す・統合の土台**。地図ページの「潮流」表示として、系統図と同じ部品に載せる | 案 |
 | `occto_flow.html` | OCCTO の地内基幹送電線の潮流実績(30 分値)を運用容量に対する割合で色づけ、連系線の潮流実績 | occto_lines 0.3 MB(線の形)、occto_today 0.2〜0.4 MB | 毎時 | トップ | 2026-11-07 新設(#143) | **残す**。モデルの推定ではなく公表の実績。flow_map と役目が違う(実績と推定) | 決定 11-07 |
+| `demos/grid_assembly.html` | 全国の 500・275 kV の網が組み上がる動く絵(500 kV → 275 kV → 連系線 → 50/60 Hz の島 → 正典の数) | 埋め込み(正典の層・連系線の形・県の形、約 0.3 MB) | 作り直したとき(`scripts/build_desk_demos.py`) | desk のデモ(`docs/demos.json`) | 2026-11-09 新設(desk の頼み)。sandbox の枠で 900×600・1400×800 を確かめた。`tests/test_desk_demos.py` | **残す** | 案 |
+| `demos/canon_recipe.html` | 正典の作り方(OSM の way → 点と線 → 公表で確かめる → 介入 #61 の前後 → 介入台帳)を新潟の中越で | 埋め込み(窓の中の OSM・正典・#61 の前の正典・台帳の題、約 0.25 MB) | 同上 | 同上 | 同上 | **残す** | 案 |
 | `map_gl.html` | 系統図の MapLibre GL 試作（2026-11-07）。日英の切り替え | 正典の層から作った `data/map/grid.pmtiles` 8 MB（見えている範囲だけ読む）。`?src=geojson` で map.html と同じ GeoJSON | 正典の層と同じ（`tests/test_map_gl_tiles.py` が元ファイルの sha256 を見る） | map.html の入口・ダッシュボード | ホバー・クリック・日英を `tests/test_pages_map_gl_ui.py` で確かめる | **試す**。移るかは PR の比較を見てオーナーが決める | 案 |
 | `subsld.html` | 変電所ごとの単線結線図（SVG） | subsld_pages 3.3 MB、loops 0.9 MB | 10-08 | ダッシュボード | 問題なし | **残す** | 案 |
 | `download.html` | データセットのダウンロード | 図 1 枚 | 10-20（v1.9.0） | トップ | 問題なし | **残す** | 案 |
