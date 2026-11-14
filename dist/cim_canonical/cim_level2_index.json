@@ -19,6 +19,7 @@
     77.0,
     66.0,
     33.0,
+    30.0,
     22.0,
     6.6
   ],
@@ -65,68 +66,70 @@
       "files": {
         "EQ": [
           "hokkaido_L2_EQ.xml",
-          8479
+          8827
         ],
         "TP": [
           "hokkaido_L2_TP.xml",
-          1662
+          1720
         ],
         "SSH": [
           "hokkaido_L2_SSH.xml",
-          5331
+          5523
         ],
         "SV": [
           "hokkaido_L2_SV.xml",
-          832
+          861
         ],
         "GL": [
           "hokkaido_L2_GL.xml",
-          1663
+          1721
         ]
       },
-      "buses": 831,
-      "lines": 858,
-      "trafos": 69,
-      "loads": 540,
+      "buses": 860,
+      "lines": 854,
+      "trafos": 103,
+      "loads": 573,
       "gens": 417,
       "base_voltages": [
         275.0,
         187.0,
         110.0,
-        66.0
+        66.0,
+        33.0,
+        22.0
       ],
       "solve_mode": "canonical-dc",
       "lineage": "canonical (docs/data/built/all.json)",
-      "verify": "OK gen=417 ext=22 vmin=0.860"
+      "verify": "OK gen=417 ext=22 vmin=0.723"
     },
     {
       "region": "east",
       "files": {
         "EQ": [
           "east_L2_EQ.xml",
-          83249
+          84071
         ],
         "TP": [
           "east_L2_TP.xml",
-          12656
+          12782
         ],
         "SSH": [
           "east_L2_SSH.xml",
-          53757
+          54224
         ],
         "SV": [
           "east_L2_SV.xml",
-          6329
+          6392
         ],
         "GL": [
           "east_L2_GL.xml",
-          12657
+          12783
         ]
       },
-      "buses": 6328,
-      "lines": 6557,
-      "trafos": 674,
-      "loads": 3457,
+      "buses": 6391,
+      "lines": 6546,
+      "trafos": 754,
+      "loads": 3534,
       "gens": 8253,
       "base_voltages": [
         500.0,
@@ -134,40 +137,42 @@
         220.0,
         154.0,
         77.0,
-        66.0
+        66.0,
+        33.0,
+        22.0
       ],
       "solve_mode": "canonical-dc",
       "lineage": "canonical (docs/data/built/all.json)",
-      "verify": "OK gen=8253 ext=236 vmin=0.857"
+      "verify": "OK gen=8253 ext=243 vmin=0.854"
     },
     {
       "region": "west",
       "files": {
         "EQ": [
           "west_L2_EQ.xml",
-          93589
+          93716
         ],
         "TP": [
           "west_L2_TP.xml",
-          15744
+          15764
         ],
         "SSH": [
           "west_L2_SSH.xml",
-          58842
+          58918
         ],
         "SV": [
           "west_L2_SV.xml",
-          7873
+          7883
         ],
         "GL": [
           "west_L2_GL.xml",
-          15743
+          15763
         ]
       },
-      "buses": 7872,
-      "lines": 7989,
-      "trafos": 960,
-      "loads": 3918,
+      "buses": 7882,
+      "lines": 7987,
+      "trafos": 971,
+      "loads": 3931,
       "gens": 8130,
       "base_voltages": [
         500.0,
@@ -177,11 +182,13 @@
         154.0,
         110.0,
         77.0,
-        66.0
+        66.0,
+        33.0,
+        22.0
       ],
-      "solve_mode": "canonical-flat+fold6",
+      "solve_mode": "canonical-dc+fold6",
       "lineage": "canonical (docs/data/built/all.json)",
-      "verify": "OK gen=8130 ext=294 vmin=0.776"
+      "verify": "OK gen=8130 ext=296 vmin=0.731"
     }
   ]
 }

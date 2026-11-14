@@ -2,18 +2,18 @@
  "note": "第一波の証拠: osm_bridges=OSM実在線が断片と本系統の両方に接触(≤80m)しているのに枝が無い=抽出回収候補(実線形つき)。same_site=名前基底一致・300m以内の同定提案(適用は承認待ち)",
  "summary": {
   "hokkaido": {
-   "fragments": 29,
-   "osm_bridges": 0,
+   "fragments": 30,
+   "osm_bridges": 1,
    "same_site": 0
   },
   "east": {
-   "fragments": 263,
-   "osm_bridges": 26,
-   "same_site": 6
+   "fragments": 270,
+   "osm_bridges": 27,
+   "same_site": 7
   },
   "west": {
    "fragments": 530,
-   "osm_bridges": 70,
+   "osm_bridges": 69,
    "same_site": 0
   },
   "okinawa": {
@@ -23,6 +23,31 @@
   }
  },
  "osm_bridges": [
+  {
+   "score": 0.0081,
+   "island": "hokkaido",
+   "frag": {
+    "k": [
+     44.27854,
+     142.33684
+    ],
+    "name": "hokkaido junction 44.2785:142.3368:22",
+    "kv": 22.0
+   },
+   "main": {
+    "k": [
+     44.27851,
+     142.33693
+    ],
+    "name": "hokkaido junction 44.2785:142.3369:66",
+    "kv": 66.0
+   },
+   "line_name": "北海道送電線_89",
+   "line_kv": null,
+   "d_frag_m": 0,
+   "d_main_m": 8,
+   "n_frag_nodes": 2
+  },
   {
    "score": 0.0291,
    "island": "east",
@@ -624,6 +649,31 @@
    "n_frag_nodes": 1
   },
   {
+   "score": 0.112,
+   "island": "east",
+   "frag": {
+    "k": [
+     35.12573,
+     138.85057
+    ],
+    "name": "中沢田変電所",
+    "kv": 22.0
+   },
+   "main": {
+    "k": [
+     35.12587,
+     138.84965
+    ],
+    "name": "沼津変電所",
+    "kv": 66.0
+   },
+   "line_name": "中部送電線_129",
+   "line_kv": null,
+   "d_frag_m": 64,
+   "d_main_m": 48,
+   "n_frag_nodes": 1
+  },
+  {
    "score": 0.0075,
    "island": "east",
    "frag": {
@@ -721,7 +771,7 @@
    "line_kv": 77.0,
    "d_frag_m": 1,
    "d_main_m": 0,
-   "n_frag_nodes": 9
+   "n_frag_nodes": 11
   },
   {
    "score": 0.0298,
@@ -924,6 +974,31 @@
    "n_frag_nodes": 3
   },
   {
+   "score": 0.061,
+   "island": "west",
+   "frag": {
+    "k": [
+     35.30536,
+     136.76694
+    ],
+    "name": "chubu junction 35.3054:136.7669:0",
+    "kv": 0.0
+   },
+   "main": {
+    "k": [
+     35.30604,
+     136.76591
+    ],
+    "name": "chubu junction 35.306:136.7659:33",
+    "kv": 33.0
+   },
+   "line_name": "毛受変電所(Menjo-Hendensho)~起変電所線",
+   "line_kv": 30.0,
+   "d_frag_m": 61,
+   "d_main_m": 0,
+   "n_frag_nodes": 2
+  },
+  {
    "score": 0.0231,
    "island": "west",
    "frag": {
@@ -945,31 +1020,6 @@
    "line_name": "植田湖西線",
    "line_kv": 77.0,
    "d_frag_m": 23,
-   "d_main_m": 0,
-   "n_frag_nodes": 2
-  },
-  {
-   "score": 0.0005,
-   "island": "west",
-   "frag": {
-    "k": [
-     34.72498,
-     136.50117
-    ],
-    "name": "chubu junction 34.725:136.5012:66",
-    "kv": 66.0
-   },
-   "main": {
-    "k": [
-     34.72193,
-     136.50326
-    ],
-    "name": "chubu junction 34.7219:136.5033:77",
-    "kv": 77.0
-   },
-   "line_name": "津東丸之内線",
-   "line_kv": 77.0,
-   "d_frag_m": 0,
    "d_main_m": 0,
    "n_frag_nodes": 2
   },
@@ -1774,31 +1824,6 @@
    "n_frag_nodes": 2
   },
   {
-   "score": 0.0006,
-   "island": "west",
-   "frag": {
-    "k": [
-     34.77042,
-     135.44284
-    ],
-    "name": "kansai junction 34.7704:135.4428:66",
-    "kv": 66.0
-   },
-   "main": {
-    "k": [
-     34.76944,
-     135.4414
-    ],
-    "name": "kansai junction 34.7694:135.4414:77",
-    "kv": 77.0
-   },
-   "line_name": "関西電力送配電 77.0kV線",
-   "line_kv": 77.0,
-   "d_frag_m": 0,
-   "d_main_m": 0,
-   "n_frag_nodes": 2
-  },
-  {
    "score": 0.0343,
    "island": "west",
    "frag": {
@@ -2231,8 +2256,8 @@
      33.34787,
      130.24848
     ],
-    "name": "kyushu junction 33.3479:130.2485:66",
-    "kv": 66.0
+    "name": "kyushu junction 33.3479:130.2485:22",
+    "kv": 22.0
    },
    "main": {
     "k": [
@@ -2407,7 +2432,7 @@
      138.85057
     ],
     "name": "中沢田変電所",
-    "kv": 66.0
+    "kv": 22.0
    },
    "main": {
     "k": [
@@ -2482,6 +2507,21 @@
    "main_k": [
     35.55309,
     139.75415
+   ],
+   "n_frag_nodes": 1
+  },
+  {
+   "island": "east",
+   "frag_name": "蒲田変電所",
+   "main_name": "蒲田変電所",
+   "dist_m": 234,
+   "frag_k": [
+    35.5564,
+    139.7202
+   ],
+   "main_k": [
+    35.55486,
+    139.71843
    ],
    "n_frag_nodes": 1
   },

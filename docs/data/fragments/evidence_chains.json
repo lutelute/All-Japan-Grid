@@ -3,7 +3,7 @@
  "summary": {
   "hokkaido": 5,
   "east": 34,
-  "west": 36,
+  "west": 35,
   "okinawa": 0
  },
  "chains": [
@@ -953,15 +953,15 @@
     139.46956
    ],
    "mk": [
-    35.38114,
-    139.48331
+    35.38109,
+    139.48338
    ],
    "way_voltage_kv": [
     66.0,
     66.0
    ],
    "d_frag_m": 9,
-   "d_main_m": 67,
+   "d_main_m": 72,
    "island": "east",
    "names": [
     "亀井野線",
@@ -969,7 +969,7 @@
    ],
    "frag_name": "亀井野変電所",
    "frag_kv": 66.0,
-   "main_name": "六会変電所",
+   "main_name": "六会変電所 66kV",
    "main_kv": 66.0,
    "n_frag_nodes": 1
   },
@@ -1500,34 +1500,6 @@
    "n_frag_nodes": 2
   },
   {
-   "n_ways": 2,
-   "stitch_m": 0,
-   "fk": [
-    35.28098,
-    139.1898
-   ],
-   "mk": [
-    35.27556,
-    139.16752
-   ],
-   "way_voltage_kv": [
-    66.0,
-    66.0
-   ],
-   "d_frag_m": 43,
-   "d_main_m": 0,
-   "island": "west",
-   "names": [
-    "西湘線",
-    "ＪＲ東海 66.0kV線"
-   ],
-   "frag_name": "chubu junction 35.281:139.1898:66",
-   "frag_kv": 66.0,
-   "main_name": "chubu junction 35.2756:139.1675:66",
-   "main_kv": 66.0,
-   "n_frag_nodes": 2
-  },
-  {
    "n_ways": 4,
    "stitch_m": 16,
    "fk": [
@@ -1747,32 +1719,32 @@
   },
   {
    "n_ways": 3,
-   "stitch_m": 0,
+   "stitch_m": 19,
    "fk": [
     35.33303,
     139.27586
    ],
    "mk": [
-    35.27754,
-    139.15771
+    35.27569,
+    139.15549
    ],
    "way_voltage_kv": [
     77.0,
-    77.0,
-    77.0
+    66.0,
+    66.0
    ],
    "d_frag_m": 0,
-   "d_main_m": 59,
+   "d_main_m": 36,
    "island": "west",
    "names": [
     "JR 西相模-平塚線",
-    "JR 西相模-平塚線",
-    "JR 西相模-平塚線"
+    "中堀線",
+    "西湘線"
    ],
    "frag_name": "chubu junction 35.333:139.2759:77",
    "frag_kv": 77.0,
-   "main_name": "扇町五丁目変電所 77kV",
-   "main_kv": 77.0,
+   "main_name": "扇町五丁目変電所 (untyped)",
+   "main_kv": 0.0,
    "n_frag_nodes": 1
   },
   {

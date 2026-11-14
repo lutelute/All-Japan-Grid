@@ -1,10 +1,10 @@
 {
  "_about": "docs/map_gl.html が読む。scripts/build_map_gl_tiles.py が書く。sources の sha256 が今のファイルと違えば作り直す(tests/test_map_gl_tiles.py)。",
  "sources": {
-  "docs/data/map/lines_all.geojson": "eaaebf902f9914bd9c5b0d81add538c0550d4c3b7548609fc36a4e74e62b25f2",
-  "docs/data/map/subs_all.geojson": "0d125ff67b60bc4934f1073efef5e86085640a41593262339e042345d61090c5",
+  "docs/data/map/lines_all.geojson": "ad716a222002e81d3d7b60920b1f4136da4cc22bc1f63df51e1342556656da43",
+  "docs/data/map/subs_all.geojson": "d2bc672a37dc4c32353184ff9585c22f84eb7c04520b89b8fdea10736c3cc15a",
   "docs/data/plants_utility.geojson": "ace836cb04baa707464938e32b3225289f7ddfbfdaa3ecdfaa77c0be997f1a73",
-  "docs/data/map/regions.json": "3193565005f8197a28fd6ef0c1f4384eb237a8bcd7120e11ac7794d5890d4c7f"
+  "docs/data/map/regions.json": "9a331ed856eec3171089672dae64bf48a523ac32846ad5d1d307e053b94ee240"
  },
  "names_en_from": [
   "data/chubu_substations.geojson",
@@ -44,8 +44,8 @@
   "data/tokyo_plants_supplement.geojson"
  ],
  "outputs": {
-  "docs/data/map/grid.pmtiles": 7876839,
-  "docs/data/map/names_en.json": 59050
+  "docs/data/map/grid.pmtiles": 7905940,
+  "docs/data/map/names_en.json": 58945
  },
  "zoom": [
   3,
@@ -53,16 +53,16 @@
  ],
  "tippecanoe": "tippecanoe v2.79.0",
  "features": {
-  "lines": 17416,
-  "subs": 8290,
+  "lines": 17510,
+  "subs": 8406,
   "plants": 547
  },
  "names_en": {
-  "entries": 1353,
+  "entries": 1350,
   "osm_conflicts": 26,
   "features_with_en": {
-   "lines": 1598,
-   "subs": 1196,
+   "lines": 1589,
+   "subs": 1220,
    "plants": 140
   }
  },
@@ -84,13 +84,13 @@
     "plants": 547
    },
    "66": {
-    "lines": 16159,
-    "subs": 7638,
+    "lines": 15894,
+    "subs": 7379,
     "plants": 547
    },
    "0": {
-    "lines": 17416,
-    "subs": 8290,
+    "lines": 17510,
+    "subs": 8406,
     "plants": 547
    }
   },
@@ -111,13 +111,13 @@
     "plants": 48
    },
    "66": {
-    "lines": 911,
-    "subs": 526,
+    "lines": 850,
+    "subs": 466,
     "plants": 48
    },
    "0": {
-    "lines": 932,
-    "subs": 549,
+    "lines": 962,
+    "subs": 584,
     "plants": 48
    }
   },
@@ -138,13 +138,13 @@
     "plants": 107
    },
    "66": {
-    "lines": 2334,
-    "subs": 1181,
+    "lines": 2291,
+    "subs": 1122,
     "plants": 107
    },
    "0": {
-    "lines": 2443,
-    "subs": 1229,
+    "lines": 2483,
+    "subs": 1277,
     "plants": 107
    }
   },
@@ -165,13 +165,13 @@
     "plants": 84
    },
    "66": {
-    "lines": 4614,
-    "subs": 2187,
+    "lines": 4592,
+    "subs": 2167,
     "plants": 84
    },
    "0": {
-    "lines": 4822,
-    "subs": 2279,
+    "lines": 4844,
+    "subs": 2308,
     "plants": 84
    }
   },
@@ -192,12 +192,12 @@
     "plants": 142
    },
    "66": {
-    "lines": 2159,
-    "subs": 824,
+    "lines": 2138,
+    "subs": 817,
     "plants": 142
    },
    "0": {
-    "lines": 2457,
+    "lines": 2458,
     "subs": 991,
     "plants": 142
    }
@@ -219,8 +219,8 @@
     "plants": 47
    },
    "66": {
-    "lines": 663,
-    "subs": 296,
+    "lines": 662,
+    "subs": 295,
     "plants": 47
    },
    "0": {
@@ -246,13 +246,13 @@
     "plants": 60
    },
    "66": {
-    "lines": 1989,
-    "subs": 931,
+    "lines": 1881,
+    "subs": 829,
     "plants": 60
    },
    "0": {
-    "lines": 2166,
-    "subs": 1100,
+    "lines": 2167,
+    "subs": 1102,
     "plants": 60
    }
   },
@@ -273,13 +273,13 @@
     "plants": 39
    },
    "66": {
-    "lines": 1114,
-    "subs": 487,
+    "lines": 1111,
+    "subs": 480,
     "plants": 39
    },
    "0": {
-    "lines": 1282,
-    "subs": 543,
+    "lines": 1284,
+    "subs": 545,
     "plants": 39
    }
   },
@@ -300,8 +300,8 @@
     "plants": 20
    },
    "66": {
-    "lines": 502,
-    "subs": 243,
+    "lines": 501,
+    "subs": 242,
     "plants": 20
    },
    "0": {
@@ -327,12 +327,12 @@
     "plants": 0
    },
    "66": {
-    "lines": 1758,
-    "subs": 890,
+    "lines": 1753,
+    "subs": 888,
     "plants": 0
    },
    "0": {
-    "lines": 1904,
+    "lines": 1902,
     "subs": 931,
     "plants": 0
    }
