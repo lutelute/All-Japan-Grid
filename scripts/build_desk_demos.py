@@ -205,39 +205,84 @@ def grow_times(lines: list, members: list, seeds0: set) -> None:
         lines[i]["t1"] = round(rank[round(lines[i]["d1"], 3)], 4)
 
 
+# 電圧の段(各社で 500 kV の下の基幹の電圧が違うので、級でまとめる)。2026-11-15 先生「275 kV が埋めるのところで、
+# 中国・四国・九州が 500 しかない。北海道もない」「33 kV もあるなら載せるといい」。前は 275 kV 以上だけを描いていた
+TIERS = [
+    {"id": "t500", "label": "500 kV", "lo": 500, "tol": 0.0012},
+    {"id": "trunk", "label": "275・220・187 kV", "lo": 187, "tol": 0.0012},
+    {"id": "region", "label": "154・132・110 kV", "lo": 100, "tol": 0.0016},
+    {"id": "local", "label": "77・66 kV(電圧不明を含む)", "lo": 0, "tol": 0.002},
+    {"id": "osm_low", "label": "22・33 kV(OSM)", "lo": None, "tol": 0.002},
+]
+# OSM の 66 kV 未満の線のうち載せる電圧。25・20 kV は短い線ばかりで鉄道のき電線とみられるので載せない
+OSM_LOW_KV = {22, 30, 33, 44}
+_RAIL = re.compile(r"鉄道|旅客|JR|railway|Railway|RAILWAY")
+
+
+def tier_of(kv: int) -> int:
+    for g, t in enumerate(TIERS[:4]):
+        if kv >= t["lo"]:
+            return g
+    return 3
+
+
+def osm_low_lines() -> list:
+    """OSM の 22・33 kV などの線(正典には 66 kV より低い級が無い)。沖縄と鉄道は外す"""
+    out, seen = [], set()
+    for r in REGIONS:
+        if r == "okinawa":
+            continue
+        for f in load(ROOT / "data" / f"{r}_lines.geojson")["features"]:
+            p = f["properties"]
+            oid = p.get("osm_id")
+            if oid in seen:
+                continue
+            kv = _kv(p.get("voltage"))
+            if kv not in OSM_LOW_KV or _RAIL.search(" ".join(str(p.get(k) or "") for k in ("operator", "name", "line"))):
+                continue
+            seen.add(oid)
+            for cs in parts(f["geometry"]):
+                if len(cs) >= 2:
+                    out.append({"cs": [tuple(c[:2]) for c in cs], "kv": kv, "r": r, "g": 4,
+                                "n": str(p.get("name") or ""), "km": path_km(cs)})
+    return out
+
+
 def assembly_data() -> dict:
-    feats = load(DATA / "map" / "lines_275kv.geojson")["features"]
+    feats = load(DATA / "map" / "lines_all.geojson")["features"]
     lines = []
     for f in feats:
         p = f["properties"]
-        kv = int(round(float(p.get("_voltage_kv") or 0)))
-        if kv < 275:
+        r = p.get("_region", "")
+        if r not in REGIONS or r == "okinawa":
             continue
+        kv = int(round(float(p.get("_voltage_kv") or 0)))
         for cs in parts(f["geometry"]):
             if len(cs) < 2:
                 continue
-            lines.append({"cs": [tuple(c[:2]) for c in cs], "kv": kv, "r": p.get("_region", ""),
+            lines.append({"cs": [tuple(c[:2]) for c in cs], "kv": kv, "r": r, "g": tier_of(kv),
                           "n": p.get("_display_name") or "", "km": path_km(cs)})
-    i500 = [i for i, ln in enumerate(lines) if ln["kv"] >= 500]
-    i275 = [i for i, ln in enumerate(lines) if ln["kv"] < 500]
-    # 500 kV: 成分ごとに、いちばん枝の多い点(拠点の変電所)から道のりの順に伸ばす
-    grow_times(lines, i500, set())
-    # 275 kV: 500 kV の網の点から外へ伸ばす(500 kV に届かない成分は、その中の枝の多い点から)
+    lines += osm_low_lines()
+    # 段ごとに、上の段の網の点から外へ伸ばす(上の段に届かない成分は、その中の枝の多い点から)
     key = lambda c: (round(c[0], 3), round(c[1], 3))
-    on500 = {key(lines[i]["cs"][j]) for i in i500 for j in (0, -1)}
-    grow_times(lines, i275, on500)
+    above: set = set()
+    for g in range(len(TIERS)):
+        members = [i for i, ln in enumerate(lines) if ln["g"] == g]
+        if members:
+            grow_times(lines, members, set(above))
+            above |= {key(lines[i]["cs"][j]) for i in members for j in (0, -1)}
 
     out_lines, lab = [], defaultdict(lambda: [0.0, 0.0, 0.0])
     for ln in lines:
-        s = simp(ln["cs"], 0.0012)
+        s = simp(ln["cs"], TIERS[ln["g"]]["tol"])
         r = ln["r"]
-        out_lines.append({"v": ln["kv"], "r": REGIONS.index(r) if r in REGIONS else 0, "q": enc(s),
+        out_lines.append({"g": ln["g"], "v": ln["kv"], "r": REGIONS.index(r) if r in REGIONS else 0, "q": enc(s),
                           "t0": ln["t0"], "t1": ln["t1"], "n": ln["n"][:40], "km": round(ln["km"], 1)})
-        for c in ln["cs"]:
-            w = 1.0
-            lab[r][0] += c[0] * w
-            lab[r][1] += c[1] * w
-            lab[r][2] += w
+        if ln["g"] <= 2:                     # 地域の名前の位置は上の 3 段で決める(下の段の多い所に引っぱられない)
+            for c in ln["cs"]:
+                lab[r][0] += c[0]
+                lab[r][1] += c[1]
+                lab[r][2] += 1.0
     labels = [{"r": REGIONS.index(r), "ja": REGION_JA[r], "lon": round(v[0] / v[2], 3), "lat": round(v[1] / v[2], 3)}
               for r, v in lab.items() if v[2] and r in REGIONS]
 
@@ -250,8 +295,16 @@ def assembly_data() -> dict:
                     "q": [enc(simp(pp, 0.001)) for pp in ps if len(pp) >= 2]})
     conv = [{"n": c["n"], "k": c["kind"], "lon": c["s"][0], "lat": c["s"][1]} for c in occ["converters"]]
 
-    stat = {"n500": len(i500), "n275": len(i275),
-            "km500": round(sum(lines[i]["km"] for i in i500)), "km275": round(sum(lines[i]["km"] for i in i275))}
+    stat = {"tiers": [{"id": t["id"], "label": t["label"], "n": sum(1 for ln in lines if ln["g"] == g),
+                       "km": round(sum(ln["km"] for ln in lines if ln["g"] == g)),
+                       "kv": sorted({ln["kv"] for ln in lines if ln["g"] == g}, reverse=True)}
+                      for g, t in enumerate(TIERS)],
+            # 段ごと・地域ごとの電圧と km(説明文で、どの会社がどの電圧かを数から言う)
+            "by_region": {REGION_JA[r]: {str(g): {str(kv): round(sum(ln["km"] for ln in lines
+                                                                   if ln["r"] == r and ln["g"] == g and ln["kv"] == kv))
+                                                  for kv in sorted({ln["kv"] for ln in lines if ln["r"] == r and ln["g"] == g})}
+                                         for g in range(len(TIERS))}
+                          for r in REGIONS if r != "okinawa"}}
     return {"made": canon_totals(), "stat": stat, "regions": [REGION_JA[r] for r in REGIONS],
             "island_of": [ISLAND[r] for r in REGIONS], "islands": ISLAND_JA,
             "outline": outline_enc(), "lines": out_lines, "labels": labels, "ics": ics, "conv": conv}

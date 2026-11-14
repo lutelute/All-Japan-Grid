@@ -10,13 +10,14 @@
           "label": "組み上がる",
           "title": "全国の送電網が組み上がる(動く絵)",
           "headline": "誰も持たない電気の地図。",
-          "desc": "500 kV の背骨 → 275 kV → 連系線 → 50 Hz と 60 Hz の 4 つの島 → 正典の数、の 6 つの場面を順に動かす。線は、つながった網の中で枝のいちばん多い点から道のりの順に伸びる。線・変換所にふれると名前・電圧・km が出る",
-          "caveat": "線の形は OSM、つなぎ方は正典(OSM から作ったモデル)で、電力会社の系統図そのものではない。275 kV 以上だけを描く(北海道は 187 kV の線が多いので線が少なく見える。沖縄は 132 kV までなので出ない)",
+          "desc": "500 kV の背骨 → 各社の基幹(275・220・187 kV)→ 地域の網(154・110 kV)→ 変電所へ(77・66 kV)→ 22・33 kV(OSM)→ 連系線 → 50 Hz と 60 Hz の 4 つの島 → 正典の数、の 9 つの場面を順に動かす。線は、上の電圧の網から道のりの順に伸びる。線・変換所にふれると名前・電圧・km が出る",
+          "caveat": "線の形は OSM、つなぎ方は正典(OSM から作ったモデル)で、電力会社の系統図そのものではない。22・33 kV の線だけは OSM そのもの(正典には 66 kV より低い級が無い)。沖縄は本州から離れているので入れていない",
           "path": "docs/demos/grid_assembly.html",
           "variants": [
             {"id": "full", "label": "最初から", "query": ""},
-            {"id": "ties", "label": "連系線から", "query": "?scene=4"},
-            {"id": "islands", "label": "4 つの島(止めて見る)", "query": "?scene=5&autoplay=0"},
+            {"id": "trunk", "label": "各社の基幹(止めて見る)", "query": "?scene=3&autoplay=0"},
+            {"id": "ties", "label": "連系線から", "query": "?scene=7"},
+            {"id": "islands", "label": "4 つの島(止めて見る)", "query": "?scene=8&autoplay=0"},
             {"id": "light", "label": "明るい配色", "query": "?theme=light"}
           ],
           "keys": "Space で再生・止める、← → で場面、T で配色、0 で全国に戻す。ドラッグで動かす、ホイールで拡大",
@@ -25,7 +26,7 @@
           "badge": "正典",
           "script": "scripts/build_desk_demos.py",
           "rebuild": "PYTHONPATH=. python scripts/build_desk_demos.py assembly",
-          "needs": ["docs/data/map/lines_275kv.geojson", "docs/data/flow_map/occto_lines.json", "data/reference/japan_prefectures_simplified.geojson", "docs/MODEL_INTERVENTIONS.md"]
+          "needs": ["docs/data/map/lines_all.geojson", "data/{region}_lines.geojson", "docs/data/flow_map/occto_lines.json", "data/reference/japan_prefectures_simplified.geojson", "docs/MODEL_INTERVENTIONS.md"]
         },
         {
           "id": "recipe",
