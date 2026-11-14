@@ -903,6 +903,28 @@ def model_plant_ledger():
     return load_plant_connections() if PLANT_CONNECTIONS else None
 
 
+def model_attach_kwargs(island: str) -> dict:
+    """モデルの既定の発電機の付け方(介入#24・#41 の島別の規則と #55 の台帳)。`attach_generators(**…)` に渡す。
+
+    関数の引数の既定は旧挙動のまま(what-if の基準を黙って変えない)なので、モデルを組む経路はこれを渡す。
+    2026-11-12 まで、潮流マップの基準・NOW 断面・日別断面は `attach_mode="cap"` を書き込み台帳を渡していなかった
+    (姉崎火力が公表の 275 kV・房総でなく中袖 500 kV に付いていた。`docs/reports/sync_scoreboard_2026-11-10.md` §11)。
+    """
+    return {"attach_mode": attach_default_for(island), "plant_ledger": model_plant_ledger()}
+
+
+def model_recipe_tag() -> str:
+    """モデルの組み方の印(付け方の既定・台帳の中身・#54)。断面を使い回してよいかの判定に使う。"""
+    import hashlib
+    h = hashlib.sha1()
+    h.update(json.dumps(ISLAND_ATTACH_DEFAULT, sort_keys=True).encode())
+    h.update(f"{GEN_ATTACH_DEFAULT}|{PLANT_CONNECTIONS}|{CONNECTED_DISPATCH}|{GEN_ZONE_BY_OPERATOR}".encode())
+    if PLANT_CONNECTIONS and os.path.exists(PLANT_CONNECTIONS_PATH):
+        with open(PLANT_CONNECTIONS_PATH, "rb") as f:
+            h.update(f.read())
+    return h.hexdigest()[:10]
+
+
 # ── 介入#56(2026-10-29): 154 kV 網の分割運用の推定 ─────────────────────────
 # `src/powerflow/subtransmission_split.py`。154 kV 級の各母線を電気的に最も近い降圧点(275 kV 以上→154 kV 級の
 # 変圧器の二次側)へ割り当て、違う降圧点の受け持ちどうしをつなぐ線を常時開放とみなす。開閉器の実データではなく推定。

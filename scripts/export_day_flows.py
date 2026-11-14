@@ -117,7 +117,8 @@ _GEN_FUEL_MAP = {
 }
 
 
-def apply_fuel_actuals(net, fm_zones: dict, h: int, island: str = None) -> dict:
+def apply_fuel_actuals(net, fm_zones: dict, h: int, island: str = None,
+                       pinned: dict | None = None) -> dict:
     """エリア需給実績(燃料別)でzoneの発電を上書きする(手法(a))。
 
     balance_by_zone(容量比例)の後に呼ぶ。実績があるzoneのみ:
@@ -131,6 +132,11 @@ def apply_fuel_actuals(net, fm_zones: dict, h: int, island: str = None) -> dict:
     返り値 = zone別帳簿 {zone: {applied_mw, clipped_mw, solar_to_load_mw,
     unknown_zeroed_mw, charge_mw}}。実績が無いzone・この島に居ないzoneは
     触らない(=容量比例のまま)。
+
+    pinned(介入#63): {発電機の番号: (MW, 燃料の組か None)}。ユニット別の発電実績で出力が分かっている
+    発電機。燃料別の実績からその合計を引いた残りを、ほかの発電機へ容量比例で配る。出力そのものは
+    呼び出し側(src/powerflow/unit_actuals.apply_pins)が置く。ユニット別の合計が燃料別の実績を超えた分は
+    帳簿の unit_over_fuel_mw に書く(どちらも速報値で、少し食い違う)。
     """
     ledger = {}
     # zoneは本籍島でのみ適用する。bbox境界の帰属ノード(east網内のchubuラベル等)に
@@ -174,8 +180,22 @@ def apply_fuel_actuals(net, fm_zones: dict, h: int, island: str = None) -> dict:
             continue      # このzoneはこの島のnetに居ない(帳簿にも載せない)
         rep = {"applied_mw": 0.0, "clipped_mw": 0.0, "solar_to_load_mw": 0.0,
                "unknown_zeroed_mw": 0.0, "charge_mw": 0.0}
+        pins_z = {gi: v for gi, v in (pinned or {}).items()
+                  if gi in zmask.index and bool(zmask.at[gi])}
+        is_pin = net.gen.index.isin(list(pins_z))
+        if pins_z:
+            rep["unit_pinned_mw"] = 0.0
+            rep["unit_over_fuel_mw"] = 0.0
         for gfuel, tgt in targets.items():
-            gm = zmask & (net.gen["type"] == gfuel)
+            # ユニット別の実績で置く発電機(燃料の組は公表のもの。無ければモデルの種別)の分を先に引く
+            pin_sum = sum(mw for gi, (mw, f) in pins_z.items()
+                          if (f or net.gen.at[gi, "type"]) == gfuel)
+            if pins_z:
+                rep["unit_pinned_mw"] += pin_sum
+                rep["unit_over_fuel_mw"] += max(pin_sum - tgt, 0.0)
+                rep["applied_mw"] += min(pin_sum, tgt)
+            tgt = max(tgt - pin_sum, 0.0)
+            gm = zmask & (net.gen["type"] == gfuel) & ~is_pin
             caps = net.gen.loc[gm, "max_p_mw"].astype(float).clip(lower=0.0) \
                 if gm.any() else None
             cap_sum = float(caps.sum()) if caps is not None else 0.0
@@ -189,7 +209,7 @@ def apply_fuel_actuals(net, fm_zones: dict, h: int, island: str = None) -> dict:
                     rep["solar_to_load_mw"] += short   # 需要側で後処理
                 else:
                     rep["clipped_mw"] += short
-        um = zmask & ~net.gen["type"].isin(_GEN_FUEL_MAP.keys())
+        um = zmask & ~net.gen["type"].isin(_GEN_FUEL_MAP.keys()) & ~is_pin
         if um.any():
             rep["unknown_zeroed_mw"] = float(
                 net.gen.loc[um, "p_mw"].astype(float).sum())
@@ -211,6 +231,51 @@ def apply_fuel_actuals(net, fm_zones: dict, h: int, island: str = None) -> dict:
             rep["charge_mw"] = charge
         ledger[zone] = {k: round(v, 1) for k, v in rep.items()}
     return ledger
+
+
+def hour_inputs(dem: dict, fm: dict | None, ic: dict | None, hours: list,
+                plants: dict | None = None) -> dict:
+    """時刻ごとの入力の署名 {時刻(文字列): 署名}。
+
+    当日の断面は 1 時間ごとに継ぎ足すが、燃料別の実績は需要より遅れて出る。先に計算した時刻を、
+    あとから実績が出ても再利用していたので、公開中の断面は実績が当たらない時刻が混ざっていた
+    (2026-11-09 は 24 時刻のうち 13〜20 時刻だけ。docs/reports/sync_scoreboard_2026-11-10.md)。
+    署名(モデルの組み方の印・需要のある区域・燃料別実績のある区域・収支の直しの出どころ・ユニット別の実績の
+    ある発電所の数)が前回と同じ時刻だけ再利用する。組み方の印は台帳(#55)などを変えると変わる。
+    """
+    zc = None
+    if ic:
+        from src.powerflow import zone_closure as zc
+    from scripts.run_full_powerflow_from_db import model_recipe_tag
+    recipe = model_recipe_tag()
+    out = {}
+    for h in hours:
+        dz = sorted(z for z, hh in dem.items() if h in hh)
+        fz = sorted(z for z, zd in ((fm or {}).get("zones") or {}).items()
+                    if h < len((zd.get("fuels") or {}).get("demand") or [])
+                    and zd["fuels"]["demand"][h] is not None)
+        sig = f"組:{recipe}|需要:" + ",".join(dz) + "|燃料:" + ",".join(fz)
+        if ic and zc.targets_at(ic, h):
+            sig += "|収支:" + ic["kind"]
+        if plants:
+            sig += f"|機:{sum(1 for v in plants.values() if v['mw'][h] is not None)}"
+        out[str(h)] = sig
+    return out
+
+
+def reusable_hours(prev: dict | None, sigs: dict) -> set:
+    """前回の断面のうち、入力の署名が今回と同じ時刻。署名を持たない古い断面は 1 つも再利用しない。"""
+    if not prev:
+        return set()
+    pin = prev.get("hour_inputs") or {}
+    return {int(h) for h in prev.get("available_hours") or []
+            if pin.get(str(h)) is not None and pin.get(str(h)) == sigs.get(str(h))}
+
+
+def _carry_hourly(prev_store: dict, keep) -> dict:
+    """時刻ごとの帳簿 {区域: {時刻: 記録}} から、keep(区域, 時刻) が真の記録だけを写す。"""
+    return {z: kept for z, hh in (prev_store or {}).items()
+            if (kept := {h: r for h, r in hh.items() if keep(z, int(h))})}
 
 
 def day_demand(date: dt.date) -> dict[str, dict[int, float]]:
@@ -334,13 +399,41 @@ def main() -> int:
                     default=True,
                     help="エリア需給実績(燃料別)で発電側も実績注入する(既定ON・"
                          "手法(a) 2026-08-19)。無効化=--no-fuel-actuals")
+    from src.powerflow.unit_actuals import UNIT_ACTUALS_DEFAULT
+    from src.powerflow.zone_closure import ZONE_CLOSURE_DEFAULT
+    ap.add_argument("--zone-closure", action=argparse.BooleanOptionalAction, default=ZONE_CLOSURE_DEFAULT,
+                    help="介入#62: 区域の(発電−需要)を、公表されている連系線の潮流に合わせる"
+                         "(既定 ON・AJG_ZONE_CLOSURE=0 で OFF)。線路の潮流には合わせない。src/powerflow/zone_closure.py")
+    ap.add_argument("--unit-actuals", action=argparse.BooleanOptionalAction, default=UNIT_ACTUALS_DEFAULT,
+                    help="介入#63: 発電機の出力を、公表されているユニット別の発電実績で置く(既定 ON・AJG_UNIT_ACTUALS=0 で OFF)。"
+                         "原本は AJG_HKS_DIR か data/external/occto/hks/hks_*.csv(scripts/fetch_hks.py)。"
+                         "その日の原本が無ければ当たらない。src/powerflow/unit_actuals.py")
+    ap.add_argument("--unit-match-report", type=Path, default=None,
+                    help="--unit-actuals の名前の結びの一覧(公表の発電所 → モデルの発電機)を書く JSON")
+    ap.add_argument("--out-dir", type=Path, default=None,
+                    help="出力先(既定 docs/data/flow_map/days)。試しに別の場所へ書くとき用。"
+                         "既定以外では manifest.json を書かない")
     ap.add_argument("--islands", nargs="+",
                     default=["hokkaido", "east", "west", "okinawa"],
                     help="計算する島(既定=全4島)。メモリ逼迫時は島ごとに"
                          "別プロセスで順に実行する(未計算の島は既存断面を保持)")
     args = ap.parse_args()
     date = dt.datetime.strptime(args.date, "%Y%m%d").date()
+    out_dir = args.out_dir or OUT
     dem = day_demand(date)
+    ic = None
+    if args.zone_closure:
+        from src.powerflow import zone_closure as zc
+        ic = zc.load_ic(ROOT, date)
+        print(f"区域の収支(#62): 連系線の{ic['kind']}潮流に合わせる" if ic
+              else "区域の収支(#62): この日の連系線の潮流が手元に無い → 当てない")
+    plants, aliases, ua = None, {}, None
+    if args.unit_actuals:
+        from src.powerflow import unit_actuals as ua
+        plants = ua.load_day(ua.find_files(ROOT), date) or None
+        aliases = ua.load_aliases(ROOT / "config" / "hks_plant_aliases.yaml")
+        print(f"ユニット別の発電実績(#63): {len(plants)} 発電所" if plants
+              else "ユニット別の発電実績(#63): この日の公表が手元に無い → 当てない")
     fm = None
     if args.fuel_actuals:
         from scripts.fetch_area_fuelmix import ensure_fuelmix
@@ -373,8 +466,9 @@ def main() -> int:
 
     import src.powerflow.point_demand as pdm
     from scripts.run_full_powerflow_from_db import (
-        add_per_component_slacks, allocate_loads, attach_generators,
-        balance_by_zone, build_island_net, load_demand_config, solve_island)
+        CONNECTED_DISPATCH, GEN_ZONE_BY_OPERATOR, add_per_component_slacks, allocate_loads,
+        attach_generators, balance_by_zone, build_island_net, load_demand_config,
+        model_attach_kwargs, solve_island)
     from src.powerflow.pref_demand import pref_zone_gwh
     from src.powerflow.line_keys import keys_signature, line_keys
     built = json.loads((ROOT / "docs/data/built/all.json").read_text())
@@ -385,8 +479,9 @@ def main() -> int:
 
     # 実績需要が1zoneでもある時刻のみ計算(当日の増分更新に対応)
     avail = sorted({h for hh in dem.values() for h in hh})
+    sigs = hour_inputs(dem, fm, ic, avail, plants)
     prev = None
-    prev_path = OUT / f"{args.date}.json"
+    prev_path = out_dir / f"{args.date}.json"
     if prev_path.exists():
         prev = json.loads(prev_path.read_text())
         # 手法が変わった既存断面(容量比例のみ・旧版手法等)の時刻を再利用すると
@@ -399,9 +494,26 @@ def main() -> int:
             print(f"燃料実績の構成が変化({prev_fa}/{prev_m} -> "
                   f"{cur_fa}/{cur_m}) — 全時刻を再計算")
             prev = None
+        # 区域の収支の直し(#62)の有無・出どころが違う断面とは混ぜない
+        elif ((prev.get("zone_closure") or {}).get("kind")) != (ic["kind"] if ic else None):
+            print("区域の収支の直しの有無が前回と違う — 全時刻を再計算")
+            prev = None
+    prev_ok = reusable_hours(prev, sigs)
+    # 変わりなし(線構成も入力も前回と同じ)なら、網を組む前に終える。前日分を毎時呼んでも重くならない
+    if prev and set(avail) <= prev_ok:
+        from src.powerflow.line_keys import keys_signature
+        same = True
+        for island in args.islands:
+            gj = json.loads((ROOT / f"docs/data/flow_map/flows_{island}.geojson").read_text())
+            sig0 = keys_signature([f["properties"].get("k", "") for f in gj["features"]])
+            if ((prev.get("islands") or {}).get(island) or {}).get("base_sig") != sig0:
+                same = False
+        if same:
+            print(f"{args.date}: 入力も線構成も前回と同じ → 作り直さない")
+            return 0
     fa_zones = sorted(fm["zones"].keys()) if fm else []
     result = {"date": args.date, "hours": list(range(24)), "islands": {},
-              "available_hours": avail,
+              "available_hours": avail, "hour_inputs": sigs,
               "demand_zones": sorted(dem.keys()),
               "fuel_actuals_zones": fa_zones,
               "fuel_actuals_method": FUEL_ACTUALS_METHOD if fm else None,
@@ -413,32 +525,47 @@ def main() -> int:
                           "・原発停止等の時事を公表実績経由で反映)、"
                           if fa_zones else "")
                        + "残りのzoneは容量比例balance(=需要断面の近似)。"
-                         "未取得zoneはfy2023既定需要のまま")}
+                         "未取得zoneはfy2023既定需要のまま"
+                       + (f"。区域の(発電−需要)を連系線の{ic['kind']}潮流に合わせた(介入#62)"
+                          if ic else "")
+                       + ("。大型の発電所の出力は、電力広域的運営推進機関 ユニット別発電実績公開システムの"
+                          "速報値を発電所ごとに合算して当てた(加工あり・介入#63)"
+                          if plants else ""))}
     # 対象外の島は既存断面(prevまたは同手法の既出力)から持ち越す
     if prev:
         for isl, dat in (prev.get("islands") or {}).items():
             if isl not in args.islands:
                 result["islands"][isl] = dat
-        if prev.get("fuel_actuals_ledger"):
-            result["fuel_actuals_ledger"] = prev["fuel_actuals_ledger"]
 
     fa_ledger: dict = {}
+    zc_hourly: dict = {}
+    reused: dict = {}            # 島 → 前回分を再利用した時刻
+    ua_match: list = []          # ユニット別の実績の名前の結び(発電所ごと)
+    ua_hourly: dict = {}         # 時刻 → 区域 → {n, mw, raised_cap_mw}
     for island, freq in (("hokkaido", 50), ("east", 50), ("west", 60),
                          ("okinawa", 60)):
         if island not in args.islands:
             continue
         t0 = time.time()
         net, bus_of, _ = build_island_net(island, nodes, edges, freq, {})
-        attach_generators(net, bus_of, nodes, island, attach_mode="cap",
-                          stats=True)
+        # 付け方・需給の合わせ方は正典と同じ既定(#24・#41・#55・#26・#54)。2026-11-12 まで "cap" 固定で台帳なし
+        attach_generators(net, bus_of, nodes, island, stats=True,
+                          **model_attach_kwargs(island))
         pinned, _ = pdm.match_buses(net, demand_pd)
         allocate_loads(net, cfg, pref_gwh=pref_gwh, point_demand=pinned)
         from src.powerflow.compensation import add_reactive_compensation
         add_reactive_compensation(net, factor=cfg.get(
             "reactive_compensation_factor", 0.6))
         add_per_component_slacks(net)
-        bnd_pts = setup_day_boundary(net, island) if fm else []
+        pins: dict = {}
+        if plants:
+            pins, led = ua.match_plants(net, plants, island, aliases)
+            ua_match.extend(led)
+            print(f"  ユニット別の実績: {len(led)} 発電所のうち {len(pins)} を発電機に結んだ")
+        bnd_pts = setup_day_boundary(net, island) if (fm or ic) else []
         bnd_series = day_boundary_series(fm, island) if fm else {}
+        if ic:   # 島の境の注入も、収支を合わせる連系線と同じ出どころの値にする
+            bnd_series.update(zc.boundary_series(ic, island))
         zl0 = net.load.groupby(net.load.bus.map(net.bus["zone"])).p_mw.sum()
         base = net
         # 線は鍵(両端座標・電圧・向き)で基準データ flows_<島>.geojson に結合する。並び順には頼らない
@@ -453,19 +580,27 @@ def main() -> int:
         sig = keys_signature(gk)
         got: dict[str, tuple[list, list]] = {}
         n_ok = 0
+        ac_hours: list = []          # 交流で解けた時刻(残りは直流の解)
         prev_isl = (prev or {}).get("islands", {}).get(island)
-        prev_avail = set((prev or {}).get("available_hours") or [])
         reuse = bool(prev_isl and prev_isl.get("base_sig") == sig)
+        # 前回分を再利用する時刻が交流で解けていたかは、前回の記録があるときだけ分かる
+        prev_ac = set(prev_isl.get("ac_hours") or []) if reuse and "ac_hours" in prev_isl else None
+        ac_known = True
         for h in range(24):
             if h not in avail:
                 continue
-            if reuse and h in prev_avail:
+            if reuse and h in prev_ok:
                 # 既計算時刻は再利用(増分更新)。同じ基準(base_sig)で計算した断面に限る
                 for k, pp, ll in zip(gk, prev_isl["p"], prev_isl["ld"]):
                     if k and pp is not None:
                         slot = got.setdefault(k, ([None] * 24, [None] * 24))
                         slot[0][h], slot[1][h] = pp[h], ll[h]
                 n_ok += 1
+                reused.setdefault(island, set()).add(h)
+                if prev_ac is None:
+                    ac_known = False
+                elif h in prev_ac:
+                    ac_hours.append(h)
                 continue
             nt = copy.deepcopy(base)
             for z, hh in dem.items():
@@ -477,21 +612,47 @@ def main() -> int:
                 mask = nt.load.bus.map(nt.bus["zone"]) == z
                 nt.load.loc[mask, "p_mw"] *= sc
                 nt.load.loc[mask, "q_mvar"] *= sc
-            balance_by_zone(nt, cfg, use_zone_src=True)
+            balance_by_zone(nt, cfg, use_zone_src=GEN_ZONE_BY_OPERATOR,
+                            connected=CONNECTED_DISPATCH)
+            pinned = ua.pinned_at(nt, pins, plants, h) if pins else {}
+            fa_led = {}
             if fm:
-                fa_led = apply_fuel_actuals(nt, fm["zones"], h, island=island)
+                fa_led = apply_fuel_actuals(nt, fm["zones"], h, island=island, pinned=pinned)
                 if fa_led:
                     fa_ledger.setdefault(island, {})[h] = fa_led
-                for pt in bnd_pts:
-                    series = bnd_series.get(tuple(pt["pair"]))
-                    if series and h < len(series) and series[h] is not None:
-                        nt.sgen.at[pt["sgen"], "p_mw"] = \
-                            float(series[h]) * pt["share"]
-            net_dc, dc, net_ac, ac = solve_island(nt, max_ac_buses=99999)
+            if pinned:
+                # 出力を観測の値にする。燃料別の実績が無い区域では、残りの発電機を需要の残りに合わせ直す
+                gz_pin = nt.gen["bus"].map(nt.bus["zone"])
+                if "zone_src" in nt.gen.columns:
+                    src_pin = nt.gen["zone_src"]
+                    gz_pin = gz_pin.where(~(src_pin.notna() & (src_pin != "")), src_pin)
+                by_zone: dict = {}
+                for gi, v in pinned.items():
+                    by_zone.setdefault(gz_pin.at[gi], {})[gi] = v
+                for z, pz in by_zone.items():
+                    rec = ua.apply_pins(nt, pz)
+                    if z not in fa_led:
+                        rec.update(ua.rebalance_unpinned(nt, z, pz))
+                    ua_hourly.setdefault(h, {})[z] = rec
+            for pt in bnd_pts:
+                series = bnd_series.get(tuple(pt["pair"]))
+                if series and h < len(series) and series[h] is not None:
+                    nt.sgen.at[pt["sgen"], "p_mw"] = \
+                        float(series[h]) * pt["share"]
+            if ic:
+                tg = zc.targets_at(ic, h)
+                if tg:
+                    led = zc.close_zone_balance(nt, tg, island=island, exclude=set(pinned))
+                    if led:
+                        zc_hourly.setdefault(h, {}).update(led)
+            net_dc, dc, net_ac, ac = solve_island(nt, max_ac_buses=99999,
+                                                  spread=CONNECTED_DISPATCH)
             conv = bool(ac.get("converged"))
             nu = net_ac if conv else net_dc
             if not (conv or dc.get("converged")):
                 continue
+            if conv:
+                ac_hours.append(h)
             live = nu.line[nu.line.in_service].index
             for li, pv, lv in zip(live, nu.res_line.loc[live, "p_from_mw"],
                                   nu.res_line.loc[live, "loading_percent"]):
@@ -510,28 +671,79 @@ def main() -> int:
         LD = [got[k][1] if k in got else None for k in gk]
         result["islands"][island] = {"p": P, "ld": LD, "base_sig": sig,
                                      "coverage": round(cover, 4)}
+        if ac_known:
+            result["islands"][island]["ac_hours"] = sorted(ac_hours)
         if cover < 1:
             print(f"  {island}: 基準の線 {len(gk)} 本のうち {cover:.2%} に対応(残りは空欄)")
-        print(f"[{island}] {n_ok}/{len(avail)}時刻(実績あり) {time.time()-t0:.0f}s", flush=True)
+        print(f"[{island}] {n_ok}/{len(avail)}時刻(実績あり・うち再利用 {len(reused.get(island, ()))}) "
+              f"{time.time()-t0:.0f}s", flush=True)
 
-    # 燃料実績注入の帳簿(コンパクト): zone別に適用時刻数と合計clip。
-    # 島分割実行では既存帳簿(他島のzone)にマージする(zoneは島間で重複しない)
-    if fa_ledger:
-        summ: dict = dict(result.get("fuel_actuals_ledger") or {})
-        for isl, hh in fa_ledger.items():
-            for h, zl in hh.items():
-                for z, rep in zl.items():
-                    s = summ.setdefault(z, {"hours": 0, "clipped_mwh": 0.0,
-                                            "charge_mwh": 0.0})
-                    s["hours"] += 1
-                    s["clipped_mwh"] += rep.get("clipped_mw", 0.0)
-                    s["charge_mwh"] += rep.get("charge_mw", 0.0)
+    # 帳簿は時刻ごとに持ち、要約はそこから作る。再利用した時刻と、計算しなかった島の区域の分は前回から写す
+    # (前は要約に足し込んでいたので、作り直すたびに時刻を数え直していた: 2026-11-09 の関西が 37 時刻)
+    from scripts.run_full_powerflow_from_db import ISLAND_OF
+
+    def keep(z, h):
+        isl = ISLAND_OF.get(z, (None,))[0]
+        return isl not in args.islands or h in reused.get(isl, ())
+
+    fa_store = _carry_hourly((prev or {}).get("fuel_actuals_hourly"), keep)
+    for isl, hh in fa_ledger.items():
+        for h, zl in hh.items():
+            for z, rep in zl.items():
+                fa_store.setdefault(z, {})[str(h)] = {
+                    "clipped_mw": rep.get("clipped_mw", 0.0), "charge_mw": rep.get("charge_mw", 0.0)}
+    if fa_store:
+        result["fuel_actuals_hourly"] = fa_store
         result["fuel_actuals_ledger"] = {
-            z: {k: round(v, 1) for k, v in s.items()} for z, s in summ.items()}
+            z: {"hours": len(hh),
+                "clipped_mwh": round(sum(r["clipped_mw"] for r in hh.values()), 1),
+                "charge_mwh": round(sum(r["charge_mw"] for r in hh.values()), 1)}
+            for z, hh in sorted(fa_store.items())}
 
-    OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / f"{args.date}.json").write_text(json.dumps(
+    if ic:
+        # 区域ごとの帳簿(動かした量・容量を超えて載せた量)
+        zc_store = _carry_hourly(((prev or {}).get("zone_closure") or {}).get("hourly"), keep)
+        for h, zs in zc_hourly.items():
+            for z, rec in zs.items():
+                zc_store.setdefault(z, {})[str(h)] = rec
+        by_hour: dict = {}
+        for z, hh in zc_store.items():
+            for h, rec in hh.items():
+                by_hour.setdefault(int(h), {})[z] = rec
+        result["zone_closure"] = {"kind": ic["kind"], "source": ic["source"],
+                                  "zones": zc.summarize(by_hour), "hourly": zc_store}
+
+    if plants:
+        ua_store = _carry_hourly(((prev or {}).get("unit_actuals") or {}).get("hourly"), keep)
+        for h, zs in ua_hourly.items():
+            for z, rec in zs.items():
+                ua_store.setdefault(z, {})[str(h)] = rec
+        how = {}
+        for m in ua_match:
+            c = how.setdefault(m["zone"], {"plants": 0, "matched": 0})
+            c["plants"] += 1
+            c["matched"] += 1 if m["how"] else 0
+        prev_match = ((prev or {}).get("unit_actuals") or {}).get("match") or {}
+        for z, c in prev_match.items():      # 計算しなかった島の区域は前回の数を残す
+            if keep(z, -1):
+                how.setdefault(z, c)
+        result["unit_actuals"] = {
+            "source": "電力広域的運営推進機関 ユニット別発電実績公開システム(速報値)",
+            "match": how,
+            "zones": {z: {"hours": len(hh), "pinned_mwh": round(sum(r["mw"] for r in hh.values()), 1),
+                          "raised_cap_mwh": round(sum(r["raised_cap_mw"] for r in hh.values()), 1)}
+                      for z, hh in sorted(ua_store.items())},
+            "hourly": ua_store}
+        if args.unit_match_report:
+            args.unit_match_report.write_text(json.dumps(
+                {"date": args.date, "match": ua_match}, ensure_ascii=False, indent=1), encoding="utf-8")
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / f"{args.date}.json").write_text(json.dumps(
         result, ensure_ascii=False, separators=(",", ":")))
+    if out_dir != OUT:
+        print(f"-> {out_dir / (args.date + '.json')}")
+        return 0
     mf = {"dates": []}
     mfp = OUT / "manifest.json"
     if mfp.exists():
