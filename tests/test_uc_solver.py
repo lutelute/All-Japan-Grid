@@ -1488,7 +1488,10 @@ class TestBatterySOC:
         params = UCParameters(generators=gens, demand=dp, time_horizon=th)
 
         result = solve_uc(params)
-        assert result.status == "Optimal"
+        # 解く道具の許容(MIP gap)の内側で解けていればよい。HiGHS 1.16 はこの問題を gap 1.3e-5(既定の許容 1e-4 の内側)で
+        # 止め、src/uc/solve_metrics.py の決まりで status は "Feasible"・termination_reason は "gap_limit" になる
+        # (1.15 までは gap 0 まで閉じて "Optimal")。この試験が確かめるのは終わりの蓄電量の制約(2026-11-14)
+        assert result.is_optimal, (result.status, result.termination_reason, result.solver_native_gap)
 
         sched = _find_schedule(result, "g_battery")
         min_terminal_soc = 0.3 * 200.0  # 60 MWh
