@@ -56,8 +56,16 @@ def check_island(name: str, rep: dict, thr: dict) -> list[tuple[str, bool, str]]
         rows.append((f"{tag}.solver", hr.get("solver") == "ac" and bool(hr.get("converged")),
                      f"solver={hr.get('solver')} converged={hr.get('converged')}"))
         vm = hr.get("vm_min")
+        # 合否は vm_min だけで決める。詳細には、どの解き方で解けたか(発電機の無効電力の上限を守ったか)・
+        # 66 kV 以上の最低・いちばん低い母線を添える(2026-11-15。前の実測 0.8555 は上限を外した解だった)
+        how = {True: "上限を守る解", False: "上限を外した解"}.get(hr.get("q_lims_enforced"), "解き方は記録なし")
+        extra = f" {how}"
+        if hr.get("vm_min_66kv_up") is not None:
+            extra += f"・66 kV 以上 {hr['vm_min_66kv_up']}"
+        if hr.get("vm_min_bus"):
+            extra += f"・最低 {hr['vm_min_bus'].get('name')} {hr['vm_min_bus'].get('vn_kv')} kV"
         rows.append((f"{tag}.vm_min", vm is not None and float(vm) >= thr["vm_min"],
-                     f"{vm} (>= {thr['vm_min']})"))
+                     f"{vm} (>= {thr['vm_min']}){extra}"))
         sl = hr.get("slack_abs_mw")
         rows.append((f"{tag}.slack_abs_mw", sl is not None and abs(float(sl)) <= thr["slack_abs_mw"],
                      f"{sl} (<= {thr['slack_abs_mw']})"))
