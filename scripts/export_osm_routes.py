@@ -5,7 +5,7 @@
 
 入力(読むだけ)
   - tw_*_t*.json                      OSM の送電線 way・鉄塔・route=power(Overpass の JSON と同じ形、git の外)。
-                                      既定は nas03 の osm_jp_power/20261105_agj_transmission/json(osm_routes.default_raw_dir)
+                                      既定は環境変数 AJG_OSM_RAW_TOWERS の場所(研究室の NAS の json_20261109。osm_routes.default_raw_dir)
   - docs/data/built/all.json          正典(地域の割り当て・変電所の名前・枝と路線の対応)
   - docs/data/map/lines_all.geojson   地図に出している正典の線(枝と同じ順。枝を引く鍵を作る)
   - data/{region}_substations.geojson・data/{region}_plants.geojson  路線の端の敷地の名前(基底 OSM)
@@ -140,7 +140,7 @@ def region_lookup(built_nodes):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--raw", default=None,
-                    help="tw_*_t*.json のあるフォルダ(既定: 環境変数 AJG_OSM_RAW_TOWERS か nas03 の 20261105 の抽出)")
+                    help="tw_*_t*.json のあるフォルダ(既定: 環境変数 AJG_OSM_RAW_TOWERS)")
     ap.add_argument("--out", default=OUT)
     args = ap.parse_args()
     args.raw = args.raw or R.default_raw_dir()
