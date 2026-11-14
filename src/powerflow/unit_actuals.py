@@ -1,4 +1,4 @@
-"""発電機の出力を、公表されているユニット別の発電実績で置く(介入 #63 の案・既定 OFF).
+"""発電機の出力を、公表されているユニット別の発電実績で置く(介入 #63・日別断面で既定 ON・2026-11-14).
 
 日別断面は、区域の発電を燃料別の実績の合計に合わせ、燃料の中は容量の比で発電機に配っている。どの発電所が
 動いているかは入っていない。OCCTO の「ユニット別発電実績公開システム」は、認可出力 10 万 kW 以上のユニットの
@@ -15,9 +15,15 @@ from __future__ import annotations
 
 import csv
 import datetime as dt
+import os
 import re
 import unicodedata
 from pathlib import Path
+
+# 日別断面(scripts/export_day_flows.py)の既定。その日の原本が置き場に無ければ当たらない(毎時の処理が日に 1 回取る)。
+# 2026-11-09・11-13 の 2 日で確かめて既定 ON にした(docs/reports/sync_scoreboard_2026-11-10.md §12)。
+# 無効化: --no-unit-actuals / 環境変数 AJG_UNIT_ACTUALS=0
+UNIT_ACTUALS_DEFAULT = os.environ.get("AJG_UNIT_ACTUALS", "1") != "0"
 
 AREA_ZONE = {"北海道": "hokkaido", "東北": "tohoku", "東京": "tokyo", "中部": "chubu", "北陸": "hokuriku",
              "関西": "kansai", "中国": "chugoku", "四国": "shikoku", "九州": "kyushu", "沖縄": "okinawa"}
@@ -89,8 +95,13 @@ def load_day(paths: list[Path], day: dt.date) -> dict:
     return plants
 
 
+def hks_dir(root: Path) -> Path:
+    """原本の置き場。環境変数 AJG_HKS_DIR があればそこ(毎時の処理は本体のチェックアウトの置き場を渡す)。"""
+    return Path(os.environ.get("AJG_HKS_DIR") or (root / "data" / "external" / "occto" / "hks"))
+
+
 def find_files(root: Path) -> list[Path]:
-    return sorted((root / "data" / "external" / "occto" / "hks").glob("hks_*.csv"))
+    return sorted(hks_dir(root).glob("hks_*.csv"))
 
 
 def load_aliases(path: Path) -> dict:

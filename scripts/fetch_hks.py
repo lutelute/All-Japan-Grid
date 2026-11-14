@@ -22,12 +22,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "data" / "external" / "occto" / "hks"
+# 置き場は環境変数 AJG_HKS_DIR で替えられる(毎時の処理は本体のチェックアウトの data/external を渡す)
+OUT = Path(os.environ.get("AJG_HKS_DIR") or (ROOT / "data" / "external" / "occto" / "hks"))
 PROVENANCE = OUT / "provenance.jsonl"
 BASE = "https://hatsuden-kokai.occto.or.jp/hks-web-public"
 
@@ -78,7 +80,7 @@ def fetch(date_from: str, date_to: str) -> Path | None:
             "source": "OCCTO ユニット別発電実績公開システム",
             "url": f"{BASE}/info/hks",
             "date_from": date_from, "date_to": date_to,
-            "file": str(dest.relative_to(ROOT)),
+            "file": f"data/external/occto/hks/{dest.name}",
             "bytes": len(blob), "sha256": hashlib.sha256(blob).hexdigest(),
             "retrieved": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "layer": "observed",

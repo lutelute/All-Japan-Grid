@@ -158,3 +158,14 @@ def test_contains_needs_long_name_compatible_fuel_and_plausible_capacity():
     pins, led = ua.match_plants(net, plants, "east")
     assert set(pins) == {("tohoku", "酒田臨海")}
     assert pins[("tohoku", "酒田臨海")] == [g["酒田"]]
+
+
+def test_hks_dir_follows_env(tmp_path, monkeypatch):
+    """毎時の処理は本体のチェックアウトの置き場を AJG_HKS_DIR で渡す(作業ツリーの data/external には無い)。"""
+    monkeypatch.delenv("AJG_HKS_DIR", raising=False)
+    assert ua.hks_dir(tmp_path) == tmp_path / "data" / "external" / "occto" / "hks"
+    d = tmp_path / "store" / "hks"
+    d.mkdir(parents=True)
+    (d / "hks_20261101_20261103.csv").write_text("x", encoding="utf-8")
+    monkeypatch.setenv("AJG_HKS_DIR", str(d))
+    assert [p.name for p in ua.find_files(tmp_path)] == ["hks_20261101_20261103.csv"]

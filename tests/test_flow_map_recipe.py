@@ -58,3 +58,21 @@ def test_day_signature_carries_recipe_tag():
     from scripts.run_full_powerflow_from_db import model_recipe_tag
     sig = edf.hour_inputs({"tokyo": {0: 1.0}}, None, None, [0])["0"]
     assert sig.startswith(f"組:{model_recipe_tag()}|")
+
+
+def test_day_flows_default_on_for_62_63(monkeypatch):
+    """#62・#63 は日別断面で既定 ON(2026-11-14)。環境変数で切れる(A/B 用)。"""
+    import importlib
+    import src.powerflow.unit_actuals as ua
+    import src.powerflow.zone_closure as zc
+    assert zc.ZONE_CLOSURE_DEFAULT is True and ua.UNIT_ACTUALS_DEFAULT is True
+    monkeypatch.setenv("AJG_ZONE_CLOSURE", "0")
+    monkeypatch.setenv("AJG_UNIT_ACTUALS", "0")
+    try:
+        assert importlib.reload(zc).ZONE_CLOSURE_DEFAULT is False
+        assert importlib.reload(ua).UNIT_ACTUALS_DEFAULT is False
+    finally:
+        monkeypatch.delenv("AJG_ZONE_CLOSURE")
+        monkeypatch.delenv("AJG_UNIT_ACTUALS")
+        importlib.reload(zc)
+        importlib.reload(ua)

@@ -1,4 +1,4 @@
-"""区域の収支を、公表されている連系線の潮流に合わせる(介入 #62 の案・既定 OFF).
+"""区域の収支を、公表されている連系線の潮流に合わせる(介入 #62・日別断面で既定 ON・2026-11-14).
 
 日別断面(scripts/export_day_flows.py)は、区域ごとに需要を実績に合わせ、発電を燃料別の実績で
 置き換える。ところが次の場合に、区域の(発電 − 需要)が実際の受け渡しからずれ、ずれた分を
@@ -20,7 +20,13 @@ from __future__ import annotations
 import csv
 import datetime as dt
 import json
+import os
 from pathlib import Path
+
+# 日別断面(scripts/export_day_flows.py)の既定。2026-11-09・11-13 の 2 日で、OCCTO の地内基幹 317 線路との同時刻の
+# 誤差が下がることを確かめて既定 ON にした(docs/reports/sync_scoreboard_2026-11-10.md §12)。
+# 無効化: --no-zone-closure / 環境変数 AJG_ZONE_CLOSURE=0
+ZONE_CLOSURE_DEFAULT = os.environ.get("AJG_ZONE_CLOSURE", "1") != "0"
 
 # 連系線の名前(OCCTO の表記)→ 鍵。順方向(正)の向きは OCCTO の定義:
 #   北本 = 北海道→東北 / 相馬双葉 = 東北→東京 / FC = 東京→中部 / 関西中国 = 関西→中国 /
@@ -147,10 +153,15 @@ def load_ic_from_kohyo04(path: Path, day: dt.date) -> dict | None:
             "hourly": {k: _hourly_slot_end(s, day) for k, s in stamps.items()}}
 
 
+def occto_dir(root: Path) -> Path:
+    """公表 04 の CSV の置き場。環境変数 AJG_OCCTO_DIR があればそこ(毎時の処理は本体のチェックアウトの置き場を渡す)。"""
+    return Path(os.environ.get("AJG_OCCTO_DIR") or (root / "data" / "external" / "occto"))
+
+
 def load_ic(root: Path, day: dt.date) -> dict | None:
     """その日の連系線の潮流を読む。実績(当日分)があればそれ、無ければ計画潮流(公表 04)。"""
     for got in (load_ic_from_occto_today(root / "docs/data/flow_map/occto_today.json", day),
-                load_ic_from_kohyo04(root / "data/external/occto" / f"kohyo_04_{day:%Y%m}.csv", day)):
+                load_ic_from_kohyo04(occto_dir(root) / f"kohyo_04_{day:%Y%m}.csv", day)):
         if got and _complete(got["hourly"]):
             return got
     return None

@@ -20,6 +20,9 @@ mkdir -p data/realtime
   # 置き場は本体のチェックアウト(data/realtime は本体の data/realtime へのリンクなので、その親)
   STORE="$(cd -P data/realtime/.. && pwd -P)"   # -P: リンクを先に解決してから .. をたどる
   TODAY=$(date +%Y%m%d)
+  # 日別断面(export_day_flows)が読む公表データの置き場。この作業ツリーの data/external ではなく本体の側
+  export AJG_HKS_DIR="$STORE/external/occto/hks"     # ユニット別の発電実績(介入#63)
+  export AJG_OCCTO_DIR="$STORE/external/occto"       # 連系線の計画潮流(公表 04、介入#62 の予備)
   # OCCTO 系統情報公表(エリア需要 02・連系線 04 の 30 分値)。API は約 14 か月しか残らないので、
   # 取り損ねた月は二度と取れない(2026-06 で止まっていた)。毎日、当月を取り直す。月初の 3 日は前月も
   if [ ! -f "data/realtime/.occto_kohyo_$TODAY" ]; then
@@ -29,6 +32,16 @@ mkdir -p data/realtime
     fi
     python3 scripts/fetch_occto_kohyo.py --from "$D0" --to "$D1" --out-dir "$STORE/external/occto" \
       && touch "data/realtime/.occto_kohyo_$TODAY" || echo "OCCTO 系統情報公表の取得に失敗(次の回に再試行)"
+  fi
+  # OCCTO のユニット別発電実績(10 万 kW 以上の約 470 ユニット・30 分値)。前日分までが出る(2026-11-10 に確認)。
+  # 日別断面(介入#63)が発電所ごとの出力に使う。日に 1 回(6 時以降)、直近 3 日を取る(遅れて出た分も拾う)。
+  # 画面の操作が要るので playwright を使う(免責への同意は 2026-08-12 にオーナーが承認)。失敗したら次の回に再試行
+  if [ ! -f "data/realtime/.hks_$TODAY" ] && [ "$(date +%H)" -ge 6 ]; then
+    H0=$(date -v-3d +%Y/%m/%d 2>/dev/null || date -d "3 days ago" +%Y/%m/%d)
+    H1=$(date -v-1d +%Y/%m/%d 2>/dev/null || date -d yesterday +%Y/%m/%d)
+    python3 scripts/fetch_hks.py "$H0" "$H1" > data/realtime/hks_fetch.log 2>&1 \
+      && touch "data/realtime/.hks_$TODAY" \
+      || echo "ユニット別の発電実績の取得に失敗(次の回に再試行・data/realtime/hks_fetch.log)"
   fi
   # 各社の系統情報公表(潮流実績)。年 1 回の公表なので週 1 回確かめ、新しい公表があれば観測の表を作り直す。
   # 新しい観測の表は、この後の export_flow_map_data(観測との向きの照合)にそのまま入る

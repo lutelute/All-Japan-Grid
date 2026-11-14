@@ -133,7 +133,7 @@ def apply_fuel_actuals(net, fm_zones: dict, h: int, island: str = None,
     unknown_zeroed_mw, charge_mw}}。実績が無いzone・この島に居ないzoneは
     触らない(=容量比例のまま)。
 
-    pinned(介入#63 案): {発電機の番号: (MW, 燃料の組か None)}。ユニット別の発電実績で出力が分かっている
+    pinned(介入#63): {発電機の番号: (MW, 燃料の組か None)}。ユニット別の発電実績で出力が分かっている
     発電機。燃料別の実績からその合計を引いた残りを、ほかの発電機へ容量比例で配る。出力そのものは
     呼び出し側(src/powerflow/unit_actuals.apply_pins)が置く。ユニット別の合計が燃料別の実績を超えた分は
     帳簿の unit_over_fuel_mw に書く(どちらも速報値で、少し食い違う)。
@@ -399,12 +399,15 @@ def main() -> int:
                     default=True,
                     help="エリア需給実績(燃料別)で発電側も実績注入する(既定ON・"
                          "手法(a) 2026-08-19)。無効化=--no-fuel-actuals")
-    ap.add_argument("--zone-closure", action=argparse.BooleanOptionalAction, default=False,
-                    help="介入#62(案): 区域の(発電−需要)を、公表されている連系線の潮流に合わせる"
-                         "(既定 OFF)。線路の潮流には合わせない。src/powerflow/zone_closure.py")
-    ap.add_argument("--unit-actuals", action=argparse.BooleanOptionalAction, default=False,
-                    help="介入#63(案): 発電機の出力を、公表されているユニット別の発電実績で置く(既定 OFF)。"
-                         "data/external/occto/hks/hks_*.csv(scripts/fetch_hks.py)を読む。src/powerflow/unit_actuals.py")
+    from src.powerflow.unit_actuals import UNIT_ACTUALS_DEFAULT
+    from src.powerflow.zone_closure import ZONE_CLOSURE_DEFAULT
+    ap.add_argument("--zone-closure", action=argparse.BooleanOptionalAction, default=ZONE_CLOSURE_DEFAULT,
+                    help="介入#62: 区域の(発電−需要)を、公表されている連系線の潮流に合わせる"
+                         "(既定 ON・AJG_ZONE_CLOSURE=0 で OFF)。線路の潮流には合わせない。src/powerflow/zone_closure.py")
+    ap.add_argument("--unit-actuals", action=argparse.BooleanOptionalAction, default=UNIT_ACTUALS_DEFAULT,
+                    help="介入#63: 発電機の出力を、公表されているユニット別の発電実績で置く(既定 ON・AJG_UNIT_ACTUALS=0 で OFF)。"
+                         "原本は AJG_HKS_DIR か data/external/occto/hks/hks_*.csv(scripts/fetch_hks.py)。"
+                         "その日の原本が無ければ当たらない。src/powerflow/unit_actuals.py")
     ap.add_argument("--unit-match-report", type=Path, default=None,
                     help="--unit-actuals の名前の結びの一覧(公表の発電所 → モデルの発電機)を書く JSON")
     ap.add_argument("--out-dir", type=Path, default=None,
@@ -422,15 +425,15 @@ def main() -> int:
     if args.zone_closure:
         from src.powerflow import zone_closure as zc
         ic = zc.load_ic(ROOT, date)
-        print(f"区域の収支(#62 案): 連系線の{ic['kind']}潮流に合わせる" if ic
-              else "区域の収支(#62 案): この日の連系線の潮流が手元に無い → 当てない")
+        print(f"区域の収支(#62): 連系線の{ic['kind']}潮流に合わせる" if ic
+              else "区域の収支(#62): この日の連系線の潮流が手元に無い → 当てない")
     plants, aliases, ua = None, {}, None
     if args.unit_actuals:
         from src.powerflow import unit_actuals as ua
         plants = ua.load_day(ua.find_files(ROOT), date) or None
         aliases = ua.load_aliases(ROOT / "config" / "hks_plant_aliases.yaml")
-        print(f"ユニット別の発電実績(#63 案): {len(plants)} 発電所" if plants
-              else "ユニット別の発電実績(#63 案): この日の公表が手元に無い → 当てない")
+        print(f"ユニット別の発電実績(#63): {len(plants)} 発電所" if plants
+              else "ユニット別の発電実績(#63): この日の公表が手元に無い → 当てない")
     fm = None
     if args.fuel_actuals:
         from scripts.fetch_area_fuelmix import ensure_fuelmix
@@ -491,7 +494,7 @@ def main() -> int:
             print(f"燃料実績の構成が変化({prev_fa}/{prev_m} -> "
                   f"{cur_fa}/{cur_m}) — 全時刻を再計算")
             prev = None
-        # 区域の収支の直し(#62 案)の有無・出どころが違う断面とは混ぜない
+        # 区域の収支の直し(#62)の有無・出どころが違う断面とは混ぜない
         elif ((prev.get("zone_closure") or {}).get("kind")) != (ic["kind"] if ic else None):
             print("区域の収支の直しの有無が前回と違う — 全時刻を再計算")
             prev = None
@@ -523,8 +526,11 @@ def main() -> int:
                           if fa_zones else "")
                        + "残りのzoneは容量比例balance(=需要断面の近似)。"
                          "未取得zoneはfy2023既定需要のまま"
-                       + (f"。区域の(発電−需要)を連系線の{ic['kind']}潮流に合わせた(介入#62 案)"
-                          if ic else ""))}
+                       + (f"。区域の(発電−需要)を連系線の{ic['kind']}潮流に合わせた(介入#62)"
+                          if ic else "")
+                       + ("。大型の発電所の出力は、電力広域的運営推進機関 ユニット別発電実績公開システムの"
+                          "速報値を発電所ごとに合算して当てた(加工あり・介入#63)"
+                          if plants else ""))}
     # 対象外の島は既存断面(prevまたは同手法の既出力)から持ち越す
     if prev:
         for isl, dat in (prev.get("islands") or {}).items():

@@ -141,3 +141,10 @@ def test_load_ic_from_kohyo04(tmp_path):
     assert got["kind"] == "計画"
     assert got["hourly"]["fc"][0] == pytest.approx(200.0)     # 00:30 と 01:00 のコマ = 0 時台
     assert got["hourly"]["fc"][1] is None
+
+
+def test_occto_dir_follows_env(tmp_path, monkeypatch):
+    monkeypatch.delenv("AJG_OCCTO_DIR", raising=False)
+    assert zc.occto_dir(tmp_path) == tmp_path / "data" / "external" / "occto"
+    monkeypatch.setenv("AJG_OCCTO_DIR", str(tmp_path / "store"))
+    assert zc.occto_dir(tmp_path) == tmp_path / "store"
