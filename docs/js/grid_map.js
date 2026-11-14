@@ -20,6 +20,8 @@ const VOLTAGE_COLORS = {
     110: "#1f77b4",
     77:  "#bcbd22",
     66:  "#8c564b",
+    33:  "#c49c94",   // 介入#64(2026-11-15): 66 kV より低い級
+    22:  "#f7b6d2",
     0:   "#cccccc",
 };
 
@@ -72,6 +74,8 @@ function voltageKvToBracket(kv) {
     if (kv >= 110) return 110;
     if (kv >= 77) return 77;
     if (kv >= 66) return 66;
+    if (kv >= 33) return 33;   // 介入#64: 30・33・44 kV
+    if (kv >= 15) return 22;   // 介入#64: 20・22・25 kV
     return 0;
 }
 
@@ -248,7 +252,7 @@ function updateLegend() {
             body += "</div>";
         } else {
             body += "<h4>電圧</h4><div class='legend-grid'>";
-            var voltages = [500, 275, 220, 187, 154, 132, 110, 77, 66];
+            var voltages = [500, 275, 220, 187, 154, 132, 110, 77, 66, 33, 22];
             for (var j = 0; j < voltages.length; j++) {
                 var kv = voltages[j];
                 body +=

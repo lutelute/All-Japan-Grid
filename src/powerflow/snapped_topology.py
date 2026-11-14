@@ -141,7 +141,9 @@ def _parse_voltage_kv(voltage_raw):
     return parse_voltage_kv(voltage_raw) or 0.0
 
 
-VALID_VOLTAGES = [66, 77, 110, 132, 154, 187, 220, 275, 500]
+# 電圧の級は src/utils/voltage.KV_CLASSES の 1 か所で決める(介入#64 で 22・33 kV を足した)
+from src.utils.voltage import KV_CLASSES as _KV_CLASSES  # noqa: E402
+VALID_VOLTAGES = list(_KV_CLASSES)
 
 # TSO operator name fragments -> home grid frequency. The regional OSM
 # slices overlap, so e.g. the chubu (60 Hz) slice contains 1,000+ TEPCO
@@ -204,11 +206,14 @@ def _freq_excluded(props, region_hz) -> bool:
 def _clean_voltage(v_kv):
     """Snap a KNOWN voltage to the nearest standard JP transmission class.
 
-    OSM voltage tags carry non-standard / distribution values (22/25/30/33/
-    100 kV). Leaving them produces non-standard buses and extreme transformer
-    voltage ratios (up to 20:1) that make Ybus ill-conditioned. Snapping to the
-    standard classes keeps ratios sane. Unknown (<=0) is preserved so
+    OSM voltage tags carry non-standard values (25/30/44/100 kV). Leaving them produces
+    non-standard buses and extreme transformer voltage ratios that make Ybus ill-conditioned.
+    Snapping to the standard classes keeps ratios sane. Unknown (<=0) is preserved so
     ``fix_zero_voltages`` can infer it from connected lines.
+
+    介入#64(2026-11-15): 22・33 kV は級として持つ(前は 66 kV に丸めていた)。30・44 kV は 33 kV、
+    25 kV(鉄道のき電線とみられる短い線)と 22 kV より低い値(11 kV など)は 22 kV に寄る。
+    級の表は src/utils/voltage.KV_CLASSES。
     """
     if v_kv <= 0:
         return 0.0
@@ -223,9 +228,9 @@ def _parse_voltage_classes(voltage_raw):
     ``154000;66000`` のような併架(under-build)は物理的に別電圧の独立回線で、
     :func:`parse_voltage_kv` の max丸めでは低電圧側の接続が失われる
     (62kV島の主因, ledger 103)。``expand_mixed_voltage`` がこの集合で
-    各クラスを個別に系統へ展開するために使う。非標準値(22/33kV)は
-    ``_clean_voltage`` で最寄り標準クラスに丸められるので、``66;22`` などは
-    単一クラス {66} になり展開対象外。
+    各クラスを個別に系統へ展開するために使う。22・33 kV は介入#64(2026-11-15)から
+    級なので、``66;22`` は {66, 22} になり 2 つの回線に展開される(前は 22 kV が
+    66 kV に丸められて単一クラス {66} になり、展開されなかった)。
     """
     out = set()
     for part in str(voltage_raw or "").replace(",", ";").split(";"):

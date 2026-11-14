@@ -216,3 +216,44 @@
     x_ohm_per_km: 0.110
     b_s_per_km: 1.0e-4
     max_i_ka: 0.7
+# 介入#64(2026-11-15): 66 kV より低い級。それまでは 22・33 kV の線を 66 kV に丸めていた。
+# 値はほかの行と同じく典型値(出典なしの合成値)。北海道・東北(佐渡を含む)・関西の 33 kV と、
+# 都市部の 22 kV(特別高圧の配電の地中線が多い)に当たる。
+33:
+  description: "33kV sub-transmission (Hokkaido, Tohoku incl. Sado, Kansai)"
+  description_ja: "33kV 送電線"
+  r_ohm_per_km: 0.240
+  x_ohm_per_km: 0.390
+  b_s_per_km: 3.0e-6
+  max_i_ka: 0.35
+  conductor: "ACSR 120mm2"
+  conductor_ja: "ACSR 120mm2 単導体"
+  circuits: 1
+  grid_class: "sub_transmission"
+  kml_style: "thin"
+  notes: "Lower sub-transmission below 66 kV. Typical values (synthetic, no source), like the other classes."
+
+  cable:                      # 33kV CV 地中(典型値)
+    r_ohm_per_km: 0.100
+    x_ohm_per_km: 0.120
+    b_s_per_km: 8.0e-5
+    max_i_ka: 0.40
+22:
+  description: "22kV special high-voltage distribution / sub-transmission"
+  description_ja: "22kV 特別高圧配電・送電線"
+  r_ohm_per_km: 0.240
+  x_ohm_per_km: 0.380
+  b_s_per_km: 3.0e-6
+  max_i_ka: 0.35
+  conductor: "ACSR 120mm2"
+  conductor_ja: "ACSR 120mm2 単導体"
+  circuits: 1
+  grid_class: "sub_transmission"
+  kml_style: "thin"
+  notes: "22 kV lines (often underground in cities). Typical values (synthetic, no source)."
+
+  cable:                      # 22kV CV 地中(都市部の特別高圧配電; 典型値)
+    r_ohm_per_km: 0.080
+    x_ohm_per_km: 0.110
+    b_s_per_km: 9.0e-5
+    max_i_ka: 0.45
