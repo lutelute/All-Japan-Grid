@@ -1,0 +1,157 @@
+{
+ "meta": {
+  "date": "2026-11-15",
+  "git_head": "3409965d",
+  "scenario": "fy2023r2",
+  "model": "built_full_v4_nameplate",
+  "bridge": false,
+  "boundary_injection": false,
+  "pref_demand": true,
+  "reactive_comp": true,
+  "dedup_nodes": true,
+  "site_trafos": false,
+  "deenergize_unbuilt": false,
+  "hourly_shunts": false,
+  "builder": "run_full_powerflow_from_db.build_island_net"
+ },
+ "islands": {
+  "hokkaido": {
+   "mode": "ac",
+   "regions": [
+    "hokkaido"
+   ],
+   "model": "full",
+   "provisional_infeed": [],
+   "implicit_stepdown": [
+    {
+     "site": "hokkaido junction 44.2785:142.3369:66",
+     "bus": 229,
+     "new_bus": 859,
+     "hv_kv": 66.0,
+     "lv_kv": 22.0,
+     "n_lines": 1,
+     "lines": [
+      "北海道送電線_89"
+     ],
+     "sn_mva": 100.0,
+     "parallel": 1,
+     "capacity": "estimated",
+     "lat": 44.27851,
+     "lon": 142.33693
+    }
+   ],
+   "lv_aggregate": null,
+   "n_bus": 860,
+   "n_trafo_nameplate": 42,
+   "backbone_ledger": null,
+   "pref_demand_ledger": {
+    "mode": "pref_demand_fy2024",
+    "zones": {
+     "hokkaido": {
+      "北海道": {
+       "n_bus": 573,
+       "gwh": 27620.5,
+       "target_mw": 4420.0
+      }
+     }
+    }
+   },
+   "reactive_comp": {
+    "factor": 0.8,
+    "n_shunt": 573,
+    "q_comp_mvar": 1162.2
+   },
+   "bridge": null,
+   "boundary_injection": null,
+   "intra_dc_injection": null,
+   "inject_main_comp_only": false,
+   "n_fragment_gen_off": 0,
+   "fragment_unserved_load_mw": 0.0,
+   "gate": {
+    "pass": true,
+    "cond_max": 3015729.134967984
+   },
+   "hours": {
+    "18": {
+     "solver": "ac",
+     "converged": true,
+     "net_demand_mw": 4434.3,
+     "load_scale": {
+      "hokkaido": 1.0032
+     },
+     "served_load_mw": 4434.3,
+     "served_frac": 1.0,
+     "slack_abs_mw": 797.1,
+     "solve_s": 1.0,
+     "q_lims_enforced": true,
+     "vm_min": 0.68,
+     "vm_max": 1.0031,
+     "vm_min_66kv_up": 0.7144,
+     "vm_low5": [
+      [
+       "浜益変電所",
+       22.0,
+       0.68
+      ],
+      [
+       "送毛変電塔",
+       22.0,
+       0.6897
+      ],
+      [
+       "尻苗変電所",
+       22.0,
+       0.6951
+      ],
+      [
+       "濃昼変電塔",
+       22.0,
+       0.6996
+      ],
+      [
+       "ユーラス浜頓別ウインドファーム特高変電所",
+       66.0,
+       0.7144
+      ]
+     ],
+     "vm_low5_66kv_up": [
+      [
+       "ユーラス浜頓別ウインドファーム特高変電所",
+       66.0,
+       0.7144
+      ],
+      [
+       "浜頓別開閉所",
+       66.0,
+       0.7155
+      ],
+      [
+       "北栄町変電所",
+       66.0,
+       0.753
+      ],
+      [
+       "歌登変電所",
+       66.0,
+       0.784
+      ],
+      [
+       "苫前町変電所",
+       66.0,
+       0.7867
+      ]
+     ],
+     "vm_min_bus": {
+      "name": "浜益変電所",
+      "vn_kv": 22.0
+     },
+     "loss_mw": 124.9,
+     "tie_mw": {}
+    }
+   },
+   "n_hours": 1,
+   "n_converged": 1,
+   "all_converged": true
+  }
+ }
+}
