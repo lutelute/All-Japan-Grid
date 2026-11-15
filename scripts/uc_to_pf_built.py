@@ -353,6 +353,8 @@ def _bounded_ac(net):
         except Exception:
             continue
         if net.converged:
+            # どの段で解けたか(発電機の無効電力の上限を守ったか)。検証の関門が読む(2026-11-15)
+            net["_ajg_q_lims"] = bool(so.get("enforce_q_lims", False))
             return True
     return False
 
@@ -805,9 +807,23 @@ def main():
             if inj_issues:
                 hrep["injection_issues"] = inj_issues
             if conv and used == "ac":
+                hrep["q_lims_enforced"] = bool(net_s.get("_ajg_q_lims", False))
                 vm = net_s.res_bus.vm_pu
                 hrep["vm_min"] = round(float(vm.min()), 4)
                 hrep["vm_max"] = round(float(vm.max()), 4)
+                # 介入#64(2026-11-15)で 22・33 kV の母線が入ったので、66 kV 以上の網の最低電圧と、
+                # いちばん低い母線(名前・電圧)も残す(検証の関門 scripts/ci/verify_matrix.py が読む)
+                vn = net_s.bus.vn_kv.reindex(vm.index)
+                hv = vm[vn >= 66.0 - 0.5].dropna()
+                if len(hv):
+                    hrep["vm_min_66kv_up"] = round(float(hv.min()), 4)
+                hrep["vm_low5"] = [[str(net_s.bus.at[b, "name"]), round(float(net_s.bus.at[b, "vn_kv"]), 1),
+                                    round(float(v), 4)] for b, v in vm.dropna().nsmallest(5).items()]
+                hrep["vm_low5_66kv_up"] = [[str(net_s.bus.at[b, "name"]), round(float(net_s.bus.at[b, "vn_kv"]), 1),
+                                            round(float(v), 4)] for b, v in hv.nsmallest(5).items()]
+                bmin = vm.dropna().idxmin()
+                hrep["vm_min_bus"] = {"name": str(net_s.bus.at[bmin, "name"]),
+                                      "vn_kv": round(float(net_s.bus.at[bmin, "vn_kv"]), 1)}
                 hrep["loss_mw"] = round(
                     float(net_s.res_line.pl_mw.sum()
                           + net_s.res_trafo.pl_mw.sum()), 1)

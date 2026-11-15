@@ -262,7 +262,11 @@ def main() -> int:
         bak.write_text(json.dumps(built, ensure_ascii=False))
         for b in bridges:
             fk, mk = b["frag"]["k"], b["main"]["k"]
-            kv = b["line_kv"] or b["frag"]["kv"] or b["main"]["kv"] or 66.0
+            # 線の電圧は OSM の生の値なので、正典の級に寄せる(介入#64 で 22・33 kV の級を足したとき、
+            # 30 kV の線がそのまま 30 kV の枝になった。2026-11-15)
+            from src.powerflow.snapped_topology import _clean_voltage
+            kv = (_clean_voltage(float(b["line_kv"])) if b["line_kv"] else 0.0) \
+                or b["frag"]["kv"] or b["main"]["kv"] or 66.0
             # 接触点間だけを切り出す(線全体を繋ぐとループ状の過大経路になり
             # 電気長も過大 — before/after図の検証で発見したバグの修正)
             sub = clip_path(b["path"], fk, mk)

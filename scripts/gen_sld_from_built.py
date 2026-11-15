@@ -84,6 +84,7 @@ def main():
 
     # loading 供給: powerflow_full line の端点ペアキー -> loading_pct(max)
     edge_load = {}
+    edge_load_kv = {}   # (端の組, 電圧) -> loading_pct(潮流の出力に線の電圧があるとき)
     n_pf_line = 0
     for lf in sorted(glob.glob(os.path.join(FULL, "*_ac_lines.geojson"))):
         if os.path.basename(lf).startswith("national_overview"):
@@ -100,6 +101,11 @@ def main():
                 ld = ft["properties"].get("loading_pct")
                 if ld is not None:
                     edge_load[key] = max(edge_load.get(key, 0.0), float(ld))
+                    # 同じ 2 つの敷地を電圧の違う線が結ぶので、線の電圧があれば電圧ごとに分ける(2026-11-15)
+                    kvp = ft["properties"].get("kv")
+                    if kvp is not None:
+                        kk = (key, round(float(kvp)))
+                        edge_load_kv[kk] = max(edge_load_kv.get(kk, 0.0), float(ld))
 
     # gen: generators 座標(4桁) 集合 -> bus.gen
     gen_coords = set()
@@ -140,7 +146,8 @@ def main():
             n_unmatched_end += 1
             continue
         key = tuple(sorted([a, b]))
-        ld = edge_load.get(key, 0.0)
+        # 線の電圧つきの出力なら、その電圧の線の負荷だけを見る(ほかの電圧の線の負荷を当てない)
+        ld = edge_load_kv.get((key, kv), 0.0) if edge_load_kv else edge_load.get(key, 0.0)
         if ld:
             n_load_hit += 1
         branches.append({"from": fr, "to": to, "loading": round(ld, 1), "xfmr": False})

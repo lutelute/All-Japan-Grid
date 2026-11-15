@@ -41,6 +41,15 @@ _TRAFO_PARAMS = {
     (132, 66):  {"sn_mva": 150, "vk_percent": 8.0, "vkr_percent": 0.5, "pfe_kw": 40, "i0_percent": 0.1},
     (110, 66):  {"sn_mva": 150, "vk_percent": 8.0, "vkr_percent": 0.5, "pfe_kw": 40, "i0_percent": 0.1},
     (77, 66):   {"sn_mva": 100, "vk_percent": 8.0, "vkr_percent": 0.5, "pfe_kw": 30, "i0_percent": 0.1},
+    # 介入#64(2026-11-15): 22・33 kV の級。典型値(出典なしの合成値、ほかの行と同じ扱い)
+    (154, 33):  {"sn_mva": 60, "vk_percent": 8.0, "vkr_percent": 0.6, "pfe_kw": 25, "i0_percent": 0.12},
+    (110, 33):  {"sn_mva": 50, "vk_percent": 8.0, "vkr_percent": 0.6, "pfe_kw": 20, "i0_percent": 0.12},
+    (77, 33):   {"sn_mva": 40, "vk_percent": 7.5, "vkr_percent": 0.6, "pfe_kw": 18, "i0_percent": 0.12},
+    (66, 33):   {"sn_mva": 30, "vk_percent": 7.5, "vkr_percent": 0.6, "pfe_kw": 15, "i0_percent": 0.12},
+    (154, 22):  {"sn_mva": 60, "vk_percent": 8.0, "vkr_percent": 0.6, "pfe_kw": 25, "i0_percent": 0.12},
+    (77, 22):   {"sn_mva": 40, "vk_percent": 7.5, "vkr_percent": 0.6, "pfe_kw": 18, "i0_percent": 0.12},
+    (66, 22):   {"sn_mva": 30, "vk_percent": 7.5, "vkr_percent": 0.6, "pfe_kw": 15, "i0_percent": 0.12},
+    (33, 22):   {"sn_mva": 20, "vk_percent": 7.0, "vkr_percent": 0.7, "pfe_kw": 10, "i0_percent": 0.15},
 }
 
 
@@ -79,7 +88,8 @@ def fix_zero_voltages(net):
 
 def _snap_voltage(vn_kv):
     """Snap a voltage to the nearest standard Japanese voltage class."""
-    classes = [500, 275, 220, 187, 154, 132, 110, 77, 66]
+    from src.utils.voltage import KV_CLASSES   # 介入#64: 級の表は 1 か所(22・33 kV を含む)
+    classes = sorted(KV_CLASSES, reverse=True)
     if vn_kv <= 0:
         return 66
     return min(classes, key=lambda c: abs(c - vn_kv))

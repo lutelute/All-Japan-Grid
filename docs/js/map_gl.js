@@ -24,6 +24,8 @@
         110: "#1f77b4",
         77:  "#bcbd22",
         66:  "#8c564b",
+        33:  "#c49c94",   // 介入#64(2026-11-15): 66 kV より低い級
+        22:  "#f7b6d2",
         0:   "#cccccc",
     };
     var FUEL_COLORS = {
@@ -41,7 +43,7 @@
         ["unknown", "その他", "Other"],
     ];
     var LEGEND_FUELS = ["nuclear", "coal", "gas", "oil", "hydro", "wind", "solar", "geothermal", "biomass"];
-    var LEGEND_KV = [500, 275, 220, 187, 154, 132, 110, 77, 66];
+    var LEGEND_KV = [500, 275, 220, 187, 154, 132, 110, 77, 66, 33, 22];
     var KV_STEPS = [500, 275, 154, 66, 0];   // 電圧の下限の切り替え(Leaflet 版の区切りボタンと同じ)
     var KV_MAX_REAL = 1100;                  // これを超える電圧は OSM の多値タグの読み違い(grid_map.js と同じ)
     var TOLERANCE = 6;                       // 当たり判定の余白 px(js/agj_map.js と同じ)

@@ -126,8 +126,11 @@ def main():
             c = (l.get("geometry") or {}).get("coordinates")
             if not c or len(c) < 2:
                 continue
-            kv = None
-            for e in (c[0], c[-1]):
+            # 線の電圧は潮流の出力の kv を先に使う(2026-11-15)。端の座標で引くと、同じ敷地に電圧の違う
+            # 母線が重なる所で、後に書いた母線の電圧になる(77 kV の昆陽線が 22 kV に入っていた)
+            kv = l["properties"].get("kv")
+            kv = float(kv) if kv is not None else None
+            for e in ((c[0], c[-1]) if kv is None else ()):
                 k = bidx.get((r(e[0]), r(e[1])))
                 if k is not None:
                     kv = max(kv or 0.0, float(k))

@@ -61,6 +61,11 @@ voltage_weights:
   110: 0.40
   77: 0.45
   66: 0.50
+  # 介入#64(2026-11-15): 22・33 kV の級を足したときの重み。公表の変圧器の一覧の組ごとの容量の中央値
+  # (config/transformer_capacity_by_pair.json、介入#50 と同じ集計)で、配電用の変圧器は 66/6.6 kV が 38 MVA、
+  # 33/6.6 kV と 22/6.6 kV は 5 MVA。66 kV の重み 0.5 × 5/38 ≈ 0.066
+  33: 0.066
+  22: 0.066
   0: 0.50    # Default/unknown voltage
 
 # Generation scaling

@@ -29,11 +29,11 @@
     const NEAR_KM = 100;            // 表に出す電圧の目安(これより遠い電圧は名前だけ)
     const R_KM = 6371.0088;
     const DEG = Math.PI / 180;
-    const KV_CLASSES = [500, 275, 220, 187, 154, 132, 110, 77, 66, 0];   // 0 = 電圧不明
+    const KV_CLASSES = [500, 275, 220, 187, 154, 132, 110, 77, 66, 33, 22, 0];   // 0 = 電圧不明・33/22 は介入#64
     // grid_map.js と同じ色(系統図と見比べられるように)
     const VOLTAGE_COLORS = {
         500: "#d62728", 275: "#ff7f0e", 220: "#e377c2", 187: "#9467bd", 154: "#2ca02c",
-        132: "#17becf", 110: "#1f77b4", 77: "#bcbd22", 66: "#8c564b", 0: "#9aa4ae",
+        132: "#17becf", 110: "#1f77b4", 77: "#bcbd22", 66: "#8c564b", 33: "#c49c94", 22: "#f7b6d2", 0: "#9aa4ae",
     };
     const KV_MAX_REAL = 1100;       // grid_map.js と同じ。超える値は OSM の多値タグの読み違い
     const DETOUR_DEFAULT = 1.12;    // docs/reports/impedance_validation_2026-08-19.md §10(経路/弦の中央値)

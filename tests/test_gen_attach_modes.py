@@ -274,11 +274,14 @@ def test_hokkaido_dc_pins_the_island_default_and_the_cap_defect():
     #   2026-10-08: nearest 136.5% / cap 318.0%(不変) / capkv 79.1% ← 介入#50(#48 で OSM の観測から
     #     張った北海道の変圧器 28 台の容量を、組ごとの公表容量の中央値に)。最大の線は nearest が寒別支線のまま、
     #     capkv は大麻線 86.4% → 望来線 79.1%。過負荷の本数は nearest 2 本・capkv 0 本で変わらない
-    assert got["nearest"] == pytest.approx(136.5, abs=0.15), \
+    #   2026-11-15: nearest 155.5% / cap 310.6% / capkv 79.3% ← 介入#64(22・33 kV を級として持つ。前は 66 kV に丸めた)。
+    #     nearest は電圧を見ずにいちばん近い母線に付けるので、22 kV の津別線に発電機が載って 155.5%(過負荷 2→3 本)。
+    #     capkv の最大は望来線(22 kV になった)から 66 kV の二の坂町西二丁目~江部乙町の線へ、過負荷 0 本のまま
+    assert got["nearest"] == pytest.approx(155.5, abs=0.15), \
         f"旧接続規則での最大負荷率が動いた: {got['nearest']}%"
-    assert got["cap"] == pytest.approx(318.0, abs=0.15), \
+    assert got["cap"] == pytest.approx(310.6, abs=0.15), \
         f"cap(電圧階級を見ない・既知の欠陥)の最大負荷率が動いた: {got['cap']}%"
-    assert got["capkv"] == pytest.approx(79.1, abs=0.15), \
+    assert got["capkv"] == pytest.approx(79.3, abs=0.15), \
         f"島別既定(capkv)での最大負荷率が動いた: {got['capkv']}%"
     assert got["capkv"] < got["nearest"] and got["capkv"] < got["cap"], \
         "島別既定が改善になっていない"

@@ -91,7 +91,7 @@ const SCENES = [
   { id: 'trunk', label: '各社の基幹', dur: 8 },
   { id: 'region', label: '地域の網', dur: 7 },
   { id: 'local', label: '変電所へ', dur: 7 },
-  { id: 'osm_low', label: '22・33 kV', dur: 5 },
+  { id: 'low', label: '33・22 kV', dur: 5 },
   { id: 'ties', label: '連系線', dur: 6 },
   { id: 'freq', label: '50 Hz と 60 Hz', dur: 5 },
   { id: 'canon', label: '正典', dur: 3 },
@@ -103,14 +103,14 @@ const TEXT = [
   { t: '各社の基幹(275・220・187 kV)', b: `500 kV のすぐ下の基幹の電圧は、会社で違います。東北・東京・中部・北陸・関西は 275 kV、中国と九州は主に 220 kV、四国は 187 kV、北海道は 275 kV と 187 kV です。500 kV の網から外へ伸ばします。${tierKm(1)}。` },
   { t: '地域の網(154・110 kV)', b: `その下で地域を回る網です。東北・東京・中部・北陸・関西は 154 kV、中国は 110 kV です。九州・四国・北海道にも 110 kV がありますが、その下の 66 kV のほうが多くあります。${tierKm(2)}。` },
   { t: '変電所へ(77・66 kV)', b: `配電用の変電所へつなぐ網です。中部と関西は 77 kV、北陸は 77 kV と 66 kV、ほかは 66 kV です。電圧の書いていない線(潮流の計算では 66 kV として扱う)もここに入れています。${tierKm(3)}。` },
-  { t: '22・33 kV(OSM)', b: `OSM には 66 kV より低い 22 kV・33 kV の線もあり、北海道・東北(佐渡を含む)・関西に多くあります。正典(潮流の計算のモデル)には 66 kV より低い級が無く、取り込むときは 66 kV に丸めるので、この場面だけは OSM の線をそのまま描きます(鉄道の線は外しています)。${tierKm(4)}。` },
+  { t: '33・22 kV', b: `66 kV より低い 33 kV・22 kV の線です。北海道・東北(佐渡を含む)・関西に多くあります。2026-11-15 から正典はこれを級として持ちます(前は 66 kV に丸めていました。介入台帳の #64)。${tierKm(4)}。` },
   { t: '10 社の網がつながる', b: '地域どうしは連系線でつながります。北海道と本州は直流、東京と中部は周波数変換所、関西と四国は直流で、そのほかは 500 kV の交流の線です。線や印にふれると名前が出ます。' },
   { t: '50 Hz と 60 Hz', b: '東は 50 Hz、西は 60 Hz です。東と西は周波数変換所だけでつながり、北海道と本州は直流だけでつながります。潮流の計算では、同じ周波数で同期している系統を 1 つの島として解きます。' },
   { t: '正典', b: `全電圧の正典(潮流の計算に使うモデル)は ${fmt(M.nodes)} 点・${fmt(M.edges)} 枝です。OSM の線 ${fmt(M.osm_lines)} 本から作り、公表の資料で確かめ、加えた仮定は介入台帳に ${M.interventions} 件書いてあります。` },
 ];
 document.getElementById('caveat').textContent =
   `線の形は OSM、つなぎ方は正典(OSM から作ったモデル、版 ${M.model_version})で、電力会社の系統図そのものではありません。` +
-  '平行する回線は 1 本に数え、km は線の道のりです。22・33 kV の線だけは OSM そのもので、正典ではありません。沖縄は本州から離れているので、この絵には入れていません。' +
+  '平行する回線は 1 本に数え、km は線の道のりです。沖縄は本州から離れているので、この絵には入れていません。' +
   '線と変電所 © OpenStreetMap の協力者(ODbL)。県の形は国土地理院のデータを簡略化したもの。';
 
 let dirty = true, st = null, lastScene = -1;
@@ -180,7 +180,7 @@ function draw(now) {
   g.fillStyle = C.land; g.fill(); g.lineWidth = 1; g.strokeStyle = C.coast; g.stroke(); g.globalAlpha = 1;
   // 線(電圧と地域ごとにまとめて描く)
   const w5 = clamp(1.7 * Math.sqrt(view.k / 45), 1.3, 4.2);
-  // 段ごとの太さ(下の段ほど細い)。22・33 kV(OSM)の場面では、ほかの段を薄くして OSM の線を太く見せる
+  // 段ごとの太さ(下の段ほど細い)。33・22 kV の場面では、ほかの段を薄くして 33・22 kV の線を太く見せる
   const low = s.i === NT ? ease(clamp(s.u * 3, 0, 1)) : 0;
   const WT = [w5, w5 * .58, w5 * .42, w5 * .32, w5 * (.45 + .35 * low)];
   const groups = new Map();
@@ -246,7 +246,7 @@ document.getElementById('map').addEventListener('pointermove', e => {
   if (!best) for (const l of LINES) {
     if (frac(l, st.p[l.g]) <= 0) continue;
     const d = view.dist(l.P, px, py);
-    if (d < bd) { bd = d; best = `${l.n || '名前なし'} — ${l.v ? l.v + ' kV' : '電圧不明'}・${D.regions[l.r]}・${l.km} km${l.g === NT - 1 ? '(OSM)' : ''}`; }
+    if (d < bd) { bd = d; best = `${l.n || '名前なし'} — ${l.v ? l.v + ' kV' : '電圧不明'}・${D.regions[l.r]}・${l.km} km`; }
   }
   if (best) { tip.textContent = best; tip.hidden = false; tip.style.left = Math.min(px + 14, window.innerWidth - 310) + 'px'; tip.style.top = (py + 14) + 'px'; }
   else tip.hidden = true;

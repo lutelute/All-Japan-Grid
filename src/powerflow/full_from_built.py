@@ -88,7 +88,8 @@ ISLAND_OF = {
 }
 ISLAND_FREQ = {"hokkaido": 50, "east": 50, "west": 60, "okinawa": 60}
 
-VALID_KV = [66, 77, 110, 132, 154, 187, 220, 275, 500]
+from src.utils.voltage import KV_CLASSES as _KV_CLASSES  # noqa: E402  介入#64: 級の表は 1 か所
+VALID_KV = list(_KV_CLASSES)
 # 介入#25: `capacity_mw` 欠損を埋める燃料別既定容量＝**出典のない合成容量**。
 # solar は 2026-08-10 に 10.0 → 0.10（OSM 実容量 600 件の中央値）へ是正した。
 # 10.0 は中央値の 100 倍で、太陽光を 180GW＝実績ピークの 318% に膨らませ、
@@ -1641,6 +1642,10 @@ def export_region(net, region, geom, mode, out_dir):
         lines.append({"type": "Feature",
                       "geometry": {"type": "LineString", "coordinates": coords},
                       "properties": {"name": str(net.line.at[li, "name"]),
+                                     # 線の電圧(母線の vn_kv)。同じ敷地に電圧の違う母線が重なるので、
+                                     # 端の座標から電圧を引くと取り違える(2026-11-15、介入#64 で 22・33 kV の
+                                     # 母線が増えて表に出た。全国の概観・単線結線図はこれを先に読む)
+                                     "kv": round(float(net.bus.at[fb, "vn_kv"]), 1),
                                      "loading_pct": _r(min(load, 200), 1),
                                      "p_mw": _r(p, 1),
                                      "tie": zf != zt}})

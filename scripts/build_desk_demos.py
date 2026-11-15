@@ -206,46 +206,25 @@ def grow_times(lines: list, members: list, seeds0: set) -> None:
 
 
 # 電圧の段(各社で 500 kV の下の基幹の電圧が違うので、級でまとめる)。2026-11-15 先生「275 kV が埋めるのところで、
-# 中国・四国・九州が 500 しかない。北海道もない」「33 kV もあるなら載せるといい」。前は 275 kV 以上だけを描いていた
+# 中国・四国・九州が 500 しかない。北海道もない」「33 kV もあるなら載せるといい」。前は 275 kV 以上だけを描いていた。
+# 22・33 kV は介入#64(2026-11-15)で正典に級として入ったので、正典の線から描く(PR #180 では OSM の線を重ねていた)
 TIERS = [
     {"id": "t500", "label": "500 kV", "lo": 500, "tol": 0.0012},
     {"id": "trunk", "label": "275・220・187 kV", "lo": 187, "tol": 0.0012},
     {"id": "region", "label": "154・132・110 kV", "lo": 100, "tol": 0.0016},
-    {"id": "local", "label": "77・66 kV(電圧不明を含む)", "lo": 0, "tol": 0.002},
-    {"id": "osm_low", "label": "22・33 kV(OSM)", "lo": None, "tol": 0.002},
+    {"id": "local", "label": "77・66 kV(電圧不明を含む)", "lo": 66, "tol": 0.002},
+    {"id": "low", "label": "33・22 kV", "lo": 1, "tol": 0.002},
 ]
-# OSM の 66 kV 未満の線のうち載せる電圧。25・20 kV は短い線ばかりで鉄道のき電線とみられるので載せない
-OSM_LOW_KV = {22, 30, 33, 44}
-_RAIL = re.compile(r"鉄道|旅客|JR|railway|Railway|RAILWAY")
 
 
 def tier_of(kv: int) -> int:
-    for g, t in enumerate(TIERS[:4]):
+    """電圧 → 段。電圧不明(0)は潮流の計算と同じく 66 kV の段に入れる"""
+    if kv <= 0:
+        return 3
+    for g, t in enumerate(TIERS):
         if kv >= t["lo"]:
             return g
-    return 3
-
-
-def osm_low_lines() -> list:
-    """OSM の 22・33 kV などの線(正典には 66 kV より低い級が無い)。沖縄と鉄道は外す"""
-    out, seen = [], set()
-    for r in REGIONS:
-        if r == "okinawa":
-            continue
-        for f in load(ROOT / "data" / f"{r}_lines.geojson")["features"]:
-            p = f["properties"]
-            oid = p.get("osm_id")
-            if oid in seen:
-                continue
-            kv = _kv(p.get("voltage"))
-            if kv not in OSM_LOW_KV or _RAIL.search(" ".join(str(p.get(k) or "") for k in ("operator", "name", "line"))):
-                continue
-            seen.add(oid)
-            for cs in parts(f["geometry"]):
-                if len(cs) >= 2:
-                    out.append({"cs": [tuple(c[:2]) for c in cs], "kv": kv, "r": r, "g": 4,
-                                "n": str(p.get("name") or ""), "km": path_km(cs)})
-    return out
+    return len(TIERS) - 1
 
 
 def assembly_data() -> dict:
@@ -262,7 +241,6 @@ def assembly_data() -> dict:
                 continue
             lines.append({"cs": [tuple(c[:2]) for c in cs], "kv": kv, "r": r, "g": tier_of(kv),
                           "n": p.get("_display_name") or "", "km": path_km(cs)})
-    lines += osm_low_lines()
     # 段ごとに、上の段の網の点から外へ伸ばす(上の段に届かない成分は、その中の枝の多い点から)
     key = lambda c: (round(c[0], 3), round(c[1], 3))
     above: set = set()
@@ -277,7 +255,7 @@ def assembly_data() -> dict:
         s = simp(ln["cs"], TIERS[ln["g"]]["tol"])
         r = ln["r"]
         out_lines.append({"g": ln["g"], "v": ln["kv"], "r": REGIONS.index(r) if r in REGIONS else 0, "q": enc(s),
-                          "t0": ln["t0"], "t1": ln["t1"], "n": ln["n"][:40], "km": round(ln["km"], 1)})
+                          "t0": ln["t0"], "t1": ln["t1"], "n": ln["n"][:40], "km": round(ln["km"], 2)})
         if ln["g"] <= 2:                     # 地域の名前の位置は上の 3 段で決める(下の段の多い所に引っぱられない)
             for c in ln["cs"]:
                 lab[r][0] += c[0]
@@ -296,7 +274,9 @@ def assembly_data() -> dict:
     conv = [{"n": c["n"], "k": c["kind"], "lon": c["s"][0], "lat": c["s"][1]} for c in occ["converters"]]
 
     stat = {"tiers": [{"id": t["id"], "label": t["label"], "n": sum(1 for ln in lines if ln["g"] == g),
-                       "km": round(sum(ln["km"] for ln in lines if ln["g"] == g)),
+                       # 絵の札は線ごとの km(0.01 km 単位)を足すので、説明文の合計も同じ値から数える。
+                       # 0.1 km 単位だと構内のつなぎなどの短い線が 0 になり、札が説明文より 6 km 少なかった(2026-11-15)
+                       "km": round(sum(round(ln["km"], 2) for ln in lines if ln["g"] == g)),
                        "kv": sorted({ln["kv"] for ln in lines if ln["g"] == g}, reverse=True)}
                       for g, t in enumerate(TIERS)],
             # 段ごと・地域ごとの電圧と km(説明文で、どの会社がどの電圧かを数から言う)

@@ -21,7 +21,7 @@ from typing import Dict, Optional
 
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "..",
                            "config", "line_capacity_calibration.yaml")
-KV_CLASSES = (66, 77, 110, 132, 154, 187, 220, 275, 500)
+from src.utils.voltage import KV_CLASSES  # noqa: E402  介入#64: 級の表は 1 か所(22・33 kV を含む)
 
 
 @lru_cache(maxsize=4)
