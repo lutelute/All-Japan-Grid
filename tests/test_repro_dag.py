@@ -121,9 +121,10 @@ def test_verify_matrix_gate_passes_on_committed_reports_and_fails_on_regression(
     spec = importlib.util.spec_from_file_location("verify_matrix", VERIFY)
     vm = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(vm)
-    hok = json.loads((ROOT / "docs/reports/uc_pf_built_hokkaido_sel_2026-09-02.json")
+    # 2026-11-15 から北海道は「上限を守る解」の記録で決めた下限(09-02 の記録は上限を外した解)
+    hok = json.loads((ROOT / "docs/reports/uc_pf_built_hokkaido_sel_2026-11-15.json")
                      .read_text(encoding="utf-8"))
-    oki = json.loads((ROOT / "docs/reports/uc_pf_built_okinawa_sel_2026-09-02.json")
+    oki = json.loads((ROOT / "docs/reports/uc_pf_built_okinawa_sel_2026-11-15.json")
                      .read_text(encoding="utf-8"))
     merged = {"meta": hok["meta"], "islands": {**hok["islands"], **oki["islands"]}}
     good = tmp_path / "good.json"
@@ -142,6 +143,21 @@ def test_verify_matrix_gate_passes_on_committed_reports_and_fails_on_regression(
     bad2p = tmp_path / "bad2.json"
     bad2p.write_text(json.dumps(bad2), encoding="utf-8")
     assert vm.main(["--report", str(bad2p)]) == 1, "電圧崩壊を見逃した"
+
+    # 北海道が上限を外した解に戻ったら、電圧が高く出ても落とす(09-02 の 0.8555 はこの種の解だった)
+    bad3 = json.loads(json.dumps(merged))
+    h3 = next(iter(bad3["islands"]["hokkaido"]["hours"].values()))
+    h3["q_lims_enforced"], h3["vm_min"], h3["vm_min_66kv_up"] = False, 0.86, 0.86
+    bad3p = tmp_path / "bad3.json"
+    bad3p.write_text(json.dumps(bad3), encoding="utf-8")
+    assert vm.main(["--report", str(bad3p)]) == 1, "上限を外した解への逆戻りを見逃した"
+
+    # 22・33 kV の鎖の下で、66 kV 以上の網が下がったら落とす
+    bad4 = json.loads(json.dumps(merged))
+    next(iter(bad4["islands"]["hokkaido"]["hours"].values()))["vm_min_66kv_up"] = 0.66
+    bad4p = tmp_path / "bad4.json"
+    bad4p.write_text(json.dumps(bad4), encoding="utf-8")
+    assert vm.main(["--report", str(bad4p)]) == 1, "66 kV 以上の網の電圧低下を見逃した"
 
     assert vm.main(["--report", str(tmp_path / "missing.json")]) == 2
 

@@ -9,7 +9,8 @@ okinawa と hokkaido のピーク断面 1 本ずつだけを解き(合計数分)
   - 収束(converged=True・solver=="ac"、dc_fallback を許さない)
   - vm_min / slack_abs_mw / served_frac の閾値
 
-で fail させる。閾値は committed の実測(docs/reports/uc_pf_built_*_2026-09-02.json)に
+で fail させる。北海道は発電機の無効電力の上限を守る解で解けること・66 kV 以上の網の最低電圧も見る。
+閾値は committed の実測(docs/reports/uc_pf_built_*_sel_2026-11-15.json)に
 余裕を持たせた値(下記 THRESHOLDS に出典と実測を併記)。east/west フルは重いので載せない。
 
 使い方:
@@ -26,15 +27,24 @@ import json
 import os
 import sys
 
-# 島 → 閾値。実測(2026-09-02・git b0970e7・fy2023r2・built_full_v4_nameplate):
-#   hokkaido h18: vm_min 0.8555 / slack 820.8 MW / served 1.0 / n_bus 831
-#   okinawa  h11: vm_min 0.9611 / slack 111.2 MW / served 1.0 / n_bus 100
+# 島 → 閾値。実測(2026-11-15・git 3409965d・fy2023r2・built_full_v4_nameplate、
+# docs/reports/uc_pf_built_{hokkaido,okinawa}_sel_2026-11-15.json):
+#   hokkaido h18: 上限を守る解・vm_min 0.680(浜益 22 kV)・66 kV 以上 0.7144 / slack 797.1 MW / served 1.0 / n_bus 860
+#   okinawa  h11: 上限を外した解・vm_min 0.961 / slack 56.3 MW / served 1.0 / n_bus 100
 # 余裕: vm_min は実測 −0.02〜0.03、slack は実測の約 1.5 倍、served は 0.99。
 # CI には銘板(data/structures・gitignore)が無いので hokkaido は n_trafo_nameplate=0 で
 # 解ける(1 基の銘板がヒューリスティック容量へ戻る)。その差も余裕の内。
+#
+# 2026-11-15 に北海道の下限を決め直した(先生「1 でいい」)。それまでの下限 0.83 は 09-02 の実測 0.8555 から
+# 決めたが、その解は発電機の無効電力の上限を外した NR の解だった(上限 0.05 Mvar の 0.1 MW の太陽光が
+# 27 Mvar を出していた)。介入#64(22・33 kV の級)のあと北海道は上限を守る NR で解けるようになり、北の
+# 宗谷・名寄と石狩の 22 kV で電圧が下がる。下限はその解で測り直し、北海道は「上限を守る解で解けること」
+# (require_q_lims)も見る。上限を外した解に戻ったら、電圧が高く出ても落とす。
+# 66 kV 以上の網の最低(vm_min_66kv_up)も別に見る(22・33 kV の鎖に隠れて上の網が下がるのを捕まえる)。
+# 沖縄は上限を外した解のまま(上限を守る解では解けない。docs/reports/low_kv_classes_2026-11-15.md)。
 THRESHOLDS = {
-    "hokkaido": {"vm_min": 0.83, "slack_abs_mw": 1200.0, "served_frac": 0.99,
-                 "n_bus_min": 700},
+    "hokkaido": {"vm_min": 0.65, "vm_min_66kv_up": 0.69, "require_q_lims": True,
+                 "slack_abs_mw": 1200.0, "served_frac": 0.99, "n_bus_min": 700},
     "okinawa": {"vm_min": 0.94, "slack_abs_mw": 200.0, "served_frac": 0.99,
                 "n_bus_min": 80},
 }
@@ -66,6 +76,14 @@ def check_island(name: str, rep: dict, thr: dict) -> list[tuple[str, bool, str]]
             extra += f"・最低 {hr['vm_min_bus'].get('name')} {hr['vm_min_bus'].get('vn_kv')} kV"
         rows.append((f"{tag}.vm_min", vm is not None and float(vm) >= thr["vm_min"],
                      f"{vm} (>= {thr['vm_min']}){extra}"))
+        if thr.get("require_q_lims"):
+            ql = hr.get("q_lims_enforced")
+            rows.append((f"{tag}.q_lims", ql is True,
+                         f"{how}(発電機の無効電力の上限を守る解で解けること)"))
+        if "vm_min_66kv_up" in thr:
+            vh = hr.get("vm_min_66kv_up")
+            rows.append((f"{tag}.vm_min_66kv_up", vh is not None and float(vh) >= thr["vm_min_66kv_up"],
+                         f"{vh} (>= {thr['vm_min_66kv_up']})"))
         sl = hr.get("slack_abs_mw")
         rows.append((f"{tag}.slack_abs_mw", sl is not None and abs(float(sl)) <= thr["slack_abs_mw"],
                      f"{sl} (<= {thr['slack_abs_mw']})"))
