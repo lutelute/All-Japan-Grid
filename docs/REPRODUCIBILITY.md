@@ -48,6 +48,23 @@ PYTHONPATH=. python scripts/regenerate_all.py            # 全段(約 11 分)
 - **同じ表なら、潮流と N-1 の出力は OS によらず再現します**（2026-10-26、macOS と Linux の clone で確認。`docs/reports/point_demand_refresh_2026-10-26.md`）。潮流の線・バス・地図の層はバイト一致です。違うのは実行の記録（日付・git の版・生成時刻・所要時間）だけです。
 - Linux の clone で上の 4 行を流すと、地点需要の表は公開値と同じになりました（2026-10-26 時点。各社が公表を差し替えると変わります）。
 
+### 正典を変えた PR でやること（2026-11-17 にまとめた）
+
+正典（`docs/data/built/`）の網を変えたら、正典から作るほかの出力も作り直してから PR にする。
+2026-11-15 の #64（22・33 kV の級）で 7 を抜かし、翌日から日別断面の北海道が出なくなった（線の 85.3% しか当たらず書き出しを止める）。
+
+1. `regenerate_all.py` を 2 回（断片の回収 #34 が前回の出力を読むので、2 回目を採る）。3 回目で正典がバイト一致することを見る
+2. 地図のタイル `scripts/build_map_gl_tiles.py`
+3. OCCTO のつなぎ `docs/data/flow_map/occto_lines.json` の bridges（`export_occto_today.bridges`）
+4. README の数 `python -m cogapp -I . -r README.md`
+5. 週次の島の試験 `AJGRID_SLOW_TESTS=1 pytest tests/test_canonical_islands.py` の記録と、`tests/test_gen_attach_modes.py` の釘
+6. desk のデモ `scripts/build_desk_demos.py`（ブラウザで場面ごとに開いて見る）
+7. **潮流マップの基準** `PYTHONPATH=. python scripts/export_flow_map_data.py`（`flows_<島>.geojson`・`gens_<島>.geojson`・`meta.json` の署名）。
+   過去の日別断面は署名が合わなくなるので、`scripts/rekey_day_flows.py --old-ref <作り直す前のコミット> --skip <計算し直す日> --write`
+   で線の鍵で並べ直し（値は当時の計算のまま）、直近の日は `scripts/export_day_flows.py --date <日>` で計算し直す
+   （公表データの置き場は `AJG_HKS_DIR`・`AJG_OCCTO_DIR`）。毎時の処理が今日と昨日の断面を書き換えるので、マージの前に main を取り込む
+8. 検証の関門 `scripts/ci/verify_matrix.py`（北海道・沖縄の 18 時と 11 時）の記録
+
 ### 残っていること
 
 - 基底の OSM（08-16 に取得）の取り直しの手順は `docs/reports/osm_refresh_survey_2026-10-24.md`。
