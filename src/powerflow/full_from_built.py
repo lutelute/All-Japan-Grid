@@ -1226,7 +1226,7 @@ def attach_generators(net, bus_of, nodes, island, territory=True,
 #  Load allocation: substation buses only, per region, voltage-class weighted
 # ──────────────────────────────────────────────────────────────────────────
 def allocate_loads(net, cfg, pref_gwh=None, point_demand=None,
-                   pop_tilt=False):
+                   pop_tilt=False, dist_share=None):
     """zone別ピーク需要をバスへ空間配分する。
 
     pref_gwh: None(既定)=従来のzone一様×電圧階級重み(正典比較性維持)。
@@ -1250,6 +1250,12 @@ def allocate_loads(net, cfg, pref_gwh=None, point_demand=None,
       なのは生Voronoiシェアが需要を過集中させた実測(台帳43)による。
       住民人口は代理変数(工業・業務需要は乖離) — 帳簿に開示。
       False=従来(回帰比較用)。帳簿=net._pop_tilt_ledger。
+
+    dist_share: **介入#65(2026-11-17・既定 OFF)**。{"radius_km": R} を渡すと、県内(またはzone内)の
+      配り方を ajg-dist の配電の需要(下から積んだ起点ごとの需要)の割合にする(src/powerflow/dist_load.py)。
+      起点の需要を半径 R km の中の 77 kV 以下の需要の点へ電圧の重み × ガウスでならす。県・zone の合計は不変。
+      観測の地点需要(#30)の母線の近くの起点は使わない。dist の起点が 1 つも届かない県は従来の電圧の重み。
+      帳簿=net._dist_share_ledger。None=従来。
     """
     peak = cfg["regional_peak_demand_mw"]
     lf = cfg.get("load_factor", 0.85)
@@ -1294,10 +1300,30 @@ def allocate_loads(net, cfg, pref_gwh=None, point_demand=None,
             [k for k in vw if isinstance(k, (int, float)) and k > 0] or [0],
             key=lambda k: abs(k - vn)), 0.5)
 
+    dist_w = None
+    if dist_share:
+        from src.powerflow.dist_load import bus_weights, load_points
+        pts_t, dmeta = load_points()
+        dist_w, dled = bus_weights(net, [dict(p) for p in pts_t],
+                                   radius_km=float(dist_share.get("radius_km", 20.0)),
+                                   pinned=set(pinned), vweight=_vweight, lonlat=_bus_lonlat)
+        net._dist_share_ledger = {**dmeta, **dled, "fallback_groups": [],
+                                  "note": "dist の需要は割合だけ使う(県・zone の合計は AJG)。"
+                                          "起点の需要は推定(世帯 × 1 戸 1.2 kW・大きい建物 30 W/m² は dist の仮の値)"}
+        print(f"  介入#65 dist の需要の配り方: 起点 {dled['n_points_used']}/{dled['n_points']}"
+              f"・母線 {dled['n_bus_weighted']}・半径 {dled['radius_km']} km"
+              f"(観測の近くで使わない {dled['n_points_near_pinned']})")
+
     def _spread(idxs, target):
         nonlocal total
-        weights = [_vweight(b) * (pop_f.get(b, 1.0) if pop_f else 1.0)
-                   for b in idxs]
+        if dist_w is not None and sum(dist_w.get(b, 0.0) for b in idxs) > 0:
+            weights = [dist_w.get(b, 0.0) for b in idxs]
+        else:
+            if dist_w is not None:
+                net._dist_share_ledger["fallback_groups"].append(
+                    {"n_bus": len(idxs), "target_mw": round(target, 1)})
+            weights = [_vweight(b) * (pop_f.get(b, 1.0) if pop_f else 1.0)
+                       for b in idxs]
         tw = sum(weights) or len(idxs)
         for b, w in zip(idxs, weights):
             p = target * (w / tw)
@@ -1812,6 +1838,14 @@ def main():
                          "(2026-08-30)。e-Stat 1km国勢調査メッシュのVoronoi"
                          "集計で電圧重みを傾斜(bounded tilt)。"
                          "--no-pop-tilt=従来一様(回帰比較用)")
+    ap.add_argument("--dist-load-share",
+                    action=argparse.BooleanOptionalAction,
+                    default=os.environ.get("AJG_DIST_LOAD_SHARE", "0") == "1",
+                    help="介入#65 県内の需要の配り方を ajg-dist の配電の需要の割合にする・既定OFF"
+                         "(2026-11-17)。置き場は AJG_DIST_ROOT・AJG_DIST_STORE。"
+                         "環境変数 AJG_DIST_LOAD_SHARE=1 でも入る")
+    ap.add_argument("--dist-radius-km", type=float, default=20.0,
+                    help="介入#65 起点の需要をならす半径(km、既定 20)")
     ap.add_argument("--freq-fix-reattr",
                     action=argparse.BooleanOptionalAction, default=True,
                     help="介入#38 周波数跨ぎ再属性の精緻化・既定ON(2026-08-30)。"
@@ -1998,7 +2032,9 @@ def main():
                   f"/{pd_ledger['pinned_mw']}MW (未突合{pd_ledger['n_unmatched']}地点)")
         total_load = allocate_loads(net, cfg, pref_gwh=pref_gwh,
                                     point_demand=pinned,
-                                    pop_tilt=args.pop_tilt)
+                                    pop_tilt=args.pop_tilt,
+                                    dist_share=({"radius_km": args.dist_radius_km}
+                                                if args.dist_load_share else None))
         if args.reactive_comp is not None:
             from src.powerflow.compensation import add_reactive_compensation
             rfac = (cfg.get("reactive_compensation_factor", 0.6)
@@ -2073,6 +2109,9 @@ def main():
             "provisional_infeed": infeed_ledger,   # 介入#37 全件台帳((仮)明記)
             "implicit_stepdown": bstats.get("implicit_stepdown_ledger", []),  # 介入#43a
             "lv_aggregate": lv_agg_ledger,         # 介入#43b 台帳(None=無効)
+            # 介入#65 台帳(切り替えを入れたときだけ書く。切っているときは要約が前と同じ)
+            **({"dist_load_share": getattr(net, "_dist_share_ledger", None)}
+               if args.dist_load_share else {}),
             "total_load_mw": round(total_load, 1),
             "n_components": n_comp, "n_slack": n_slack, "n_synthetic_slack": n_synth,
             "ac_converged": bool(ac.get("converged")),
