@@ -40,7 +40,16 @@ for f in "$SRC"/docs/data/flow_map/flows_now_*.geojson "$SRC"/docs/data/flow_map
   [ -f "$f" ] && cp "$f" "$PUB/docs/data/flow_map/$(basename "$f")"
 done
 mkdir -p "$PUB/docs/data/flow_map/days"
-cp "$SRC"/docs/data/flow_map/days/*.json "$PUB/docs/data/flow_map/days/"
+# 日別断面は、この回が計算する今日と昨日の分と一覧(manifest)だけを積む(2026-11-17)。
+# 前は全日分をコピーしていたので、この回の初めより後に main へ入った過去の日の直し(PR #184 で潮流マップの
+# 基準を作り直し、過去 80 日を線の鍵で並べ直した)を、回の初めに取り出した古い日で上書きした。
+TODAY_D=$(date +%Y%m%d)
+YD_D=$(date -v-1d +%Y%m%d 2>/dev/null || date -d yesterday +%Y%m%d)
+for d in "$YD_D" "$TODAY_D" manifest; do
+  if [ -f "$SRC/docs/data/flow_map/days/$d.json" ]; then
+    cp "$SRC/docs/data/flow_map/days/$d.json" "$PUB/docs/data/flow_map/days/$d.json"
+  fi
+done
 
 git -C "$PUB" add docs/data/realtime/latest.json docs/data/flow_map/flows_now_*.geojson \
     docs/data/flow_map/gens_now_*.geojson docs/data/flow_map/now_meta.json docs/data/flow_map/days/
