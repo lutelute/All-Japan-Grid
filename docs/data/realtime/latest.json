@@ -1,57 +1,64 @@
 {
- "fetched_at": "2026-11-20T02:36:48",
+ "fetched_at": "2026-11-20T03:48:50",
  "unit": "MW",
  "zones": {
   "hokkaido": {
    "hourly_mw": {
     "0": 3530.0,
-    "1": 3580.0
+    "1": 3580.0,
+    "2": 3680.0
    },
-   "updated": "2026/11/20 2:30",
+   "updated": "2026/11/20 3:40",
    "date": "2026/11/20",
    "source": "https://denkiyoho.hepco.co.jp/area/data/juyo_01_20261120.csv"
   },
   "tohoku": {
    "hourly_mw": {
     "0": 8350.0,
-    "1": 8360.0
+    "1": 8360.0,
+    "2": 8570.0
    },
-   "updated": "2026/11/20 2:32",
+   "updated": "2026/11/20 3:47",
    "date": "2026/11/20",
    "source": "https://setsuden.nw.tohoku-epco.co.jp/common/demand/juyo_02_20261120.csv"
   },
   "tokyo": {
    "hourly_mw": {
     "0": 25100.0,
-    "1": 24020.0
+    "1": 24020.0,
+    "2": 23910.0
    },
-   "updated": "2026/11/20 2:30",
+   "updated": "2026/11/20 3:40",
    "date": "2026/11/20",
    "source": "https://www.tepco.co.jp/forecast/html/images/juyo-d1-j.csv"
   },
   "chubu": {
    "hourly_mw": {
-    "0": 12720.0
+    "0": 12720.0,
+    "1": 12290.0,
+    "2": 12310.0
    },
-   "updated": "2026/11/20 02:10",
+   "updated": "2026/11/20 03:35",
    "date": "2026/11/20",
    "source": "https://powergrid.chuden.co.jp/denki_yoho_content_data/juyo_cepco003.csv"
   },
   "hokuriku": {
    "hourly_mw": {
     "0": 2860.0,
-    "1": 2850.0
+    "1": 2850.0,
+    "2": 3000.0
    },
-   "updated": "2026/11/20 2:32",
+   "updated": "2026/11/20 3:46",
    "date": "2026/11/20",
    "source": "https://www.rikuden.co.jp/nw/denki-yoho/csv/juyo_05_20261120.csv"
   },
   "chugoku": {
    "hourly_mw": {
     "0": 5540.0,
-    "1": 5430.0
+    "1": 5430.0,
+    "2": 5660.0
    },
-   "updated": "2026/11/20 02:34",
+   "updated": "2026/11/20 03:44",
    "date": "2026/11/20",
    "source": "https://www.energia.co.jp/nw/jukyuu/sys/juyo_07_20261120.csv"
   },
@@ -93,9 +100,10 @@
   "okinawa": {
    "hourly_mw": {
     "0": 670.0,
-    "1": 640.0
+    "1": 640.0,
+    "2": 650.0
    },
-   "updated": "2026/11/20 02:32",
+   "updated": "2026/11/20 03:42",
    "date": "2026/11/20",
    "source": "https://www.okiden.co.jp/denki2/juyo_10_20261120.csv"
   }
