@@ -8,7 +8,10 @@
 
 `scripts/realtime_cycle.sh` が1サイクルで以下を実行する。
 
-1. `fetch_denkiyoho.py` — 各社「でんき予報」のエリア実績需要（9社）
+1. `fetch_denkiyoho.py` — 各社「でんき予報」のエリア実績需要（10社の当日の CSV。`hourly_mw` が実績、`forecast_mw` が各社の当日の予測値）
+   - 2026-11-25: 関西(`/yamasou/juyo_06_YYYYMMDD.csv`)を足し、四国を当日の CSV(`juyo_08_YYYYMMDD.csv`)に替えた(年次 CSV は前の日までなので date が毎回前の日だった。当日の CSV が取れないときだけ年次 CSV を読む)
+   - 東北は 2026-11-20 から同社が「当社ホームページの一部機能の一時停止」ででんき予報を止めている(名前が引けない)。URL はそのままなので、再開すればそのまま取れる
+   - 試すときは `python3 scripts/fetch_denkiyoho.py --out-dir <試しの置き場>`(蓄積も latest.json もそこへ書く)
 2. `fetch_area_fuelmix.py` — エリア需給実績の燃料別内訳（任意・失敗しても続行）
    - `export_occto_today.py today` — OCCTO の地内基幹送電線・連系線の**潮流実績**(前日 0 時から今まで、30 分値)と運用容量の実績 → `docs/data/flow_map/occto_today.json`(ページ `docs/occto_flow.html`)。1 回に 10 リクエストほど(5 秒間隔)。取れなかった回は前のファイルのまま(2026-11-07、#143)。線の形 `occto_lines.json` は照合を作り直したときだけ手で作る(FLOW_VIEWER_PREP.md)
 3. `export_flow_map_data.py --realtime` — **実績需要にスケールした NOW 断面 PF**
