@@ -186,7 +186,7 @@ python scripts/diagnostics/test_west_reactive.py
 |---|---|---|
 | `fetch_area_fuelmix.py` | 現役 | 各社「エリア需給実績」(燃料別・30分値)の取得 → zone×hour×燃料MW. |
 | `fetch_capacity_tables.py` |  | 一般送配電事業者の「予想潮流・空容量一覧表」を取得する(介入#45 の較正入力). |
-| `fetch_denkiyoho.py` | 現役 | でんき予報(各社 当日需要実績・1時間値)の準リアルタイム取得. |
+| `fetch_denkiyoho.py` | 現役 | でんき予報(10 社の当日需要実績と当日の予測値・1時間値)の準リアルタイム取得. |
 | `fetch_estat_mesh.py` 🔒 |  | Fetch 2020-census 1 km mesh population (e-Stat GIS, stats T001140). |
 | `fetch_fit.py` |  | FIT/FIP 事業計画認定情報を47都道府県ぶん取得する。 |
 | `fetch_hks.py` |  | OCCTO「ユニット別発電実績公開システム」(HKS) から30分値の発電実績を取得する。 |
